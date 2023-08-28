@@ -3,6 +3,7 @@ import './App.css';
 import Navbar from './LayOut/Navbar';
 import Footer from './LayOut/Footer';
 import Home from './pages/Home';
+import Howwork from './pages/Howwork';
 
 
 
@@ -24,6 +25,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Layout />}>
         <Route path='/' element={<Home />} />
+        <Route path='/howwork' element = {<Howwork />} />
         </Route>
       </Routes>
     </Router>
