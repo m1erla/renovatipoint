@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MasterRepository extends JpaRepository<Master, Integer> {
      boolean existsMasterByEmail(String email);
-     boolean existMasterByPhoneNumber(String phoneNumber);
+
 
 }

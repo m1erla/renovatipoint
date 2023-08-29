@@ -5,8 +5,8 @@ import com.werkspot.dataAccess.abstracts.MasterRepository;
 
 public class MasterBusinessRules {
     private MasterRepository masterRepository;
-    public void checkIfInfoExists(String email, String phoneNumber){
-        if (this.masterRepository.existsMasterByEmail(email) && this.masterRepository.existMasterByPhoneNumber(phoneNumber)) {
+    public void checkIfInfoExists(String email){
+        if (this.masterRepository.existsMasterByEmail(email)) {
            throw new BusinessException("Email or Phone Number is Already Exist! Please try differ email or phone number!");
         }
         }

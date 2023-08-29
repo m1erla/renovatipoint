@@ -7,8 +7,8 @@ public class ConsumerBusinessRules {
 
     private ConsumerRepository consumerRepository;
 
-    public void checkIfInfoExists(String email, String phoneNumber){
-        if(this.consumerRepository.existsConsumersByEmail(email) && this.consumerRepository.existsConsumerByPhoneNumber(phoneNumber)){
+    public void checkIfInfoExists(String email){
+        if(this.consumerRepository.existsConsumersByEmail(email)){
             throw new BusinessException("Email or Phone Number is already exists! Please try differ email or phone number!");
         }
     }
