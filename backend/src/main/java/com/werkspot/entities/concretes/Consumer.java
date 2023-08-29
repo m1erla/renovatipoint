@@ -31,6 +31,6 @@ public class Consumer {
     @Column(name = "phone_number")
     private String phone_number;
 
-    @OneToMany(mappedBy = "master")
+    @OneToMany(mappedBy = "consumer")
     private List<Master> masters;
 }

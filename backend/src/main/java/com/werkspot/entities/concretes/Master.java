@@ -29,5 +29,9 @@ public class Master {
     @Column(name = "phone_number")
     private String phone_number;
 
+    @ManyToOne
+    @JoinColumn(name = "consumer_id")
+    private Consumer consumer;
+
 
 }
