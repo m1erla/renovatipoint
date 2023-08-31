@@ -4,7 +4,7 @@ import Navbar from './LayOut/Navbar';
 import Footer from './LayOut/Footer';
 import Home from './pages/Home';
 import Howwork from './pages/Howwork';
-
+import { ChatProvider } from './context/ChatContext';
 
 
 
@@ -16,6 +16,7 @@ function App() {
         <Navbar />
         <Outlet />
         <Footer/>
+        <ChatProvider/>
       </div>
     );
   };
