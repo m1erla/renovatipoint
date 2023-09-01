@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/masters")
 @AllArgsConstructor
-
+@CrossOrigin(origins = "http://localhost:8080")
 public class MasterController {
 
     private MasterService masterService;
