@@ -4,12 +4,12 @@ import com.werkspot.business.requests.CreateConsumerRequest;
 import com.werkspot.business.requests.UpdateConsumerRequest;
 import com.werkspot.business.responses.GetAllByIdConsumersResponse;
 import com.werkspot.business.responses.GetAllConsumersResponse;
-import org.springframework.stereotype.Component;
+
 
 import java.util.List;
-@Component
+
 public interface ConsumerService {
-    List<GetAllConsumersResponse> getAllConsumers();
+    List<GetAllConsumersResponse> getAll();
 
     GetAllByIdConsumersResponse getById(int id);
 

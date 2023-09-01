@@ -15,17 +15,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/masters")
 @AllArgsConstructor
+
 public class MasterController {
 
     private MasterService masterService;
 
     @GetMapping
-    public List<GetAllMastersResponse> getAllMasters() {
+    public List<GetAllMastersResponse> getAll() {
         return masterService.getAll();
     }
 
-    @GetMapping()
-    public GetAllByIdMastersResponse getAllById(@PathVariable int id) {
+    @GetMapping("/{id}")
+    public GetAllByIdMastersResponse getById(@PathVariable int id) {
         return masterService.getById(id);
     }
 
@@ -42,6 +43,6 @@ public class MasterController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id){
-        this.delete(id);
+        this.masterService.delete(id);
     }
 }

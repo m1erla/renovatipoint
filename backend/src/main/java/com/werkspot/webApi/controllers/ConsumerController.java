@@ -14,12 +14,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/consumers")
 @AllArgsConstructor
+
 public class ConsumerController {
     private ConsumerService consumerService;
 
     @GetMapping()
     public List<GetAllConsumersResponse> getAll() {
-        return consumerService.getAllConsumers();
+        return consumerService.getAll();
     }
 
     @GetMapping("/{id}")
