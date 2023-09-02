@@ -1,0 +1,100 @@
+.homecomments{
+    background-color: #017ACD ;
+    padding: 100px 0;
+
+    .container{
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+        padding: 0 5px;
+    }
+    .homecomments-title{
+        color: white;
+    }
+    .homecomments-paragraph{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      color: white;
+      text-align: center;
+      font-size: 15px; 
+      .iconComment{
+        font-size: 40px;
+      }
+    }
+}
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    align-self: flex-start;
+   /* Reverse the order of the stars */
+    font-size: 0;
+   /* Remove the space between the elements */
+  }
+  
+  .rating input[type="radio"] {
+    display: none;
+   /* Hide the radio buttons */
+  }
+  
+  .rating label {
+    font-size: 30px;
+    color: rgba(187, 183, 183, 0.726);
+   /* Empty star color */
+    margin: 0 2px;
+    cursor: pointer;
+  }
+  
+  .rating label:before {
+    content: "\2605";
+   /* Unicode character for filled star */
+  }
+  
+  .rating input[type="radio"]:checked ~ label:before {
+    content: "\2606";
+   /* Unicode character for empty star */
+    color: #016bf5;
+   /* Filled star color */
+  }
+
+  .homecomments-card{
+    background-color: white;
+    border-radius: 20px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 10px;
+    .image{
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    .card-top{
+        display: flex;
+        justify-content: space-around;
+        gap: 20px;
+        align-items: center;
+    }
+    .card-bot{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .customer{
+        color: grey;
+      }
+    }
+  }
+
+  .comment-cards{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+

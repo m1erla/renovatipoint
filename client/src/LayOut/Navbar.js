@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import "./navbar.css"
+import "./LayoutCss/navbar.css"
 import { FaBars } from 'react-icons/fa';
 import { CgClose } from 'react-icons/cg';
 import { links} from '../data/navbarData';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
-
+  const location = useLocation();
   const linksContainerRef = useRef(null);
   const linksRef = useRef(null);
-
+  const loginLink = links.find(link => link.text === 'Login');
   useEffect(() => {
     const linksHeight = linksRef.current?.getBoundingClientRect().height;
 
@@ -43,15 +43,24 @@ const Navbar = () => {
           ref={linksContainerRef}
         >
           <ul className='links' ref={linksRef}>
-            {links.map((singleLink) => {
-              const { id, url, text } = singleLink;
-              return (
-                <li key={id}>
-                  <Link to={url}>{text}</Link>
-                </li>
-              );
-            })}
-          </ul>
+          {
+  location.pathname === '/register' ? (
+    <li key={loginLink.id}>
+      <Link to={loginLink.url} className='last-link'>
+        {loginLink.text}
+      </Link>
+    </li>
+  ) : (
+    links.map((singleLink, index) => (
+      <li key={singleLink.id}>
+        <Link to={singleLink.url} className={index === links.length - 1 ? 'last-link' : ''}>
+          {singleLink.text}
+        </Link>
+      </li>
+    ))
+  )
+}
+</ul>
         </div>
       </div>
     </nav>

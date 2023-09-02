@@ -1,0 +1,60 @@
+.hero{
+    background-image: url("../../assets/horoImage2.jpg");
+    object-fit: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+
+}
+
+.hero-wrapper{
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+    min-height: calc(100vh - 86px);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    .hero-title{
+        font-size: 45px;
+        line-height: 60px;
+    }
+    .search-hero{
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+}
+
+.homeSecondSectionTitle{
+    padding: 50px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+    .cards{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+  .homeSecondSection-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 300px;
+    text-align: center;
+    gap: 20px;
+    background-color: #F9F8F6 ;
+    padding: 20px 0px;
+    height: 227px !important;
+    border-radius: 20px;
+    
+  }
+  .homeSecondSection-card span {
+    font-size: 50px;
+  }
+
