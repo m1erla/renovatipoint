@@ -2,7 +2,11 @@ package com.werkspot.business.rules;
 
 import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.dataAccess.abstracts.ConsumerRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
+@AllArgsConstructor
 public class ConsumerBusinessRules {
 
     private ConsumerRepository consumerRepository;

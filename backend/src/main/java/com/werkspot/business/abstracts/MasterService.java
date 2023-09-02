@@ -5,6 +5,7 @@ import com.werkspot.business.requests.UpdateMasterRequest;
 import com.werkspot.business.responses.GetAllByIdMastersResponse;
 import com.werkspot.business.responses.GetAllMastersResponse;
 
+
 import java.util.List;
 
 public interface MasterService {

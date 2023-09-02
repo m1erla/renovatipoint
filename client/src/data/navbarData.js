@@ -8,16 +8,8 @@ export const links = [
     url: '/apply-for-a-job',
     text: 'apply for a job',
   },{
-    id: 3,
+    id: 2,
     url: '/howwork',
     text: 'How does it work',
-  },{
-    id: 4,
-    url: '/login',
-    text: 'Login',
-  },{
-    id: 5,
-    url: '/register',
-    text: 'Register as a professional',
   }
 ];
