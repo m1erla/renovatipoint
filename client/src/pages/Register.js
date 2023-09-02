@@ -89,7 +89,7 @@ const Register = () => {
               </button>
               <div>
                 <span>
-                  <Link to="/">Terms and conditions</Link> and{" "}
+                  <Link to="/privacy/privacy-policy">Terms and conditions</Link> and{" "}
                   <Link to="/">privacy policy.</Link>{" "}
                 </span>
               </div>

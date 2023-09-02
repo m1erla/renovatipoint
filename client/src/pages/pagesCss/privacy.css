@@ -1,0 +1,48 @@
+.privacy-links{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 50px 0 50px;
+}
+
+.privacy-link{
+    color: black;
+    margin-right: 50px;
+}
+
+.active-link{
+    margin-right: 50px;
+    color: red;
+    text-decoration: underline;
+  }
+
+  .privacyPolicy-hero{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px ;
+  }
+
+  .privacyPolicy-hero-list{
+    padding: 0 50px;
+  }
+
+  .privacyParaghrap{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px ;
+    margin: 50px 0;
+    .privacyPolicy-policy-list{
+      padding: 0px 50px;
+      font-weight: bold;
+    }
+    .privacyPolicy-policy2-list{
+      padding: 0px 50px;
+    }
+  }
+
+  .privacyPolicy-policy3-list{
+    padding: 0px 50px;
+  }
