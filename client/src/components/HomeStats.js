@@ -19,7 +19,7 @@ const HomeStats = () => {
                 <div className='count-write'>comments</div>
             </div>
             </div>
-        <Link to="/apply-for-a-job" className='statsBtn'>Post your job posting</Link>
+        <Link onClick={() => window.scrollTo(0, 0)} to="/apply-for-a-job" className='statsBtn'>Post your job posting</Link>
         </div>
     </div>
   )

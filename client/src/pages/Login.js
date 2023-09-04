@@ -70,7 +70,7 @@ function Login() {
           />
           {passwordError && <div className="error">{passwordError}</div>}
         </div>
-        <Link to="*" className='forgetPassword'>Forgot password ?</Link>
+        <Link onClick={() => window.scrollTo(0, 0)} to="*" className='forgetPassword'>Forgot password ?</Link>
         <button className='loginBtn' onClick={handleLogin}>Login</button>
       </form>
       <div className='fastLogin'>

@@ -1,0 +1,16 @@
+.partner-hero {
+  margin: 40px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.partner-body {
+    margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  .partner-list{
+    list-style-type: disc;
+    padding: 0px 40px;
+  }
+}

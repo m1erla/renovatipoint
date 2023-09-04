@@ -143,7 +143,7 @@ const Howwork = () => {
 
         <div className="howworrkShareBtn-wrapper">
           <h3>Keep in touch</h3>
-          <Link to="/apply-for-a-job" className="howworkBtn">post your job posting</Link>
+          <Link onClick={() => window.scrollTo(0, 0)} to="/apply-for-a-job" className="howworkBtn">post your job posting</Link>
         </div>
         </div>
       </div>

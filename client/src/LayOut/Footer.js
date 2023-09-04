@@ -18,7 +18,7 @@ const Footer = () => {
         <ul>
         {company.map((company)=>(
           <li key={company.id}>
-            <Link key={company.id}>{company.title}</Link>
+            <Link onClick={() => window.scrollTo(0, 0)} to={company.to} key={company.id}>{company.title}</Link>
           </li>
         ))}
         </ul>
@@ -28,7 +28,7 @@ const Footer = () => {
         <ul>
         {help.map((help)=>(
           <li key={help.id}>
-            <Link key={help.id}>{help.title}</Link>
+            <Link onClick={() => window.scrollTo(0, 0)} key={help.id}>{help.title}</Link>
           </li>
         ))}
         </ul>
@@ -38,7 +38,7 @@ const Footer = () => {
         <ul>
         {resource.map((resource)=>(
           <li key={resource.id}>
-            <Link key={resource.id}>{resource.title}</Link>
+            <Link to={resource.to} onClick={() => window.scrollTo(0, 0)} key={resource.id}>{resource.title}</Link>
           </li>
         ))}
         </ul>
@@ -55,9 +55,9 @@ const Footer = () => {
             <Link><BsLinkedin/></Link>
             </div>
             <div className="links">
-              <Link>Privacy Policy</Link>
-              <Link>Terms & Conditions</Link>
-              <Link>Support</Link>
+              <Link onClick={() => window.scrollTo(0, 0)}>Privacy Policy</Link>
+              <Link onClick={() => window.scrollTo(0, 0)}>Terms & Conditions</Link>
+              <Link onClick={() => window.scrollTo(0, 0)}>Support</Link>
             </div>
           </div>
 

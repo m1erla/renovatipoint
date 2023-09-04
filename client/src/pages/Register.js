@@ -89,8 +89,8 @@ const Register = () => {
               </button>
               <div>
                 <span>
-                  <Link to="/privacy/privacy-policy">Terms and conditions</Link> and{" "}
-                  <Link to="/">privacy policy.</Link>{" "}
+                  <Link onClick={() => window.scrollTo(0, 0)} to="/privacy/privacy-policy">Terms and conditions</Link> and{" "}
+                  <Link onClick={() => window.scrollTo(0, 0)} to="/">privacy policy.</Link>{" "}
                 </span>
               </div>
             </form>
