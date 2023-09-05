@@ -1,4 +1,5 @@
 package com.werkspot.security.token;
 
-public class TokenType {
+public enum TokenType {
+    BEARER
 }
