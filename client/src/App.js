@@ -11,6 +11,10 @@ import Privacy from './pages/Privacy';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import Cookies from './components/Cookies';
 import TermsAndConditions from './components/TermsAndConditions';
+import About from './pages/About';
+import Affiliate from './components/Affiliate';
+import Partner from './components/Partner';
+import QualityReq from './components/QualityReq';
 
 function App() {
   const Layout = () => {
@@ -36,6 +40,10 @@ function App() {
           <Route path='cookies' element = {<Cookies/>} />
           <Route path='terms-conditions' element = {<TermsAndConditions/>} />
         </Route>
+        <Route path='about' element={<About/>}/>
+        <Route path='become-an-affiliate' element={<Affiliate/>}/>
+        <Route path='partner' element={<Partner/>}/>
+        <Route path='quality-requirements' element={<QualityReq/>}/>
         <Route path='/login' element = {<Login />} />
         </Route>
       </Routes>

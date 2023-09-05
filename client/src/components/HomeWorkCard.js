@@ -9,7 +9,7 @@ const HomeWorkCard = ({ img, iconn, to ,  text ,paragraph , link, subtext , subi
       <img alt='icon' src={img} className='homeWork-card-image'/>       
       <h4 className='homeWork-card-title'> {iconn} {text}</h4>
       <p>{paragraph}</p>
-      <Link to={to}>{link}</Link>
+      <Link onClick={() => window.scrollTo(0, 0)} to={to}>{link}</Link>
       </div>
       <hr />
       <div className='bottomSide'>
@@ -17,7 +17,7 @@ const HomeWorkCard = ({ img, iconn, to ,  text ,paragraph , link, subtext , subi
         <img alt="icon2" src={subimg} className='homeWork-card-subimage' />
         <p>{subtext}</p>
         </div>
-        <Link to={to}>{sublink}</Link>
+        <Link onClick={() => window.scrollTo(0, 0)} to={to}>{sublink}</Link>
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ const HomeEveryJobCard = ({ icon, text , links,to }) => {
       <ul className='homeeveryjob-links'>
         {links.map((linkObj) => (
           <li key={linkObj.id}>
-            <Link to={to}>{linkObj.link}</Link>
+            <Link onClick={() => window.scrollTo(0, 0)} to={to}>{linkObj.link}</Link>
           </li>
         ))}
       </ul>
