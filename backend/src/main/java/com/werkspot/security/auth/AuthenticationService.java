@@ -1,9 +1,9 @@
 package com.werkspot.security.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.werkspot.dataAccess.abstracts.ConsumerRepository;
-import com.werkspot.entities.concretes.Consumer;
 import com.werkspot.security.config.JwtService;
+import com.werkspot.security.user.User;
+import com.werkspot.security.user.UserRepository;
 import com.werkspot.security.token.Token;
 import com.werkspot.security.token.TokenRepository;
 import com.werkspot.security.token.TokenType;
@@ -21,25 +21,25 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final ConsumerRepository repository;
+    private final UserRepository repository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request){
-         var consumer = Consumer.builder()
-                 .name(request.getName())
-                 .surname(request.getSurname())
+    public AuthenticationResponse register( RegisterRequest request){
+         var user = User.builder()
+                 .firstname(request.getFirstname())
+                 .lastname(request.getLastname())
                  .email(request.getEmail())
-                 .phone_number(request.getPhone_number())
+                 .phoneNumber(request.getPhoneNumber())
                  .password(passwordEncoder.encode(request.getPassword()))
                  .role(request.getRole())
                  .build();
-         var savedConsumer = repository.save(consumer);
-         var jwtToken = jwtService.generateToken(consumer);
-         var refreshToken = jwtService.generateRefreshToken(consumer);
-         saveConsumerToken(savedConsumer, jwtToken);
+         var savedUser = repository.save(user);
+         var jwtToken = jwtService.generateToken(user);
+         var refreshToken = jwtService.generateRefreshToken(user);
+         saveUserToken(savedUser, jwtToken);
          return AuthenticationResponse.builder()
                  .accessToken(jwtToken)
                  .refreshToken(refreshToken)
@@ -47,19 +47,19 @@ public class AuthenticationService {
 
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
+    public AuthenticationResponse authenticate( AuthenticationRequest request){
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
-        var consumer = repository.findByEmail(request.getEmail())
+        var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(consumer);
-        var refreshToken = jwtService.generateRefreshToken(consumer);
-        revokeAllConsumerTokens(consumer);
-        saveConsumerToken(consumer, jwtToken);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
@@ -67,9 +67,9 @@ public class AuthenticationService {
 
     }
 
-    private void saveConsumerToken(Consumer consumer, String jwtToken){
+    private void saveUserToken( User user, String jwtToken){
         var token = Token.builder()
-                .consumer(consumer)
+                .user(user)
                 .token(jwtToken)
                 .tokenType(TokenType.BEARER)
                 .expired(false)
@@ -78,8 +78,8 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 
-    private void revokeAllConsumerTokens(Consumer consumer){
-        var validConsumerTokens = tokenRepository.findAllValidTokenByConsumer(consumer.getId());
+    private void revokeAllUserTokens( User user){
+        var validConsumerTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if(validConsumerTokens.isEmpty())
             return;
         validConsumerTokens.forEach(token -> {
@@ -94,19 +94,19 @@ public class AuthenticationService {
    ) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
-        final String consumerEmail;
+        final String userEmail;
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             return;
         }
 
         refreshToken = authHeader.substring(7);
-        consumerEmail = jwtService.extractUsername(refreshToken);
-        if(consumerEmail != null){
-            var consumer = this.repository.findByEmail(consumerEmail).orElseThrow();
-            if (jwtService.isTokenValid(refreshToken, consumer)) {
-                var accessToken = jwtService.generateToken(consumer);
-                revokeAllConsumerTokens(consumer);
-                saveConsumerToken(consumer, accessToken);
+        userEmail = jwtService.extractUsername(refreshToken);
+        if(userEmail != null){
+            var user = this.repository.findByEmail(userEmail).orElseThrow();
+            if (jwtService.isTokenValid(refreshToken, user)) {
+                var accessToken = jwtService.generateToken(user);
+                revokeAllUserTokens(user);
+                saveUserToken(user, accessToken);
                 var authResponse = AuthenticationResponse.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)

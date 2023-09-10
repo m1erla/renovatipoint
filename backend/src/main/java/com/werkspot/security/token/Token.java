@@ -1,6 +1,8 @@
 package com.werkspot.security.token;
 
 import com.werkspot.entities.concretes.Consumer;
+import com.werkspot.entities.concretes.Master;
+import com.werkspot.security.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,11 +15,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class Token {
+
     @Id
     @GeneratedValue
     public Integer id;
+
     @Column(unique = true)
     public String token;
+
     @Enumerated(EnumType.STRING)
     public TokenType tokenType = TokenType.BEARER;
 
@@ -25,8 +30,16 @@ public class Token {
 
     public boolean expired;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    public User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consumer_id")
     public Consumer consumer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "master_id")
+    public Master master;
 
 
 }
