@@ -21,3 +21,39 @@ export const links = [
     text: 'Register as a professional',
   }
 ];
+
+export const Loginlinks = [
+  {
+    id: 1,
+    url: '/',
+    text: 'New Missions',
+  },{
+    id: 2,
+    url: '/interest',
+    text: 'Interest',
+  },{
+    id: 3,
+    url: '/persons',
+    text: 'Persons',
+  }
+];
+
+export const accordionMenuLinks = [
+  {
+    id:1,
+    ulr: "/complete-my-registration",
+    text: "Complete My Registration"
+  },{
+    id:2,
+    ulr: "/recorded-commands",
+    text: "Recorded Commands"
+  },{
+    id:3,
+    ulr: "/my-profile",
+    text: "My Profile"
+  },{
+    id:4,
+    ulr: "/my-account",
+    text: "My Account"
+  }
+]

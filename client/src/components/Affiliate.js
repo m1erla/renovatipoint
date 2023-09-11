@@ -21,7 +21,7 @@ import "./componentCss/affiliate.css"
             id:2,
             htext:(
                 <>
-                <Link to="https://partner.instapro.com/anmelden.cgi?new=1&cpid=5">Sign up</Link> for our one-click program
+                <Link className='lineLink' to="https://partner.instapro.com/anmelden.cgi?new=1&cpid=5">Sign up</Link> for our one-click program
                 </>
             ),
             lists:[
@@ -47,7 +47,7 @@ import "./componentCss/affiliate.css"
                     id:1,
                     list: (
                         <>
-                        Content websites, emails (under certain conditions) or price guides: <Link to="https://partner.instapro.com/anmelden.cgi?new=1&cpid=5">sign up now!</Link>
+                        Content websites, emails (under certain conditions) or price guides: <Link className='lineLink' to="https://partner.instapro.com/anmelden.cgi?new=1&cpid=5">sign up now!</Link>
                         </>
                     )
                 },{
@@ -86,8 +86,8 @@ const Affiliate = () => {
   return (
     <div className='container'>
         <div className='affiliate-hero'>
-        <h2>Become an affiliate</h2>
-        <p>Updated on 04-09-2023</p>
+        <h2 className='affiliate-title'>Become an affiliate</h2>
+        <p className='updateTime'>Updated on 04-09-2023</p>
         <div className='affiliate-body'>
         <h3>Work with Europe's leading marketplace connecting home owners and artisans</h3>
         <p>Werkspot.nl is the trusted way for homeowners to hire the professionals they need and get the professionals the job they want. With 150,000 job postings posted by over 40,000 active shopkeepers and homeowners each month, Werkspot has established itself as a leading player in the market for all types of businesses, small and large, in and around the home.</p>
@@ -114,7 +114,7 @@ const Affiliate = () => {
             <p>Our online platform connects homeowners with verified and approved local professionals across the Netherlands for all work in and around the home, whether it's renovation, maintenance work or repairs. Homeowners can post their work for free and get responses from available professionals; They can view their profile and read reviews from previous customers before deciding who to connect with.</p>
             </>
             <>
-            <h3>We are waiting for you! <Link to="https://partner.instapro.com/anmelden.cgi?new=1&cpid=5"> Register now</Link></h3>
+            <h3>We are waiting for you! <Link className='lineLink' to="https://partner.instapro.com/anmelden.cgi?new=1&cpid=5"> Register now</Link></h3>
             <p>If you have any questions or concerns, please contact us at affiliate@instapro.com.</p>
             </>
         </div>
