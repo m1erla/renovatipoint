@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/masters")
+@RequestMapping("/api/v1/masters")
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin("*")
 public class MasterController {
 
     private MasterService masterService;

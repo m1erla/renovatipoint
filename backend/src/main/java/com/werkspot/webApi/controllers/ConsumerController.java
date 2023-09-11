@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/consumers")
+@RequestMapping("/api/v1/consumers")
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin("*")
 public class ConsumerController {
     private ConsumerService consumerService;
 
