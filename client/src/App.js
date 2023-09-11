@@ -15,6 +15,7 @@ import About from './pages/About';
 import Affiliate from './components/Affiliate';
 import Partner from './components/Partner';
 import QualityReq from './components/QualityReq';
+import ErorrPage from './components/ErorrPage';
 
 function App() {
   const Layout = () => {
@@ -45,6 +46,7 @@ function App() {
         <Route path='partner' element={<Partner/>}/>
         <Route path='quality-requirements' element={<QualityReq/>}/>
         <Route path='/login' element = {<Login />} />
+        <Route path='*' element = {<ErorrPage />} />
         </Route>
       </Routes>
     </Router>

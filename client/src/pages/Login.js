@@ -51,7 +51,7 @@ function Login() {
       <form method='post' className="loginForm">
         <h1>Login</h1>
         <div>
-          <label>Email: asdasd</label>
+          <label>Email:</label>
           <input
             type="email"
             className='textInput'

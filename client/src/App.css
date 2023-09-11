@@ -7,6 +7,7 @@
 
 :root {
   /* dark shades of primary color*/
+  --clr-grey: #ababab;
   --clr-primary-1: #010040;
   --clr-primary-2: #020066;
   --clr-primary-3: #02008c;
@@ -46,6 +47,10 @@
   --dark-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   --max-width: 1170px;
   --fixed-width: 620px;
+}
+
+.updateTime{
+  color: var(--clr-grey);
 }
 
 @media screen and (min-width: 800px) {
