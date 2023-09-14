@@ -5,10 +5,9 @@ import { CgClose } from "react-icons/cg";
 import { Loginlinks, accordionMenuLinks, links } from "../data/navbarData";
 import { Link, useLocation } from "react-router-dom";
 import AccountMenu from "../components/AcorrdionMenu";
-import BasicMenu from "../components/AcorrdionMenu";
 
 const Navbar = () => {
-  const [isLogin, setIsLogin] = useState(false); //login için bekliyor
+  const [isLogin, setIsLogin] = useState(true); //login için bekliyor
   const [menuOpen, setMenuOpen] = useState(false); // toggle deneme
   const [windowWidth, setWindowWidth] = useState(window.innerWidth); //toggle deneme
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -16,10 +15,6 @@ const Navbar = () => {
   const linksContainerRef = useRef(null);
   const linksRef = useRef(null);
   const loginLink = links.find((link) => link.text === "Login");
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,11 +40,13 @@ const Navbar = () => {
       linksContainerRef.current.style.height = "0px";
     }
   }, [isNavOpen]);
+  
   return (
+    
     <nav>
       <div className="nav-center">
         <div className="nav-header">
-          <p>logo</p>
+          <Link to="/">logo</Link>
           <button
             className={isNavOpen ? "nav-toggle cancel-btn" : "nav-toggle"}
             onClick={() => {
@@ -109,7 +106,8 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <ul>
+                {
+                  isLogin=== true ? ( <ul>
                     {accordionMenuLinks.map((data) => (
                       <li key={data.id}>
                         <Link to={data.ulr}>{data.text}</Link>
@@ -118,7 +116,9 @@ const Navbar = () => {
                     <li>
                       <Link>log out</Link>
                     </li>
-                  </ul>
+                  </ul>):(null)
+                }
+                 
                 </>
               )}
             </>

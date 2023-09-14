@@ -16,6 +16,15 @@ import Affiliate from './components/Affiliate';
 import Partner from './components/Partner';
 import QualityReq from './components/QualityReq';
 import ErorrPage from './components/ErorrPage';
+import Propsals from './pages/Propsals';
+import Contacts from './components/Contacts';
+import Interest from './components/Interest';
+import PropsalstoInfrom from './components/PropsalstoInfrom';
+import PropsalsArchive from './components/PropsalsArchive';
+import ContactsArchive from './components/ContactsArchive';
+import ContactsInterest from './components/ContactsInterest';
+import ForgotPassword from './components/ForgotPassword';
+import MyProfile from './components/MyProfile';
 
 function App() {
   const Layout = () => {
@@ -36,6 +45,16 @@ function App() {
         <Route path='/apply-for-a-job' element = {<ApplyJob />} />
         <Route path='/howwork' element = {<Howwork />} />
         <Route path='/register' element = {<Register />} />
+        <Route path='propsals' element = {<Propsals />}>
+          <Route path='interest' element= {<Interest/>}>
+          <Route path='to-inform' element = {<PropsalstoInfrom />}/>
+          <Route path='archive' element = {<PropsalsArchive />} />
+          </Route>
+          <Route path='contacts' element= {<Contacts/>}>
+          <Route path='to-inform' element = {<ContactsInterest />}/>
+          <Route path='archive' element = {<ContactsArchive />} />
+          </Route>
+        </Route>
         <Route path='privacy' element = { <Privacy />}>
           <Route path='privacy-policy' element ={<PrivacyPolicy />} />
           <Route path='cookies' element = {<Cookies/>} />
@@ -45,7 +64,9 @@ function App() {
         <Route path='become-an-affiliate' element={<Affiliate/>}/>
         <Route path='partner' element={<Partner/>}/>
         <Route path='quality-requirements' element={<QualityReq/>}/>
+        <Route path='my-profile' element={<MyProfile/>}/>
         <Route path='/login' element = {<Login />} />
+        <Route path='login/forgot-password' element = {<ForgotPassword />} />
         <Route path='*' element = {<ErorrPage />} />
         </Route>
       </Routes>
