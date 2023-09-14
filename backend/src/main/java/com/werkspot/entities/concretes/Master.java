@@ -37,6 +37,7 @@ public class Master implements UserDetails {
 
     private String password;
 
+    private String jobTitle;
     @ManyToOne
     @JoinColumn(name = "consumer_id")
     private Consumer consumer;
