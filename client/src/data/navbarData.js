@@ -1,9 +1,5 @@
 export const links = [
-  {
-    id: 1,
-    url: '/',
-    text: 'home',
-  },{
+{
     id: 2,
     url: '/apply-for-a-job',
     text: 'apply for a job',
@@ -29,12 +25,12 @@ export const Loginlinks = [
     text: 'New Missions',
   },{
     id: 2,
-    url: '/interest',
+    url: '/propsals/interest/to-inform',
     text: 'Interest',
   },{
     id: 3,
-    url: '/persons',
-    text: 'Persons',
+    url: '/propsals/contacts/to-inform',
+    text: 'Contacts',
   }
 ];
 
