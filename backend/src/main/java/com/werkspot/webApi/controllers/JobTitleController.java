@@ -2,6 +2,7 @@ package com.werkspot.webApi.controllers;
 
 import com.werkspot.business.abstracts.JobTitleService;
 import com.werkspot.business.requests.CreateJobTitleRequest;
+import com.werkspot.business.requests.UpdateJobTitleRequest;
 import com.werkspot.business.responses.GetAllJobTitlesResponse;
 import com.werkspot.entities.concretes.JobTitle;
 import lombok.AllArgsConstructor;
@@ -26,5 +27,14 @@ public class JobTitleController {
    @ResponseStatus(code = HttpStatus.CREATED)
    public void add(@RequestBody CreateJobTitleRequest createJobTitleRequest){
        this.jobTitleService.add(createJobTitleRequest);
+   }
+   @PutMapping
+   public void update(@RequestBody UpdateJobTitleRequest updateJobTitleRequest){
+       this.jobTitleService.update(updateJobTitleRequest);
+   }
+
+   @DeleteMapping("/{id}")
+   public void delete(@PathVariable int id){
+       this.jobTitleService.delete(id);
    }
 }

@@ -2,6 +2,7 @@ package com.werkspot.business.concretes;
 
 import com.werkspot.business.abstracts.JobTitleService;
 import com.werkspot.business.requests.CreateJobTitleRequest;
+import com.werkspot.business.requests.UpdateJobTitleRequest;
 import com.werkspot.business.responses.GetAllJobTitlesResponse;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
 import com.werkspot.dataAccess.abstracts.JobTitleRepository;
@@ -35,5 +36,15 @@ public class JobTitleManager implements JobTitleService {
          JobTitle jobTitle = this.modelMapperService.forRequest()
                  .map(createJobTitleRequest, JobTitle.class);
          this.jobTitleRepository.save(jobTitle);
+    }
+
+    @Override
+    public void update(UpdateJobTitleRequest updateJobTitleRequest) {
+
+    }
+
+    @Override
+    public void delete(int id) {
+
     }
 }
