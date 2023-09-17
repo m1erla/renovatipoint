@@ -5,6 +5,8 @@ import "./pagesCss/register.css";
 import AssignmentsCard from "../components/AssignmentsCard";
 import OtherProfCard from "../components/OtherProfCard";
 
+
+
 const Register = () => {
   const [formData, setFormData] = useState({
     selectedOption: "",
@@ -16,10 +18,10 @@ const Register = () => {
     e.preventDefault();
 
     // Verileri backend'e gönderme
-    fetch("backend_api_url", {
+    fetch(`${process.env.BASE_API_URL}/masters`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": `${process.env.BASE_API_URL}`,
       },
       body: JSON.stringify(formData),
     })

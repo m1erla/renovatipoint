@@ -10,7 +10,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-
+ 
   const handleLogin = () => {
     if (email === '') {
       setEmailError('Email field cannot be left blank');
@@ -25,10 +25,10 @@ function Login() {
     } else {
       setPasswordError('');
     }
-
+    const apiUrl = 'http://localhost:8080/api/v1/consumers';
     // Form verilerini backend'e gönder
-    fetch('your-backend-api-url', {
-      method: 'POST',
+    fetch(`${apiUrl}`, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -48,7 +48,7 @@ function Login() {
 
   return (
     <div className='loginPage'>
-      <form method='post' className="loginForm">
+      <form method='get' className="loginForm">
         <h1>Login</h1>
         <div>
           <label>Email:</label>
