@@ -8,6 +8,7 @@
 - Spring Data
 - Spring Rest (http status)
 - Spring Security
+- CRUD structures
 
 ---
 
@@ -38,14 +39,17 @@
 ### Project Steps
 1. @Bean (ModelMapper)
 2. CRUD structure
-3. ConsumerEntity (@Entity)
-4. ConsumerRepository (@Repository)
-5. ConsumerServices (interface)
-6. ConsumerServiceImpl(@Service)
-7. ResourceNotFoundException(@ResponseStatus)
-8. ConsumerController(@RestController)
-9. JWT Security
-10. Web Socket
+3. Model Mapper Services
+4. JWT Security
+5. JWT Token
+6. UserEntity (@Entity)
+7. UserRepository (@Repository)
+8. UserServices (interface)
+9. UserServiceImpl(@Service)
+10. UserBusinessRules
+11. ResourceNotFoundException(@ResponseStatus)
+12. WebApiControllers(@RestController)
+13. Web Socket
 ---
 
 ### Unit Test
@@ -66,11 +70,11 @@
 3.ADIM
 POSTMAN
 
-//EKLEME
+//ADDITION
 http://localhost:8080/api/consumers
 
 
-//LISTELE
+//TO LIST
 http://localhost:8080/api/consumers
 
 

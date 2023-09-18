@@ -25,6 +25,7 @@ import ContactsArchive from './components/ContactsArchive';
 import ContactsInterest from './components/ContactsInterest';
 import ForgotPassword from './components/ForgotPassword';
 import MyProfile from './components/MyProfile';
+import Signin from './pages/Signin';
 
 function App() {
   const Layout = () => {
@@ -42,6 +43,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Layout />}>
         <Route path='/' element={<Home />} />
+        <Route path='/signin' element={<Signin />} />
         <Route path='/apply-for-a-job' element = {<ApplyJob />} />
         <Route path='/howwork' element = {<Howwork />} />
         <Route path='/register' element = {<Register />} />

@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 
 import static com.werkspot.security.user.Permission.*;
 import static com.werkspot.security.user.Role.ADMIN;
@@ -22,6 +23,7 @@ import static org.springframework.http.HttpMethod.*;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
+@EnableWebSocketMessageBroker
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -39,10 +41,14 @@ public class SecurityConfiguration {
                         "/api/v1/job_titles",
                         "/api/v1/services",
                         "/ws",
+                        "/app",
+                        "/app/ws",
                         "/app/topic/public",
-                        "/topic/public",
-                        "/topic",
+                        "/app/topic",
                         "/chat.sendMessage",
+                        "/v3/api-docs/**",
+                        "/v3/api-docs",
+                        "/v2/api-docs",
                         "/swagger-resources",
                         "/swagger-resources/**",
                         "/configuration/ui",
@@ -87,4 +93,5 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
 }

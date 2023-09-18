@@ -19,6 +19,8 @@ public class JobTitle {
     @Column(name = "job_titles")
     private String jobTitles;
 
+    private String name;
+
     @Column(name = "descriptions")
     private String descriptions;
 

@@ -22,9 +22,10 @@ import java.util.HashMap;
 
 import static com.werkspot.security.user.Role.*;
 
-@SpringBootApplication
+
 @RestControllerAdvice
 @OpenAPIDefinition
+@SpringBootApplication
 public class BackendApplication {
 
     public static void main(String[] args) {
