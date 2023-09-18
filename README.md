@@ -13,7 +13,7 @@
 
 ## System Login
 > Register
-> Login (username+password)
+> Login (email+password)
 > Authorization(Jwt)
 
 ---
@@ -45,6 +45,7 @@
 7. ResourceNotFoundException(@ResponseStatus)
 8. ConsumerController(@RestController)
 9. JWT Security
+10. Web Socket
 ---
 
 ### Unit Test
