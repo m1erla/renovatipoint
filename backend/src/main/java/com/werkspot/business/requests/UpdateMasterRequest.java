@@ -12,8 +12,11 @@ public class UpdateMasterRequest {
     private String name;
     private String surname;
     private String experience;
-    private String jobTitle;
+    private String jobTitles;
+    private String services;
+    private String descriptions;
     private String email;
     private String phoneNumber;
+    private String postCode;
 
 }

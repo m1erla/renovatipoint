@@ -34,7 +34,9 @@ public class Consumer implements UserDetails {
     private String email;
 
     @Column(name = "phone_number")
-    private String phone_number;
+    private String phoneNumber;
+    @Column(name = "post_code")
+    private String postCode;
 
     private String password;
 

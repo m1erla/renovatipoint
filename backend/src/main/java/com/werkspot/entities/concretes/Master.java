@@ -33,11 +33,11 @@ public class Master implements UserDetails {
     private String email;
 
     @Column(name = "phone_number")
-    private String phone_number;
+    private String phoneNumber;
 
     private String password;
-
-    private String jobTitle;
+    @Column(name = "job_title")
+    private String jobTitles;
     @ManyToOne
     @JoinColumn(name = "consumer_id")
     private Consumer consumer;

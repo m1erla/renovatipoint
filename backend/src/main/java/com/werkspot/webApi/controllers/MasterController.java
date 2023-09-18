@@ -1,11 +1,12 @@
 package com.werkspot.webApi.controllers;
 
+import com.werkspot.business.abstracts.JobTitleService;
 import com.werkspot.business.abstracts.MasterService;
+import com.werkspot.business.requests.CreateJobTitleRequest;
 import com.werkspot.business.requests.CreateMasterRequest;
+import com.werkspot.business.requests.UpdateJobTitleRequest;
 import com.werkspot.business.requests.UpdateMasterRequest;
-import com.werkspot.business.responses.GetAllByIdConsumersResponse;
-import com.werkspot.business.responses.GetAllByIdMastersResponse;
-import com.werkspot.business.responses.GetAllMastersResponse;
+import com.werkspot.business.responses.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,10 @@ public class MasterController {
     public GetAllByIdMastersResponse getById(@PathVariable int id) {
         return masterService.getById(id);
     }
+    @GetMapping("/{name}")
+    public GetJobtitleByName getJobtitleByName(@PathVariable String name){
+        return masterService.getJobTitleByName(name);
+    }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -41,8 +46,10 @@ public class MasterController {
         this.masterService.update(masterRequest);
     }
 
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id){
         this.masterService.delete(id);
     }
+
 }

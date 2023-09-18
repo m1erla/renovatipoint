@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class UpdateJobTitleRequest {
     private int id;
     private String jobTitles;
+    private String descriptions;
+    private String services;
 }

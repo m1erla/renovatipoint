@@ -19,6 +19,12 @@ public class JobTitle {
     @Column(name = "job_titles")
     private String jobTitles;
 
+    @Column(name = "descriptions")
+    private String descriptions;
+
+    @Column(name = "services")
+    private String services;
+
     @ManyToOne
     @JoinColumn(name = "master_id")
     private Master master;

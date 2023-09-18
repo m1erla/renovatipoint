@@ -1,6 +1,7 @@
 package com.werkspot.business.rules;
 
 import com.werkspot.core.utilities.exceptions.BusinessException;
+import com.werkspot.dataAccess.abstracts.JobTitleRepository;
 import com.werkspot.dataAccess.abstracts.MasterRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +19,6 @@ public class MasterBusinessRules {
            throw new BusinessException("Email or Phone Number is Already Exist! Please try differ email or phone number!");
         }
         }
+
     }
 

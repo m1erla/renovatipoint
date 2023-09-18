@@ -4,11 +4,13 @@ import com.werkspot.business.abstracts.JobTitleService;
 import com.werkspot.business.requests.CreateJobTitleRequest;
 import com.werkspot.business.requests.UpdateJobTitleRequest;
 import com.werkspot.business.responses.GetAllJobTitlesResponse;
+import com.werkspot.business.rules.JobTitleBusinessRules;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
 import com.werkspot.dataAccess.abstracts.JobTitleRepository;
 import com.werkspot.entities.concretes.JobTitle;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 public class JobTitleManager implements JobTitleService {
     private ModelMapperService modelMapperService;
     private JobTitleRepository jobTitleRepository;
+    private JobTitleBusinessRules jobTitleBusinessRules;
     @Override
     public List<GetAllJobTitlesResponse> getAllJobTitlesResponseList() {
         List<JobTitle> jobTitles = jobTitleRepository.findAll();
@@ -33,6 +36,7 @@ public class JobTitleManager implements JobTitleService {
 
     @Override
     public void add(CreateJobTitleRequest createJobTitleRequest) {
+        this.jobTitleBusinessRules.checkIfJobtitleExists(createJobTitleRequest.getJobTitles());
          JobTitle jobTitle = this.modelMapperService.forRequest()
                  .map(createJobTitleRequest, JobTitle.class);
          this.jobTitleRepository.save(jobTitle);
@@ -40,11 +44,13 @@ public class JobTitleManager implements JobTitleService {
 
     @Override
     public void update(UpdateJobTitleRequest updateJobTitleRequest) {
-
+          JobTitle jobTitle = this.modelMapperService.forRequest()
+                  .map(updateJobTitleRequest, JobTitle.class);
+          this.jobTitleRepository.save(jobTitle);
     }
 
     @Override
     public void delete(int id) {
-
+        this.jobTitleRepository.deleteById(id);
     }
 }
