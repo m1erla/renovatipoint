@@ -14,7 +14,8 @@ public class ChatController {
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage){
         return chatMessage;
     }
-
+    @MessageMapping("/chat.addUser")
+    @SendTo("/topic/public")
     public ChatMessage addUser(
             @Payload ChatMessage chatMessage,
             SimpMessageHeaderAccessor headerAccessor
