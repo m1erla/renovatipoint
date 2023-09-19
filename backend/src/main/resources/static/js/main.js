@@ -7,7 +7,8 @@ var messageForm = document.querySelector('#messageForm');
 var messageInput = document.querySelector("#message");
 var messageArea = document.querySelector("#messageArea");
 var connectingElement = document.querySelector(".connecting");
-
+var http = require("http").Server(chatPage);
+var io = require("socket.io")(http);
 var stompClient = null;
 var username = null;
 
@@ -24,12 +25,16 @@ function connect(event) {
         chatPage.classList.remove('hidden');
 
         var socket = new SockJS('/ws');
+
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, onConnected, onError);
     }
     event.preventDefault();
 }
+http.listen("3000", () => {
+    console.log("listening on *:3000");
+})
 
 function onConnected(){
     // Subscribe to the Public Topic
