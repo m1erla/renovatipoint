@@ -39,7 +39,7 @@ function App() {
   };
 
   return (
-    <Router>
+   
       <Routes>
         <Route path='/' element={<Layout />}>
         <Route path='/' element={<Home />} />
@@ -72,7 +72,7 @@ function App() {
         <Route path='*' element = {<ErorrPage />} />
         </Route>
       </Routes>
-    </Router>
+   
   );
 }
 
