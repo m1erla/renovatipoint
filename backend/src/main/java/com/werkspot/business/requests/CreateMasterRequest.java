@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateMasterRequest {
-    private int id;
     private String name;
     private String surname;
     private String experience;
