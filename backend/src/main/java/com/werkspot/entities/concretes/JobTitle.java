@@ -3,6 +3,8 @@ package com.werkspot.entities.concretes;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Table(name = "job_title")
 @Getter
 @Setter
@@ -25,7 +27,9 @@ public class JobTitle {
     private String descriptions;
 
     @Column(name = "services")
-    private String services;
+    @OneToMany(mappedBy = "job_titles")
+    @JoinColumn(name = "services")
+    private List<Employment> services;
 
     @ManyToOne
     @JoinColumn(name = "master_id")
