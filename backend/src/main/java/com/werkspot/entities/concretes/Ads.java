@@ -1,8 +1,10 @@
 package com.werkspot.entities.concretes;
 
+import com.werkspot.security.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Table(name = "ads")
@@ -18,25 +20,32 @@ public class Ads {
     @GeneratedValue
     private int id;
 
+    @Column(name = "ad_name")
+    private String adName;
+
     @OneToOne(mappedBy = "ads")
     @JoinColumn(name = "category_id")
     private Category categoryId;
 
     @OneToOne(mappedBy = "ads")
-    @JoinColumn(name = "consumer_id")
+    @JoinColumn(name = "consumers_id")
     private Consumer consumerAd;
 
     @OneToOne(mappedBy = "ads")
-    @JoinColumn(name = "master_id")
+    @JoinColumn(name = "masters_id")
     private Master masterAd;
 
+    @OneToOne(mappedBy = "ads")
+    @JoinColumn(name = "_user_id")
+    private User userAd;
+
     @OneToMany(mappedBy = "ads")
-    @JoinColumn(name = "service_id")
+    @JoinColumn(name = "services_id")
     private List<Employment> serviceId;
 
-    private String adReleaseDate;
+    private Date adReleaseDate;
 
-    private String description;
+    private String descriptions;
 
     private boolean isActive;
 }

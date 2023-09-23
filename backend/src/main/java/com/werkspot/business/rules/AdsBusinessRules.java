@@ -16,9 +16,15 @@ public class AdsBusinessRules {
         }
     }
 
-    public void checkIfAdsExists(boolean isActive){
+    public void checkIfAdsActive(boolean isActive){
         if (adsRepository.existsByAd(isActive)){
-            throw new BusinessException("This ad is already exists! Please create another ad.");
+            throw new BusinessException("There is no ad here!");
+        }
+    }
+
+    public void checkIfAdsExists(int id, String adsName){
+        if (adsRepository.existsById(id) && adsRepository.existsByName(adsName)){
+            throw new BusinessException("This ad is already exists! Please try to create another ad.");
         }
     }
 
