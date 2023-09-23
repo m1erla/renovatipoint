@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 public class CreateMasterRequest {
     private String name;
     private String surname;
-    private String experience;
-    private String jobTitles;
-    private String services;
+    private int experience;
+    private String jobTitleName;
+    private String serviceName;
     private String email;
     private String phoneNumber;
     private String postCode;

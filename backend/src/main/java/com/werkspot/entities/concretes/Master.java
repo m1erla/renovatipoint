@@ -29,17 +29,28 @@ public class Master implements UserDetails {
 
     @Column(name = "surname")
     private String surname;
+
+    private int experience;
+
+    @Column(name = "job_title")
+    private String jobTitleName;
+
+    private String services;
+
     @Column(name = "email")
     private String email;
+
+    private String password;
 
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    private String password;
-    @Column(name = "job_title")
-    private String jobTitles;
+    private String postCode;
+
+    private String descriptions;
+
     @ManyToOne
-    @JoinColumn(name = "consumer_id")
+    @JoinColumn(name = "fk_consumer_id")
     private Consumer consumer;
 
     @Enumerated(EnumType.STRING)

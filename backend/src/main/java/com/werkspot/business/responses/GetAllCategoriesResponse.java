@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class GetAllCategoriesResponse {
     private int id;
     private String categoryName;
+    private boolean isActive;
 }

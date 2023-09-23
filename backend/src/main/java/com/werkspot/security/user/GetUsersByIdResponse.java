@@ -1,4 +1,4 @@
-package com.werkspot.business.requests;
+package com.werkspot.security.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,16 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateMasterRequest {
-    private int id;
+public class GetUsersByIdResponse {
+    private Integer id;
     private String name;
     private String surname;
-    private String experience;
-    private String jobTitleName;
-    private String serviceName;
-    private String descriptions;
     private String email;
     private String phoneNumber;
+    private String jobTitleName;
     private String postCode;
-
 }

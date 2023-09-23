@@ -22,11 +22,11 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
-    private String firstname;
-    private String lastname;
+    private String name;
+    private String surname;
     private String email;
     private String password;
-    private String jobTitles;
+    private String jobTitleName;
     private String phoneNumber;
     private String postCode;
 

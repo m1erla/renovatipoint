@@ -22,11 +22,12 @@ public class Category {
     private String categoryName;
 
     private boolean isActive;
-    @OneToOne(mappedBy = "categories")
-    @JoinColumn(name = "ad_id")
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_ad_id")
     private Ads ads;
 
-    @OneToMany(mappedBy = "categories")
-    @JoinColumn(name = "services")
+    @OneToMany
+    @JoinColumn(name = "fk_service_id")
     private List<Employment> services;
 }

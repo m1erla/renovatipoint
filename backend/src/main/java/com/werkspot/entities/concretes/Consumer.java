@@ -40,7 +40,8 @@ public class Consumer implements UserDetails {
 
     private String password;
 
-    @OneToMany(mappedBy = "consumer")
+    @OneToMany
+    @JoinColumn(name = "fk_consumer_id")
     private List<Master> masters;
 
     @Enumerated(EnumType.STRING)

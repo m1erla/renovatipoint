@@ -13,7 +13,7 @@ public class GetAllMastersResponse {
     private String surname;
     private String email;
     private String phoneNumber;
-    private String jobTitles;
+    private String jobTitleName;
     private String postCode;
 
 }

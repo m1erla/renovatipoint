@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,27 +28,40 @@ public class CategoryManager implements CategoryService {
     public List<GetAllCategoriesResponse> getAll() {
         List<Category> categories = categoryRepository.findAll();
 
+        List<GetAllCategoriesResponse> categoriesResponses =
+                categories.stream().map(category -> this.modelMapperService.forResponse().map(category, GetAllCategoriesResponse.class)).collect(Collectors.toList());
 
-        return null;
+
+        return categoriesResponses;
     }
 
     @Override
     public GetCategoriesByIdResponse getById(int id) {
-        return null;
+        Category category = this.categoryRepository.findById(id).orElseThrow();
+
+        GetCategoriesByIdResponse response =
+                this.modelMapperService.forResponse().map(category, GetCategoriesByIdResponse.class);
+        return response;
     }
 
     @Override
     public void add(CreateCategoryRequest createCategoryRequest) {
+        this.categoryBusinessRules.checkIfCategoryExists(createCategoryRequest.getCategoryName());
 
+        Category category = this.modelMapperService.forRequest().map(createCategoryRequest, Category.class);
+        this.categoryRepository.save(category);
     }
 
     @Override
     public void update(UpdateCategoryRequest updateCategoryRequest) {
+        Category category = this.modelMapperService.forRequest().map(updateCategoryRequest, Category.class);
+        this.categoryRepository.save(category);
 
     }
 
     @Override
     public void delete(int id) {
+        this.categoryRepository.deleteById(id);
 
     }
 }

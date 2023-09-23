@@ -36,7 +36,7 @@ public class JobTitleManager implements JobTitleService {
 
     @Override
     public void add(CreateJobTitleRequest createJobTitleRequest) {
-        this.jobTitleBusinessRules.checkIfJobtitleExists(createJobTitleRequest.getJobTitles());
+        this.jobTitleBusinessRules.checkIfJobTitleNameExists(createJobTitleRequest.getJobTitleName());
          JobTitle jobTitle = this.modelMapperService.forRequest()
                  .map(createJobTitleRequest, JobTitle.class);
          this.jobTitleRepository.save(jobTitle);

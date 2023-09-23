@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateJobTitleRequest {
     private int id;
-    private String jobTitles;
+    private String jobTitleName;
     private String descriptions;
-    private String services;
+    private String serviceName;
 }

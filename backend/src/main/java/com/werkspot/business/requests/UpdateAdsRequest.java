@@ -8,5 +8,6 @@ import lombok.Data;
 public class UpdateAdsRequest {
     private int id;
     private String adName;
+    private String descriptions;
     private boolean isActive;
 }

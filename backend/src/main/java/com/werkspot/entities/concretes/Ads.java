@@ -23,24 +23,24 @@ public class Ads {
     @Column(name = "ad_name")
     private String adName;
 
-    @OneToOne(mappedBy = "ads")
-    @JoinColumn(name = "category_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_category_id")
     private Category categoryId;
 
-    @OneToOne(mappedBy = "ads")
-    @JoinColumn(name = "consumers_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_consumer_id")
     private Consumer consumerAd;
 
-    @OneToOne(mappedBy = "ads")
-    @JoinColumn(name = "masters_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_master_id")
     private Master masterAd;
 
-    @OneToOne(mappedBy = "ads")
-    @JoinColumn(name = "_user_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_user_id")
     private User userAd;
 
-    @OneToMany(mappedBy = "ads")
-    @JoinColumn(name = "services_id")
+    @OneToMany
+    @JoinColumn(name = "fk_service_id")
     private List<Employment> serviceId;
 
     private Date adReleaseDate;

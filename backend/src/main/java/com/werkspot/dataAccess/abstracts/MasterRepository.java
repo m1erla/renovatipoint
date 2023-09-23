@@ -10,12 +10,4 @@ import java.util.Optional;
 public interface MasterRepository extends JpaRepository<Master, Integer> {
      boolean existsMasterByEmail(String email);
 
-     Optional<Master> findByEmail(String email);
-
-     Optional<JobTitle> findByName(String name);
-
-     Optional<JobTitle> findAllByJobTitles(String jobTitleList);
-
-     boolean existsJobTitlesByName(String jobTitleName);
-
 }

@@ -13,8 +13,8 @@ import java.util.Optional;
 public class JobTitleBusinessRules {
     private JobTitleRepository jobTitleRepository;
 
-    public void checkIfJobtitleExists(String jobTitle){
-        if (this.jobTitleRepository.existsJobTitlesByName(jobTitle)){
+    public void checkIfJobTitleNameExists(String jobTitle){
+        if (this.jobTitleRepository.existsByJobTitleName(jobTitle)){
             throw  new BusinessException("The job title is already exist! Please try differ job title name");
         }
     }

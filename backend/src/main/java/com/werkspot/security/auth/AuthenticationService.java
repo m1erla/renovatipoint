@@ -29,11 +29,12 @@ public class AuthenticationService {
 
     public AuthenticationResponse register( RegisterRequest request){
          var user = User.builder()
-                 .firstname(request.getFirstname())
-                 .lastname(request.getLastname())
+                 .name(request.getName())
+                 .surname(request.getSurname())
                  .email(request.getEmail())
                  .phoneNumber(request.getPhoneNumber())
                  .password(passwordEncoder.encode(request.getPassword()))
+                 .jobTitleName(request.getJobTitleName())
                  .postCode(request.getPostCode())
                  .role(request.getRole())
                  .build();

@@ -1,5 +1,6 @@
 package com.werkspot.business.responses;
 
+import com.werkspot.entities.concretes.Ads;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,5 +11,10 @@ import lombok.NoArgsConstructor;
 public class GetAllByIdMastersResponse {
     private int id;
     private String name;
-    private String jobTitles;
+    private String surname;
+    private String phoneNumber;
+    private String postCode;
+    private String jobTitleName;
+
+
 }

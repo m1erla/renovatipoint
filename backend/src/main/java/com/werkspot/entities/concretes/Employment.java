@@ -23,10 +23,10 @@ public class Employment {
     private boolean isActive;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "fk_category_id")
     private Category categoryId;
 
     @ManyToOne
-    @JoinColumn(name = "ad_id")
+    @JoinColumn(name = "fk_ad_id")
     private Ads ads;
 }

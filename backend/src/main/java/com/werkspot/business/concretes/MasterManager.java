@@ -63,7 +63,7 @@ public class MasterManager implements MasterService {
 
     @Override
     public GetJobtitleByName getJobTitleByName(String jobTitleName) {
-        JobTitle jobTitle = this.jobTitleRepository.findByName(jobTitleName).orElseThrow();
+        JobTitle jobTitle = this.jobTitleRepository.findByJobTitleName(jobTitleName).orElseThrow();
 
         GetJobtitleByName response =
                 this.modelMapperService.forResponse().map(jobTitle, GetJobtitleByName.class);
