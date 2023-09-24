@@ -18,16 +18,15 @@ public class JobTitle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "job_title_name")
+    @Column(name = "job_title_name", nullable = false, unique = true)
     private String jobTitleName;
 
     @Column(name = "descriptions")
     private String descriptions;
 
 
-    @OneToMany
-    @JoinColumn(name = "fk_service_id")
-    private List<Employment> services;
+    @OneToMany(mappedBy = "jobTitle")
+    private List<Employment> serviceId;
 
     @ManyToOne
     @JoinColumn(name = "fk_master_id")

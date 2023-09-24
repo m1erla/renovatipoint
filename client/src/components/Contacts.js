@@ -6,10 +6,10 @@ import "../pages/pagesCss/propsals.css"
 const Contacts = () => {
   return (
     <div className='propsals-head'>
-        <h1>Contacts</h1>
+        <h1>Kişiler</h1>
         <div className="porpsals-links">
-        <Link to="/propsals/contacts/to-inform" className="porpsals-link-item" ><BsFillChatFill/> To inform</Link>
-        <Link to="/propsals/contacts/archive" className="porpsals-link-item" ><BsBoxSeam/> Archive</Link>
+        <Link to="/propsals/contacts/to-inform" className="porpsals-link-item" ><BsFillChatFill/> Bilgi vermek</Link>
+        <Link to="/propsals/contacts/archive" className="porpsals-link-item" ><BsBoxSeam/> Arşiv</Link>
       </div>
       <Outlet/>
     </div>

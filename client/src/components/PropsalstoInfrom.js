@@ -7,8 +7,8 @@ const PropsalstoInfrom = () => {
     <div>
       <PropsalCard
       icon={<VscFileSubmodule className='icon' />}
-      h2="You haven't sent any messages yet"
-      p="When you show interest in assignments, your messages will appear here"
+      h2="Henüz mesaj göndermediniz"
+      p="Ödevlere ilgi gösterdiğinizde mesajlarınız burada görünecek"
       />
       </div>
   )

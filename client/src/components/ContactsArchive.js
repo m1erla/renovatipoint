@@ -7,8 +7,8 @@ const ContactsArchive = () => {
     <div>
       <PropsalCard
         icon={<VscFileSubmodule className="icon" />}
-        h2="No messages have been archived yet"
-        p="Messages you want to archive will appear here."
+        h2="Henüz hiçbir mesaj arşivlenmedi"
+        p="Arşivlemek istediğiniz mesajlar burada görünecektir."
       />
     </div>
   );

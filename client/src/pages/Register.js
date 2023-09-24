@@ -49,11 +49,11 @@ const Register = () => {
           <div className="formSide">
             {" "}
             <form className="registerForm" onSubmit={handleFormSubmit}>
-              <h2>Are you looking for a job ?</h2>
+              <h2>Bir iş mi arıyorsunuz ?</h2>
               <p>
-                Er worden klussen gezocht in alle vakgebieden, door heel
-                Nederland. Vertel ons waar je wilt werken en we helpen je bij
-                het vinden van klussen die overeenkomen met wat je zoekt.
+                Her alanda iş aranıyor
+                Hollanda. Bize nerede çalışmak istediğinizi söyleyin, size yardımcı olalım
+                aradığınızla eşleşen işleri bulmak.
               </p>
               <div className="select">
                 <select
@@ -87,39 +87,42 @@ const Register = () => {
                 }
               />
               <button type="submit" className="registerBtn">
-                sign up for free
+              ücretsiz kaydol
               </button>
               <div>
                 <span>
-                  <Link onClick={() => window.scrollTo(0, 0)} to="/privacy/privacy-policy">Terms and conditions</Link> and{" "}
-                  <Link onClick={() => window.scrollTo(0, 0)} to="/">privacy policy.</Link>{" "}
+                  <Link onClick={() => window.scrollTo(0, 0)} to="/privacy/privacy-policy">Şartlar ve koşullar</Link> ve{" "}
+                  <Link onClick={() => window.scrollTo(0, 0)} to="/">Gizlilik Politikası.</Link>{" "}
                 </span>
               </div>
             </form>
           </div>
         </div>
         <div className="assignments ">
-          <h2 className="assignments-title">Find assignments in 3 steps</h2>
+          <h2 className="assignments-title">3 adımda ödevleri bulun</h2>
           <div className="cards">
             <AssignmentsCard
               icon="https://cdn.pixabay.com/photo/2017/11/25/16/36/traveling-2977176_1280.jpg"
-              text="Choose your tasks yourself"
-              subtext="Respond to assignments that interest you with no registration or subscription fees"
+              text="Görevlerinizi kendiniz seçin"
+              subtext="Hiçbir kayıt veya abonelik ücreti olmadan ilginizi çeken ödevlere yanıt verin "
             />
             <AssignmentsCard
               icon="https://cdn.pixabay.com/photo/2018/03/11/06/15/social-media-marketing-3216077_1280.jpg"
-              text="Show Your Interest"
-              subtext="Show interest in an assignment by sending a free message to consumers"
+              text="
+              İlginizi Gösterin"
+              subtext="
+              Tüketicilere ücretsiz bir mesaj göndererek bir ödeve ilgi gösterin"
             />
             <AssignmentsCard
               icon="https://cdn.pixabay.com/photo/2017/11/25/16/36/traveling-2977176_1280.jpg"
-              text="Consumer Contact Information"
-              subtext="You only pay when the consumer shares their contact information to contact you"
+              text="Tüketici İletişim Bilgileri"
+              subtext="
+              Yalnızca tüketici sizinle iletişim kurmak için iletişim bilgilerini paylaştığında ödeme yaparsınız"
             />
           </div>
         </div>
         <div className="tv-wrapper">
-          <h3>Working place: known from TV</h3>
+          <h3>Çalışma yeri: TV'den biliniyor</h3>
           <div className="tvs">
             <img
               alt="tv-kanal"
@@ -137,103 +140,103 @@ const Register = () => {
         </div>
         <>
         <div className="register-find-work-FirstText">
-          <h2 className="find-works-desc-title">How do you find new jobs?</h2>
+          <h2 className="find-works-desc-title">Yeni işleri nasıl buluyorsunuz?</h2>
           <p>
-            Whether you're just starting out or have been in the business for
-            several years: As a DIY company, it's always interesting to win new
-            customers. So where do you start finding new customers?
+            İster yeni başlıyor olun ister uzun süredir bu işte çalışıyor olun
+            birkaç yıl: Bir DIY şirketi olarak yeni şeyler kazanmak her zaman ilgi çekicidir
+            müşteriler. Peki yeni müşteriler bulmaya nereden başlayacaksınız?
           </p>
           <ol className="find-works-desc-lists">
             <li className="find-works-desc-list-item">
-              <b>Use your own network -</b> Never underestimate the power of
-              your own network, especially the power of your old customers. They
-              are your gateway to new customers. Think about it: Did you
-              dismantle the kitchen of one of your regular customers or fix the
-              squeaky door? When your customer's friends are looking for a good
-              repair company, your name is likely to be mentioned. All you have
-              to do for this is to present the mastery to your customers, and
-              you pass the rest by word of mouth.
+              <b>Kendi ağınızı kullanın -</b> Gücünü asla küçümseme
+              kendi ağınız, özellikle eski müşterilerinizin gücü. Onlar
+              yeni müşterilere açılan kapınızdır. Bir düşünün: Yaptınız mı?
+              Düzenli müşterilerinizden birinin mutfağını sökün veya tamir edin
+              gıcırdayan kapı mı? Müşterinizin arkadaşları iyi bir ürün aradığında
+              onarım şirketi, muhtemelen adınız geçecektir. Sahip olduğun her şey
+              Bunun için yapmanız gereken ustalığı müşterilerinize sunmaktır ve
+              geri kalanını ağızdan ağza aktarırsınız.
             </li>
             <li className="find-works-desc-list-item">
-              <b>Introduce yourself in the neighborhood -</b> You're seeing
-              fewer and fewer flyers these days, and some people say the power
-              of door-to-door advertising has grown a bit as a result. That's
-              why some mechanic companies prefer to put ads on buses. Another
-              possibility is to place an ad in a local or regional newspaper.
-              While these methods can help your business gain visibility, such
-              actions don't always lead to new business opportunities. Also,
-              finding customers this way often takes a lot of time (and money).
+              <b>Kendinizi mahallede tanıtın -</b> Ygörüyorsun
+              bu günlerde el ilanları giderek azalıyor ve bazı insanlar gücün
+              Sonuç olarak kapıdan kapıya reklamcılık oranı biraz arttı. bu
+              Neden bazı tamirci firmaları otobüslere reklam koymayı tercih ediyor? Bir diğer
+              Yerel veya bölgesel bir gazeteye ilan vermek mümkündür.
+              Bu yöntemler işletmenizin görünürlük kazanmasına yardımcı olsa da,
+              eylemler her zaman yeni iş fırsatlarına yol açmaz. Ayrıca,
+              Bu şekilde müşteri bulmak genellikle çok zaman alır (ve para).
             </li>
             <li className="find-works-desc-list-item">
-              <b>Share your work on social media -</b> Have you installed a
-              cabinet, installed a wall unit, or have another job you're proud
-              of? Then it is very nice to share these photos on social media.
-              This way, your network can see what you're doing, and if you're
-              lucky, you can win new business. The problem is that your photos
-              are quickly lost in the information flow, and advertising on
-              social media can cost a lot of money.
+              <b>Çalışmanızı sosyal medyada paylaşın -</b> Bir kurulum yaptınız mı?
+              dolabınız var, duvar ünitesi taktınız veya gurur duyduğunuz başka bir işiniz var
+              ile ilgili? O zaman bu fotoğrafları sosyal medyada paylaşmak çok güzel.
+              Bu şekilde ağınız ne yaptığınızı görebilir ve eğer
+              şanslısınız, yeni işler kazanabilirsiniz. Sorun şu ki fotoğraflarınız
+              bilgi akışında hızla kayboluyor ve reklamlar
+              sosyal medya çok paraya mal olabilir.
             </li>
           </ol>
         </div>
         <div className="register-find-work-SecondText">
           <h2 className="find-works-desc-title">
-            Are you looking for a job? Werkspot has the solution!
+            Bir iş mi arıyorsunuz? Werkspot'un çözümü var!
           </h2>
           <p>
-            Looking for new jobs? So of course it's nice to get in direct
-            contact with people who are looking for a good business company. You
-            can be sure to find the customers you are looking for at Werkspot.
-            You only respond to assignments that interest you, with no
-            registration or subscription fees.
+            Yeni işler mi arıyorsunuz? Tabii ki doğrudan katılmak güzel
+            iyi bir iş şirketi arayan insanlarla iletişim kurun. Sen
+            Aradığınız müşteriyi Werkspot'ta bulacağınızdan emin olabilirsiniz.
+            Yalnızca ilginizi çeken ödevlere yanıt verirsiniz.
+            kayıt veya abonelik ücretleri.
           </p>
           <ol className="find-works-desc-lists">
             <li className="find-works-desc-list-item">
-              Create your own profile page.
+            Kendi profil sayfanızı oluşturun.
             </li>
             <li className="find-works-desc-list-item">
-              Respond to assignments that interest you.
+             İlginizi çeken ödevlere yanıt verin.
             </li>
             <li className="find-works-desc-list-item">
-              Send free messages to consumers to show your interest in a
-              business.
+              İlginizi göstermek için tüketicilere ücretsiz mesajlar gönderin
+              işletme.
             </li>
             <li className="find-works-desc-list-item">
-              Pay only when a consumer shares their contact information to
-              contact you.
+              Yalnızca tüketici iletişim bilgilerini paylaştığında ödeme yapın
+              seninle iletişime geçme.
             </li>
           </ol>
         </div>
         <div className="register-find-work-ThirdText">
           <h2 className="find-works-desc-title">
-            Advantages of the profile page on Werkspot
+            Werkspot'taki profil sayfasının avantajları
           </h2>
           <ol className="find-works-desc-lists">
             <li className="find-works-desc-list-item">
-            Direct communication with customers looking for a mechanic.
+            Tamirci arayan müşterilerle doğrudan iletişim.
             </li>
             <li className="find-works-desc-list-item">
-            Consumers can use Werkspot for free. As a result, the number of jobs in a mechanic company is greatly increased.
+            Tüketiciler Werkspot'u ücretsiz olarak kullanabilirler. Sonuç olarak, bir tamirci şirketindeki iş sayısı büyük ölçüde artar.
             </li>
             <li className="find-works-desc-list-item">
-            Werkspot has a good reputation: consumers trust the professionals on our platform, thanks to reviews and clear communication.
+            Werkspot'un iyi bir itibarı var: Tüketiciler, incelemeler ve net iletişim sayesinde platformumuzdaki profesyonellere güveniyor.
             </li>
             <li className="find-works-desc-list-item">
-              Pay only when a consumer shares their contact information to
-              contact you.
+              Yalnızca tüketici iletişim bilgilerini paylaştığında ödeme yapın
+              seninle iletişime geçme.
             </li>
           </ol>
           <p>
-            In short, you can easily find new jobs on Werkspot. If the consumer
-            shares their data with you, all we ask in return is an amount. We
-            also ask our professionals to be transparent, treat customers right,
-            and respond seriously to consumer demands on our platform. This is
-            how we work together to find more jobs.
+            Kısacası Werkspot'ta kolayca yeni işler bulabilirsiniz. Eğer tüketici
+            Verilerini sizinle paylaşıyor, karşılığında tek istediğimiz bir miktar. Biz
+            ayrıca profesyonellerimizden şeffaf olmalarını, müşterilere doğru davranmalarını,
+            ve platformumuzda tüketici taleplerine ciddi bir şekilde yanıt veriyoruz. Bu
+            daha fazla iş bulmak için nasıl birlikte çalışırız.
           </p>
         </div>
 
         </>
         <div className="registerOtherProf">
-        <h2 className="title">Other Professions</h2>
+        <h2 className="title">Diğer Meslekler</h2>
         <div className="other-cards">
         <OtherProfCard 
         text="

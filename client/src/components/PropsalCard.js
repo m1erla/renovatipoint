@@ -7,7 +7,7 @@ const PropsalCard = ({icon,h2,p}) => {
         <span>{icon}</span>
         <h2>{h2}</h2>
         <p>{p}</p>
-        <Link className="propsal-button">View new assignments</Link>
+        <Link className="propsal-button">Yeni ödevleri görüntüle</Link>
     </div>
   );
 };

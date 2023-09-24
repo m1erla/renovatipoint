@@ -1,9 +1,11 @@
 package com.werkspot.entities.concretes;
 
-import com.werkspot.security.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -17,33 +19,33 @@ import java.util.List;
 @Data
 public class Ads {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "ad_name")
     private String adName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_category_id")
     private Category categoryId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_consumer_id")
-    private Consumer consumerAd;
+    private Consumer consumerId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_master_id")
-    private Master masterAd;
+    private Master masterId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_user_id")
-    private User userAd;
+    private User userId;
 
-    @OneToMany
-    @JoinColumn(name = "fk_service_id")
+    @OneToMany(mappedBy = "ads")
     private List<Employment> serviceId;
 
-    private Date adReleaseDate;
+
+    private String adReleaseDate;
 
     private String descriptions;
 

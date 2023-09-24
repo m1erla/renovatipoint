@@ -23,11 +23,11 @@ public class Category {
 
     private boolean isActive;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_ad_id")
     private Ads ads;
 
     @OneToMany
     @JoinColumn(name = "fk_service_id")
-    private List<Employment> services;
+    private List<Employment> serviceName;
 }

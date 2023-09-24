@@ -6,28 +6,28 @@ const HomeComments = () => {
   return (
     <div className='homecomments'>
         <div className='container'>
-            <h3 className='homecomments-title'>Thousands of comments available</h3>
+            <h3 className='homecomments-title'>Binlerce yorum mevcut</h3>
             <div className='comment-cards'>
             <HomeCommentsCard 
             img={photo}
             text="8 m²; walkway or pavement; floor tiles"
             customerText="Ali"
-            comment="“So much good work has been done in a shorter time. Hardworking friendly person. ”"
+            comment="“Kısa sürede çok güzel işler yapıldı. Çalışkan dost canlısı insan. ”"
             />
             <HomeCommentsCard 
             img={photo}
             text="8 m²; walkway or pavement; floor tiles"
             customerText="Ali"
-            comment="“So much good work has been done in a shorter time. Hardworking friendly person. ”"
+            comment="“Kısa sürede çok güzel işler yapıldı. Çalışkan dost canlısı insan. ”"
             />
             <HomeCommentsCard 
             img={photo}
             text="8 m²; walkway or pavement; floor tiles"
             customerText="Ali"
-            comment="“So much good work has been done in a shorter time. Hardworking friendly person. ”"
+            comment="“Kısa sürede çok güzel işler yapıldı. Çalışkan dost canlısı insan. ”"
             />
             </div>
-            <p className='homecomments-paragraph'><TbMessageCircleStar className='iconComment' /> Reviews on Werkspot are written by consumers like you. Read others' experiences for a better impression.</p>
+            <p className='homecomments-paragraph'><TbMessageCircleStar className='iconComment' />Werkspot'taki yorumlar sizin gibi tüketiciler tarafından yazılmaktadır. Daha iyi bir izlenim için başkalarının deneyimlerini okuyun.</p>
         </div>
         </div>
   )

@@ -1,11 +1,11 @@
 export const registerOptionData = [
     {
         id:1 ,
-        text: "Enginner",
-        value: "enginner"
+        text: "Mühendis",
+        value: "engineer"
     },{
         id:2 ,
-        text: "coocker",
-        value: "coocker"
+        text: "Ocak",
+        value: "cooker"
     }
 ]

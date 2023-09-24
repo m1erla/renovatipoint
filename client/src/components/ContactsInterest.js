@@ -6,8 +6,8 @@ const ContactsInterest = () => {
     <div>
        <PropsalCard
         icon={<VscFileSubmodule className="icon" />}
-        h2="No contact details have been shared yet"
-        p="When consumers want to get in touch with you, their contact details will appear here"
+        h2="Henüz iletişim bilgisi paylaşılmadı"
+        p="Tüketiciler sizinle iletişime geçmek istediklerinde iletişim bilgileri burada görünecek"
       />
     </div>
   )

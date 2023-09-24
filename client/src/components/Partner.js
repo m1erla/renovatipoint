@@ -7,28 +7,28 @@ const Partner = () => {
   return (
     <div className='container'>
         <div className='partner-hero'>
-        <h2>Be Our Partner</h2>
-        <p className='updateTime'>Updated on 17-07-2023</p>
-        <p>Interested in new opportunities to grow your business with the help of a trusted partner?</p>
-        <p>We look forward to connecting with like-minded organizations that can add value to our growing network of talented professionals.</p>
-        <p>Whatever the industry, we are always open to discussing a partnership that benefits both parties.</p>
+        <h2>Ortağımız Olun</h2>
+        <p className='updateTime'>17-07-2023 tarihinde güncellendi</p>
+        <p>Güvenilir bir ortağın yardımıyla işinizi büyütmek için yeni fırsatlarla ilgileniyor musunuz?</p>
+        <p>Yetenekli profesyonellerden oluşan büyüyen ağımıza değer katabilecek benzer düşüncelere sahip kuruluşlarla bağlantı kurmayı sabırsızlıkla bekliyoruz.</p>
+        <p>Sektör ne olursa olsun, her iki tarafın da yararına olacak bir ortaklığı tartışmaya her zaman açığız.</p>
         </div>
         <div className='partner-body'>
         <div>
-        <Link className='lineLink' to="https://wtay96d6qws.typeform.com/to/MA07llLs?typeform-source=www.google.com">Contact us</Link>
+        <Link className='lineLink' to="https://wtay96d6qws.typeform.com/to/MA07llLs?typeform-source=www.google.com">Bize Ulaşın</Link>
         </div>
         <img src={partnerImage} alt='prtnImg'/>
-        <h3>Retail partnership</h3>
-        <p>Looking for ways to improve your customers' shopping experience?</p>
-        <p>Or do you want to grow your store?</p>
-        <p>As our partner, you can entrust the installation or assembly of your products to our professional network.</p>
+        <h3>Perakende ortaklığı</h3>
+        <p>Müşterilerinizin alışveriş deneyimini iyileştirmenin yollarını mı arıyorsunuz?</p>
+        <p>Yoksa mağazanızı büyütmek mi istiyorsunuz?</p>
+        <p>Ortağımız olarak ürünlerinizin kurulumunu veya montajını profesyonel ağımıza emanet edebilirsiniz.</p>
         <ol className='partner-list'>
-            <li>Enhance the customer experience</li>
-            <li>Reach new customers</li>
-            <li>Increase your turnover</li>
+            <li>Müşteri deneyimini geliştirin</li>
+            <li>Yeni müşterilere ulaşın</li>
+            <li>Cironuzu artırın</li>
         </ol>
-        <Link className='lineLink' to="https://wtay96d6qws.typeform.com/to/MA07llLs?typeform-source=www.google.com">To be a partner</Link>
-        <p>We would like to contact you to find out how we can work together!</p>
+        <Link className='lineLink' to="https://wtay96d6qws.typeform.com/to/MA07llLs?typeform-source=www.google.com">Ortak olmak</Link>
+        <p>Birlikte nasıl çalışabileceğimizi öğrenmek için sizinle iletişime geçmek istiyoruz!</p>
         <img className="partner-image" src={partnerImage2} alt='partnerImg' />
         </div>
      

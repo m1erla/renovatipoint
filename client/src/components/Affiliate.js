@@ -86,12 +86,13 @@ const Affiliate = () => {
   return (
     <div className='container'>
         <div className='affiliate-hero'>
-        <h2 className='affiliate-title'>Become an affiliate</h2>
-        <p className='updateTime'>Updated on 04-09-2023</p>
+        <h2 className='affiliate-title'>Satış ortağı olun</h2>
+        <p className='updateTime'>
+04-09-2023 tarihinde güncellendi</p>
         <div className='affiliate-body'>
-        <h3>Work with Europe's leading marketplace connecting home owners and artisans</h3>
-        <p>Werkspot.nl is the trusted way for homeowners to hire the professionals they need and get the professionals the job they want. With 150,000 job postings posted by over 40,000 active shopkeepers and homeowners each month, Werkspot has established itself as a leading player in the market for all types of businesses, small and large, in and around the home.</p>
-        <p>The platform is part of the Instapro Group, Europe's leading marketplace for all business in and around the home. Besides Werkspot.nl in the Netherlands, the Instapro Group also operates in other European countries, including France, Germany, Austria, Italy and the Netherlands.</p>
+        <h3> Ev sahiplerini ve zanaatkarları buluşturan Avrupa'nın önde gelen pazarıyla çalışın</h3>
+        <p>Werkspot.nl, ev sahiplerinin ihtiyaç duydukları profesyonelleri işe almaları ve profesyonellere istedikleri işi almaları için güvenilir yoldur. Her ay 40.000'den fazla aktif esnaf ve ev sahibi tarafından yayınlanan 150.000 iş ilanıyla Werkspot, ev içinde ve çevresinde küçük ve büyük her türlü işletme için pazarda lider bir oyuncu olarak kendini kanıtlamıştır.</p>
+        <p>Platform, ev içi ve çevresindeki tüm işletmeler için Avrupa'nın lider pazarı olan Instapro Group'un bir parçasıdır. Instapro Grubu, Hollanda'daki Werkspot.nl'nin yanı sıra Fransa, Almanya, Avusturya, İtalya ve Hollanda dahil olmak üzere diğer Avrupa ülkelerinde de faaliyet göstermektedir.</p>
         </div>
         </div>
         <div className='affiliate-lists'>
@@ -110,12 +111,12 @@ const Affiliate = () => {
         </div>
         <div className='affiliate-bottom'>
             <>
-            <h3>How do we work?</h3>
-            <p>Our online platform connects homeowners with verified and approved local professionals across the Netherlands for all work in and around the home, whether it's renovation, maintenance work or repairs. Homeowners can post their work for free and get responses from available professionals; They can view their profile and read reviews from previous customers before deciding who to connect with.</p>
+            <h3>Nasıl çalışıyoruz?</h3>
+            <p>Çevrimiçi platformumuz, yenileme, bakım çalışmaları veya onarımlar olsun, ev içindeki ve çevresindeki tüm işler için ev sahiplerini Hollanda genelinde doğrulanmış ve onaylanmış yerel profesyonellerle buluşturur. Ev sahipleri çalışmalarını ücretsiz olarak yayınlayabilir ve mevcut profesyonellerden yanıt alabilir; Kiminle bağlantı kuracaklarına karar vermeden önce profillerini görüntüleyebilir ve önceki müşterilerin yorumlarını okuyabilirler.</p>
             </>
             <>
-            <h3>We are waiting for you! <Link className='lineLink' to="https://partner.instapro.com/anmelden.cgi?new=1&cpid=5"> Register now</Link></h3>
-            <p>If you have any questions or concerns, please contact us at affiliate@instapro.com.</p>
+            <h3>Seni bekliyoruz! <Link className='lineLink' to="https://partner.instapro.com/anmelden.cgi?new=1&cpid=5">Şimdi üye Ol</Link></h3>
+            <p>Herhangi bir sorunuz veya endişeniz varsa lütfen affiliate@instapro.com adresinden bizimle iletişime geçin.</p>
             </>
         </div>
     </div>

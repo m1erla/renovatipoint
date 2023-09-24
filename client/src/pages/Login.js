@@ -49,9 +49,9 @@ function Login() {
   return (
     <div className='loginPage'>
       <form method='get' className="loginForm">
-        <h1>Login</h1>
+        <h1>Giriş yapmak</h1>
         <div>
-          <label>Email:</label>
+          <label>E-posta:</label>
           <input
             type="email"
             className='textInput'
@@ -61,7 +61,7 @@ function Login() {
           {emailError && <div className="error">{emailError}</div>}
         </div>
         <div>
-          <label>Password:</label>
+          <label>Şifre:</label>
           <input
             type="password"
             className='textInput'
@@ -70,15 +70,15 @@ function Login() {
           />
           {passwordError && <div className="error">{passwordError}</div>}
         </div>
-        <Link onClick={() => window.scrollTo(0, 0)} to="forgot-password" className='forgetPassword'>Forgot password ?</Link>
-        <button className='loginBtn' onClick={handleLogin}>Login</button>
+        <Link onClick={() => window.scrollTo(0, 0)} to="forgot-password" className='forgetPassword'>Parolanızı mı unuttunuz ?</Link>
+        <button className='loginBtn' onClick={handleLogin}>Giriş yapmak</button>
       </form>
       <div className='fastLogin'>
-        <p>Or go fast</p>
-        <Link className='fastLoginSocialBtn'><MdOutlineLocalPostOffice /> Login without password</Link>
+        <p>Veya hızlı git</p>
+        <Link className='fastLoginSocialBtn'><MdOutlineLocalPostOffice /> Şifre olmadan giriş yap</Link>
         <Link className='fastLoginSocialBtn'><FcGoogle /> Google/Gmail</Link>
         <Link className='fastLoginSocialBtn'><BiLogoFacebookCircle /> Facebook</Link>
-        <p className='fastLogintext'>Your personal information will not be shared with us.</p>
+        <p className='fastLogintext'>Kişisel bilgileriniz bizimle paylaşılmayacaktır.</p>
       </div>
     </div>
   );

@@ -22,15 +22,15 @@ export const Loginlinks = [
   {
     id: 1,
     url: '/',
-    text: 'New Missions',
+    text: 'Yeni Görevler',
   },{
     id: 2,
     url: '/propsals/interest/to-inform',
-    text: 'Interest',
+    text: 'İlgi',
   },{
     id: 3,
     url: '/propsals/contacts/to-inform',
-    text: 'Contacts',
+    text: 'Kişiler',
   }
 ];
 
@@ -38,18 +38,18 @@ export const accordionMenuLinks = [
   {
     id:1,
     ulr: "/complete-my-registration",
-    text: "Complete My Registration"
+    text: "Kaydımı Tamamla"
   },{
     id:2,
     ulr: "/recorded-commands",
-    text: "Recorded Commands"
+    text: "Kaydedilen Komutlar"
   },{
     id:3,
     ulr: "/my-profile",
-    text: "My Profile"
+    text: "Benim profilim"
   },{
     id:4,
     ulr: "/my-account",
-    text: "My Account"
+    text: "Hesabım"
   }
 ]

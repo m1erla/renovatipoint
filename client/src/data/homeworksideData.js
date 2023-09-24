@@ -5,37 +5,37 @@ export const homeworksideData = [
         id:1 ,
         img: photo,
         iconn : <GiPizzaCutter /> ,
-        text:"Gardening and outdoor",
+        text:"Bahçecilik ve dış mekan",
         to : "/",
-        paragraph:"More on jobs like paving asphalt, setting up a pergola or garden house, mowing lawns, trimming trees, shrubs or hedges...",
-        link:"All information about gardening and the outdoors",
+        paragraph:"Asfalt döşemek, pergola veya bahçe evi kurmak, çimleri biçmek, ağaçları, çalıları veya çitleri budamak gibi işler hakkında daha fazla bilgi...",
+        link:"Bahçecilik ve açık hava ile ilgili tüm bilgiler",
         subimg: photo,
-        subtext:"Find the right professionals: in the Netherlands 9060 gardeners",
-        sublink:"View gardeners"
+        subtext:"Doğru profesyonelleri bulun: Hollanda'da 9060 bahçıvan",
+        sublink:"Bahçıvanları görüntüle"
     },
     {
         id:2 ,
         img: photo,
         iconn : <GiPizzaCutter /> ,
-        text:"Gardening and outdoor",
+        text:"Bahçecilik ve dış mekan",
         to : "/",
-        paragraph:"More on jobs like paving asphalt, setting up a pergola or garden house, mowing lawns, trimming trees, shrubs or hedges...",
-        link:"All information about gardening and the outdoors",
+        paragraph:"Asfalt döşemek, pergola veya bahçe evi kurmak, çimleri biçmek, ağaçları, çalıları veya çitleri budamak gibi işler hakkında daha fazla bilgi...",
+        link:"Bahçecilik ve açık hava ile ilgili tüm bilgiler",
         subimg: photo,
-        subtext:"Find the right professionals: in the Netherlands 9060 gardeners",
-        sublink:"View gardeners"
+        subtext:"Doğru profesyonelleri bulun: Hollanda'da 9060 bahçıvan",
+        sublink:"Bahçıvanları görüntüle"
     },
     {
         id:3 ,
         img: photo,
         iconn : <GiPizzaCutter /> ,
-        text:"Gardening and outdoor",
+        text:"Bahçecilik ve dış mekan",
         to : "/",
-        paragraph:"More on jobs like paving asphalt, setting up a pergola or garden house, mowing lawns, trimming trees, shrubs or hedges...",
-        link:"All information about gardening and the outdoors",
+        paragraph:"Asfalt döşemek, pergola veya bahçe evi kurmak, çimleri biçmek, ağaçları, çalıları veya çitleri budamak gibi işler hakkında daha fazla bilgi...",
+        link:"Bahçecilik ve açık hava ile ilgili tüm bilgiler",
         subimg: photo,
-        subtext:"Find the right professionals: in the Netherlands 9060 gardeners",
-        sublink:"View gardeners"
+        subtext:"Doğru profesyonelleri bulun: Hollanda'da 9060 bahçıvan",
+        sublink:"Bahçıvanları görüntüle"
     }
 ]
 
@@ -44,36 +44,36 @@ export const homeworksideDataTopcategories = [
         id:1 ,
         img: photo,
         iconn : <GiPizzaCutter /> ,
-        text:"Gardening and outdoor",
+        text:"Bahçecilik ve dış mekan",
         to : "/",
-        paragraph:"More on jobs like paving asphalt, setting up a pergola or garden house, mowing lawns, trimming trees, shrubs or hedges...",
-        link:"All information about gardening and the outdoors",
+        paragraph:"Asfalt döşemek, pergola veya bahçe evi kurmak, çimleri biçmek, ağaçları, çalıları veya çitleri budamak gibi işler hakkında daha fazla bilgi...",
+        link:"Bahçecilik ve açık hava ile ilgili tüm bilgiler",
         subimg: photo,
-        subtext:"Find the right professionals: in the Netherlands 9060 gardeners",
-        sublink:"View gardeners"
+        subtext:"Doğru profesyonelleri bulun: Hollanda'da 9060 bahçıvan",
+        sublink:"Bahçıvanları görüntüle"
     },
     {
         id:2 ,
         img: photo,
         iconn : <GiPizzaCutter /> ,
-        text:"Gardening and outdoor",
+        text:"Bahçecilik ve dış mekan",
         to : "/",
-        paragraph:"More on jobs like paving asphalt, setting up a pergola or garden house, mowing lawns, trimming trees, shrubs or hedges...",
-        link:"All information about gardening and the outdoors",
+        paragraph:"Asfalt döşemek, pergola veya bahçe evi kurmak, çimleri biçmek, ağaçları, çalıları veya çitleri budamak gibi işler hakkında daha fazla bilgi...",
+        link:"Bahçecilik ve açık hava ile ilgili tüm bilgiler",
         subimg: photo,
-        subtext:"Find the right professionals: in the Netherlands 9060 gardeners",
-        sublink:"View gardeners"
+        subtext:"Doğru profesyonelleri bulun: Hollanda'da 9060 bahçıvan",
+        sublink:"Bahçıvanları görüntüle"
     },
     {
         id:3 ,
         img: photo,
         iconn : <GiPizzaCutter /> ,
-        text:"Gardening and outdoor",
+        text:"Bahçecilik ve dış mekan",
         to : "/",
-        paragraph:"More on jobs like paving asphalt, setting up a pergola or garden house, mowing lawns, trimming trees, shrubs or hedges...",
-        link:"All information about gardening and the outdoors",
+        paragraph:"Asfalt döşemek, pergola veya bahçe evi kurmak, çimleri biçmek, ağaçları, çalıları veya çitleri budamak gibi işler hakkında daha fazla bilgi...",
+        link:"Bahçecilik ve açık hava ile ilgili tüm bilgiler",
         subimg: photo,
-        subtext:"Find the right professionals: in the Netherlands 9060 gardeners",
-        sublink:"View gardeners"
+        subtext:"Doğru profesyonelleri bulun: Hollanda'da 9060 bahçıvan",
+        sublink:"Bahçıvanları görüntüle"
     }
 ]

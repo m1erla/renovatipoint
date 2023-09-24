@@ -6,7 +6,7 @@ const HomeWorkSide = () => {
   return (
     <div className='container'>
         <div className='homeWorkAll-cards-wrapper'>
-        <h2>Get ready for summer</h2>
+        <h2>Yaza hazırlanın</h2>
         <div className='homeWorkSide-cards-wrapper'>
               {homeworksideData.map((card)=>(
                 <HomeWorkCard
@@ -23,7 +23,7 @@ const HomeWorkSide = () => {
                 />
               ))}
         </div>
-        <h2>Top categories</h2>
+        <h2>En iyi kategoriler</h2>
         <div className='homeWorkSide-cards-wrapper'>
               {homeworksideDataTopcategories.map((card)=>(
                 <HomeWorkCard

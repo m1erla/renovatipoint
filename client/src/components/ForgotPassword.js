@@ -31,11 +31,11 @@ const ForgotPassword = () => {
 
   return (
     <div className='container a'>
-      <h2>Nieuw wachtwoord aanvragen</h2>
-      <p>Voer je e-mailadres in. We sturen je een link waarmee je een nieuw wachtwoord kan maken.</p>
+      <h2>yeni şifre isteği</h2>
+      <p>E-posta adresinizi giriniz. Size yeni şifre oluşturabileceğiniz bir bağlantı göndereceğiz.</p>
       <form className='forgotForm' onSubmit={handleSubmit}>
         <div>
-          <label>E-mail</label>
+          <label>E-posta</label>
           <input
             type='email'
             required
@@ -44,7 +44,7 @@ const ForgotPassword = () => {
             onChange={handleEmailChange}
           />
         </div>
-        <button type="submit" className='forgotBtn'>Send</button>
+        <button type="submit" className='forgotBtn'>Gönder</button>
       </form>
     </div>
   );

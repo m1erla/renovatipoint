@@ -1,8 +1,7 @@
 package com.werkspot.security.config;
 
-import com.werkspot.security.user.UserRepository;
+import com.werkspot.dataAccess.abstracts.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

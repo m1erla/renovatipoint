@@ -8,18 +8,18 @@ const HomeStats = () => {
             <div className='stats'>
             <div className='prof'>
                 <div className='count'>10.368</div>
-                <div className='count-write'>masters</div>
+                <div className='count-write'>ustalar</div>
             </div>
             <div className='prof'>
                 <div className='count'>106.368</div>
-                <div className='count-write'>The work done</div>
+                <div className='count-write'>İş bitti</div>
             </div>
             <div className='prof'>
                 <div className='count'>30.368</div>
-                <div className='count-write'>comments</div>
+                <div className='count-write'>yorumlar</div>
             </div>
             </div>
-        <Link onClick={() => window.scrollTo(0, 0)} to="/apply-for-a-job" className='statsBtn'>Post your job posting</Link>
+        <Link onClick={() => window.scrollTo(0, 0)} to="/apply-for-a-job" className='statsBtn'>İş ilanınızı yayınlayın</Link>
         </div>
     </div>
   )

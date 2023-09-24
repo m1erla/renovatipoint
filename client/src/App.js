@@ -27,7 +27,10 @@ import ForgotPassword from './components/ForgotPassword';
 import MyProfile from './components/MyProfile';
 import Signin from './pages/Signin';
 
+
 function App() {
+  
+
   const Layout = () => {
     return (
       <div className='app'>

@@ -6,9 +6,9 @@ const Hero = () => {
     <div className='hero'>
       <div className='container'>
           <div className='hero-wrapper'>
-            <h2 className='hero-title'>Find a professional for all your work in and around the home</h2>
+            <h2 className='hero-title'>Evdeki ve çevresindeki tüm işleriniz için bir profesyonel bulun</h2>
             <div className='search-hero'>
-              <h3>What is your business?</h3>
+              <h3>Ne iş yapıyorsun?</h3>
             <Search />
             </div>
           </div>

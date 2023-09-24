@@ -1,15 +1,15 @@
 const company = [
-    {id:1 ,title: "About", to: "/about"},
-    {id:2 ,title: "Are you a craftsman?", to: ""},
-    {id:3 ,title: "Press and media", to: ""},
-    {id:4 ,title: "Career", to: ""}
+    {id:1 ,title: "Hakkında", to: "/about"},
+    {id:2 ,title: "Zanaatkar mısın?", to: ""},
+    {id:3 ,title: "Basın ve medya", to: ""},
+    {id:4 ,title: "Kariyer", to: ""}
 ]
 const help = [
-    {id:1 ,title: "Online Help Desk", to: "/"},
+    {id:1 ,title: "Çevrimiçi Yardım Masası", to: "/"},
 ]
 const resource = [
-    {id:1 ,title: "Become an affiliate", to: "/become-an-affiliate"},
-    {id:2 ,title: "Be our partner", to: "/partner"},
-    {id:3 ,title: "Quality requirements", to: "/quality-requirements"}
+    {id:1 ,title: "Satış ortağı olun", to: "/become-an-affiliate"},
+    {id:2 ,title: "Ortağımız olun", to: "/partner"},
+    {id:3 ,title: "Kalite gereksinimleri", to: "/quality-requirements"}
 ]
 export {company,help,resource}

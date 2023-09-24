@@ -6,10 +6,10 @@ const Interest = () => {
   return (
     <div>
       <div className="propsals-head">
-        <h1>Interest</h1>
+        <h1>İlgi</h1>
       <div className="porpsals-links">
-        <Link to="/propsals/interest/to-inform" className="porpsals-link-item"><BsFillChatFill/> To inform</Link>
-        <Link to="/propsals/interest/archive" className="porpsals-link-item"><BsBoxSeam/> Archive</Link>
+        <Link to="/propsals/interest/to-inform" className="porpsals-link-item"><BsFillChatFill/> Bilgi vermek</Link>
+        <Link to="/propsals/interest/archive" className="porpsals-link-item"><BsBoxSeam/> Arşiv</Link>
       </div>
       </div>
       

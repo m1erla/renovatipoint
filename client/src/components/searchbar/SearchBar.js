@@ -29,11 +29,11 @@ export const SearchBar = ({ setResults }) => {
     <div className="input-wrapper">
       <input
         id="inputHero"
-        placeholder="Type to search..."
+        placeholder="Aramak için yazın..."
         value={input}
         onChange={(e) => handleChange(e.target.value)}
       />
-      <button className="inputHeroBtn">Find a professional</button>
+      <button className="inputHeroBtn">Bir profesyonel bulun</button>
     </div>
   );
 };

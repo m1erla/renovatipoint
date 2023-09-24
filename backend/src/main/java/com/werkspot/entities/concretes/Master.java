@@ -35,7 +35,7 @@ public class Master implements UserDetails {
     @Column(name = "job_title")
     private String jobTitleName;
 
-    private String services;
+    private String serviceName;
 
     @Column(name = "email")
     private String email;
@@ -52,6 +52,14 @@ public class Master implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "fk_consumer_id")
     private Consumer consumer;
+
+    @OneToOne
+    @JoinColumn(name = "fk_user_id")
+    private User user;
+
+    @OneToOne
+    @JoinColumn(name = "fk_ad_id")
+    private Ads ads;
 
     @Enumerated(EnumType.STRING)
     private Role role;

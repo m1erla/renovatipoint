@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 public class Employment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String serviceName;
@@ -29,4 +29,8 @@ public class Employment {
     @ManyToOne
     @JoinColumn(name = "fk_ad_id")
     private Ads ads;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_job_title_id")
+    private JobTitle jobTitle;
 }

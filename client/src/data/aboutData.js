@@ -1,11 +1,11 @@
 export const bodydata = [
     {
         id:1,
-        hText:"About Werkspot and Instapro",
-        pText:"120 international professionals from Amsterdam are working on the success of our Werkspot and Instapro brands. Our aim is to have as much work done professionally as possible. Whether it's a renovation, maintenance job or repair. We do this by simply connecting professionals and consumers. Consumer reviews of the work done give homeowners a good idea of ​​the quality of the craftsman."
+        hText:"Werkspot ve Instapro Hakkında",
+        pText:"Amsterdam'dan 120 uluslararası profesyonel Werkspot ve Instapro markalarımızın başarısı üzerinde çalışıyor. Amacımız mümkün olduğunca profesyonelce iş yapmaktır. İster yenileme, ister bakım işi, ister onarım olsun. Bunu yalnızca profesyonelleri ve tüketicileri birbirine bağlayarak yapıyoruz. Yapılan işin tüketici incelemeleri, ev sahiplerine ustanın kalitesi hakkında iyi bir fikir verir."
     },{
         id:2,
-        hText:"Our culture",
-        pText:"For us, it's not just about talent, it's about personality. From the very beginning, we attached great importance to company culture. Our seven values ​​guide how we interact with each other and make decisions. Would you like to work at Werkspot and learn more about our culture? Check out our careers site."
+        hText:"Bizim kültürümüz",
+        pText:"Bizim için mesele sadece yetenek değil, kişiliktir. En başından beri şirket kültürüne çok önem verdik. Yedi değerimiz birbirimizle nasıl etkileşim kuracağımıza ve kararlar vereceğimize rehberlik eder. Werkspot'ta çalışmak ve kültürümüz hakkında daha fazla bilgi edinmek ister misiniz? Kariyer sitemize göz atın."
     },
 ]

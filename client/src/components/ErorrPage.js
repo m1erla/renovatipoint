@@ -6,7 +6,7 @@ const ErorrPage = () => {
     <div className="container">
         <div className="error-hero">
         <TbError404 className="error-icon"/>
-        <h2>Sorry, something went wrong. Try again.</h2>
+        <h2>Üzgünüz, bir şeyler ters gitti. Tekrar deneyin.</h2>
         </div>
     
     </div>

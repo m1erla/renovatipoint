@@ -1,150 +1,150 @@
 export const privacyStateHero = [
   {
     id: 1,
-    title: "Privacy Statement",
+    title: "Gizlilik Bildirimi",
     subText:
-      'Werkspot BV ("Werkspot", "we", "us") respects your privacy and takes the protection of your privacy seriously; therefore we operate this website and our services in accordance with applicable privacy legislation, in particular EU General Data. Protection Regulation (“GDPR”). This Privacy Statement aims to give you a clear picture of how we use your personal data, the rights you have and the possibilities to exercise control over your data, and the protection of your privacy. In this Privacy Notice you will find the following information, among other information: ',
+      'Werkspot BV ("Werkspot", "biz", "bize") gizliliğinize saygı duyar ve gizliliğinizin korunmasını ciddiye alır; bu nedenle bu web sitesini ve hizmetlerimizi yürürlükteki gizlilik mevzuatına, özellikle de AB Genel Verilerine uygun olarak işletiyoruz. Koruma Yönetmeliği (“GDPR”). Bu Gizlilik Bildirimi, kişisel verilerinizi nasıl kullandığımıza, sahip olduğunuz haklara ve verileriniz üzerinde kontrol uygulama olanaklarına ve gizliliğinizin korunmasına ilişkin size net bir resim sunmayı amaçlamaktadır. Bu Gizlilik Bildiriminde diğer bilgilerin yanı sıra aşağıdaki bilgileri bulacaksınız: ',
     linkTexts: [
       {
         id: 1,
         href: "",
-        linkText: "What personal data Werkspot collects and uses; ",
+        linkText: "Werkspot'un topladığı ve kullandığı kişisel veriler; ",
       },
       {
         id: 2,
         href: "",
-        linkText: "How Werkspot uses personal data; ",
+        linkText: "Werkspot kişisel verileri nasıl kullanır; ",
       },
       {
         id: 3,
         href: "",
-        linkText: "With whom Werkspot shares personal data; ",
+        linkText: "Werkspot'un kişisel verileri kimlerle paylaştığı; ",
       },
       {
         id: 4,
         href: "",
-        linkText: "How Werkspot transfers personal data internationally; ",
+        linkText: "Werkspot kişisel verileri uluslararası alanda nasıl aktarır; ",
       },
       {
         id: 5,
         href: "",
-        linkText: "How Werkspot protects and stores personal data; ",
+        linkText: "Werkspot kişisel verileri nasıl korur ve saklar; ",
       },
       {
         id: 6,
         href: "",
-        linkText: "How to exercise your rights; ",
+        linkText: "Haklarınızı nasıl kullanabilirsiniz; ",
       },
       {
         id: 7,
         href: "",
-        linkText: "Links to other websites; ",
+        linkText: "Diğer web sitelerine bağlantılar; ",
       },
       {
         id: 8,
         href: "",
-        linkText: "How to reach Werkspot; ",
+        linkText: "Werkspot'a nasıl ulaşılır; ",
       },
     ],
     subText2:
-      "We recommend that you read this Privacy Statement carefully and refer to it regularly when using our website and services.",
+      "Bu Gizlilik Bildirimini dikkatle okumanızı ve web sitemizi ve hizmetlerimizi kullanırken düzenli olarak ona başvurmanızı öneririz.",
   },
 ];
 
 export const personaldata = [
   {
     id: 1,
-    hText: "What personal data Werkspot collects and uses",
+    hText: "Werkspot'un topladığı ve kullandığı kişisel veriler",
     sText:
-      "Personal data is any data that can identify you directly or in combination with other data. We collect personal data:",
+      "Kişisel veriler, sizi doğrudan veya diğer verilerle birlikte tanımlayabilecek her türlü veridir. Kişisel verileri topluyoruz:",
     sTexts: [
       {
         id: 1,
-        text: "information you provide to us when using our website and services;",
+        text: "web sitemizi ve hizmetlerimizi kullanırken bize sağladığınız bilgiler;",
       },
       {
         id: 2,
-        text: "personal data we collect automatically;",
+        text: "otomatik olarak topladığımız kişisel veriler;",
       },
       {
         id: 3,
-        text: "personal data we collect from other sources.",
+        text: "diğer kaynaklardan topladığımız kişisel veriler.",
       },
     ],
-    hText2: "Personal data you provide to us or that we collect automatically",
-    sText2: "The personal data we collect includes:",
+    hText2: "Bize sağladığınız veya otomatik olarak topladığımız kişisel veriler",
+    sText2: "Topladığımız kişisel veriler şunları içerir:",
     lists: [
       {
         id: 1,
-        list: "Contact details such as (company) name, address, (mobile) phone number, e-mail address, specialty and other personal data that you voluntarily provide to us when you contact or communicate with us, and details about roles and services. Werkspot also collects personal data from ordering customers and contractors for as long as necessary to 'match' a potential customer. This includes data such as information on occupation, activity and products and services;",
+        list: "Bizimle iletişime geçtiğinizde veya bizimle iletişim kurduğunuzda gönüllü olarak bize sağladığınız (şirket) adı, adresi, (cep telefonu) telefon numarası, e-posta adresi, uzmanlık alanı ve diğer kişisel veriler gibi iletişim bilgileri ve roller ve hizmetler hakkındaki ayrıntılar. Werkspot ayrıca potansiyel bir müşteriyi 'eşleştirmek' için gerekli olduğu sürece sipariş veren müşterilerden ve yüklenicilerden kişisel verileri toplar. Buna meslek, faaliyet ve ürün ve hizmetlere ilişkin bilgiler;",
       },
       {
         id: 2,
-        list: "Account details such as username and password if you create an account on Werkspot;",
+        list: "Werkspot'ta hesap oluşturduğunuzda kullanıcı adı ve şifre gibi hesap ayrıntıları;",
       },
       {
         id: 3,
-        list: "Identity data originating from the identity documents of the tradesmen",
+        list: "Esnafların kimlik belgelerinden kaynaklanan kimlik verileri",
       },
       {
         id: 4,
-        list: "Transactional and financial data, such as invoices, financial data required for billing, invitations to contractors, and contractors' bids for assignments from customers;",
+        list: "Faturalar, faturalandırma için gereken mali veriler, yüklenicilere yapılan davetler ve yüklenicilerin müşterilerden gelen görev teklifleri gibi işlemsel ve mali veriler;",
       },
       {
         id: 5,
-        list: "Communication data such as communication between customer and contractor via Werkspot, participation in surveys or communication with Werkspot; for example, if you contact our customer service or ask us a question, comment or send a request;",
+        list: "Werkspot üzerinden müşteri ile yüklenici arasındaki iletişim, anketlere katılım veya Werkspot ile iletişim gibi iletişim verileri; örneğin, müşteri hizmetlerimizle iletişime geçtiğinizde veya bize bir soru sorduğunuzda, yorum yaptığınızda veya bir talep gönderdiğinizde;",
       },
       {
         id: 6,
-        list: "Reviews and comments posted by Werkspot users;",
+        list: "Werkspot kullanıcıları tarafından gönderilen incelemeler ve yorumlar;",
       },
       {
         id: 7,
-        list: "Descriptions of assignments submitted by Werkspot users;",
+        list: "Werkspot kullanıcıları tarafından gönderilen ödevlerin açıklamaları;",
       },
       {
         id: 8,
-        list: "Automatically collected information such as your IP address, browser type and operating system, application version and geographic location. We also collect and produce data based on your use of Werkspot, such as the pages you visit, the pages you visit before and after your visit to Werkspot, the search terms you use, how often you use Werkspot and whether you are interested. To use Werkspot more often. We collect this information by placing cookies. For more information about the cookies we use, please see our cookie statement.",
+        list: "IP adresiniz, tarayıcı türünüz ve işletim sisteminiz, uygulama sürümünüz ve coğrafi konumunuz gibi otomatik olarak toplanan bilgiler. Ayrıca Werkspot kullanımınıza bağlı olarak ziyaret ettiğiniz sayfalar, Werkspot ziyaretiniz öncesinde ve sonrasında ziyaret ettiğiniz sayfalar, kullandığınız arama terimleri, Werkspot'u ne sıklıkta kullandığınız ve ilgilenip ilgilenmediğiniz gibi verileri de topluyor ve üretiyoruz. Werkspot'u daha sık kullanmak. Bu bilgileri çerez yerleştirerek topluyoruz. Kullandığımız çerezler hakkında daha fazla bilgi için lütfen çerez bildirimimize bakın.",
       },
       {
         id: 9,
-        list: "Login via social media: To increase your ease of use on our website, we offer the ability to login via your Google or Facebook account. If you choose to do so, you authorize us to collect personal data such as your name, email address and external identification number. We may store this information for use as set forth in this statement and may be used to verify usage data for social media logins. The use of information collected by Google and Facebook is subject to the policies of the respective parties and our use of this information is subject to this privacy statement.",
+        list: "Sosyal medya üzerinden giriş yapın: Web sitemizde kullanım kolaylığınızı artırmak için Google veya Facebook hesabınızla giriş yapma olanağı sunuyoruz. Bunu yapmayı seçerseniz adınız, e-posta adresiniz ve harici kimlik numaranız gibi kişisel verileri toplamamız için bize yetki vermiş olursunuz. Bu bilgileri bu beyanda belirtildiği şekilde kullanmak üzere saklayabiliriz ve sosyal medya oturum açma işlemlerine ilişkin kullanım verilerini doğrulamak için kullanılabilir. Google ve Facebook tarafından toplanan bilgilerin kullanımı ilgili tarafların politikalarına, bu bilgileri kullanımımız ise bu gizlilik bildirimine tabidir.",
       },
       {
         id: 10,
-        list: "Phone records: We can record phone calls for quality control, internal training and evidence of contract formation. Doing so is in our legitimate business interests.",
+        list: "Telefon kayıtları: Kalite kontrol, iç eğitim ve sözleşme oluşumunun kanıtı için telefon görüşmelerini kaydedebiliriz. Bunu yapmak meşru ticari çıkarlarımıza uygundur.",
       },
     ],
-    hText3: "Personal data we obtain from other sources",
+    hText3: "Diğer kaynaklardan elde ettiğimiz kişisel veriler",
     sText3:
-      "We use external sources to collect certain personal data. For example, we can understand whether the Chamber of Commerce has VAT exemption by collecting company data from contractors or external sources. We also collect technical information regarding the delivery of emails, SMS and push notifications from sources such as Google Analytics and Amazon Web Services.",
+      "Belirli kişisel verileri toplamak için dış kaynakları kullanırız. Örneğin Ticaret Odasının KDV muafiyetinin olup olmadığını yüklenicilerden veya dış kaynaklardan şirket verilerini toplayarak anlayabiliriz. Ayrıca Google Analytics ve Amazon Web Services gibi kaynaklardan e-postaların, SMS'lerin ve anlık bildirimlerin teslimine ilişkin teknik bilgiler de topluyoruz.",
   },
 ];
 
 export const personaldata2 = [
     {
         id: 1,
-        hText: "How does Werkspot use personal data?",
-        subText: "Werkspot uses your personal data for the following purposes:",
+        hText: "Werkspot kişisel verileri nasıl kullanıyor?",
+        subText: "Werkspot kişisel verilerinizi aşağıdaki amaçlarla kullanır:",
         lists: [
             {
                 id: 1,
-                list:"Providing our services We process your personal data in order to provide our services to you. The purpose of our services is to put customers in contact with contractors to perform tasks, based in part on interests and/or considerations. The basis of this is the performance of the contract between you and us;"
+                list:"Hizmetlerimizi sunmak Size hizmetlerimizi sunmak için kişisel verilerinizi işleriz. Hizmetlerimizin amacı, kısmen çıkarlara ve/veya düşüncelere dayalı olarak, görevlerin yerine getirilmesi için müşterileri yüklenicilerle temasa geçirmektir. Bunun temeli sizinle aramızdaki sözleşmenin ifasıdır;"
             },{
                 id: 2,
-                list:"Identification and authorization We process your personal data to verify your identity and enable you to access our services. This is based on performance of our contract with you and compliance with our legal obligation to take appropriate security measures to protect the data we process;"
+                list:"Kimlik belirleme ve yetkilendirme Kimliğinizi doğrulamak ve hizmetlerimize erişebilmenizi sağlamak için kişisel verilerinizi işleriz. Bu, sizinle aramızdaki sözleşmenin yerine getirilmesine ve işlediğimiz verileri korumak için uygun güvenlik önlemlerini almaya yönelik yasal yükümlülüğümüze uymaya dayanmaktadır;"
             },{
                 id: 3,
-                list:"Fraud prevention For fraud prevention, we process identity data from the Professional's identity documents. This is according to the Expert. The legal basis for this is Art. 6(1)(a)GDPR;"
+                list:"Dolandırıcılığın önlenmesi Dolandırıcılığın önlenmesi için, Profesyonelin kimlik belgelerinden kimlik verilerini işleriz. Uzmana göre bu böyle. Bunun yasal dayanağı Art. 6(1)(a)GDPR;"
             },{
                 id: 4,
-                list:"Improving our website and services We analyze information about how you use our website and services in order to improve the user experience of all website visitors. This information includes conducting and analyzing research data as well as statistics or surveys you choose to participate in to improve our services. It is in our legitimate business interest to conduct research and analysis of the operation of our services so that we can understand and improve any issues with our services;"
+                list:"Web sitemizi ve hizmetlerimizi iyileştirme Tüm web sitesi ziyaretçilerinin kullanıcı deneyimini geliştirmek amacıyla web sitemizi ve hizmetlerimizi nasıl kullandığınıza ilişkin bilgileri analiz ediyoruz. Bu bilgiler, araştırma verilerinin yürütülmesi ve analiz edilmesinin yanı sıra hizmetlerimizi geliştirmek için katılmayı seçtiğiniz istatistikler veya anketleri de içerir. Hizmetlerimizle ilgili sorunları anlayıp iyileştirebilmemiz için hizmetlerimizin işleyişine ilişkin araştırma ve analiz yapmak meşru ticari çıkarımızadır;"
             },{
                 id: 5,
-                list:"Personalizing your experience We use your personal data to provide you with a personalized experience of our services. We do this, for example, by offering you interactive or personalized items tailored to your interests. It is in our legitimate business interest to provide you with a service that is as close to your interests as possible;"
+                list:"Deneyiminizi kişiselleştirmek Kişisel verilerinizi, hizmetlerimizle ilgili kişiselleştirilmiş bir deneyim sunmak için kullanırız. Bunu örneğin ilgi alanlarınıza göre uyarlanmış etkileşimli veya kişiselleştirilmiş öğeler sunarak yapıyoruz. Size çıkarlarınıza mümkün olduğunca yakın bir hizmet sunmak meşru ticari çıkarımızadır;"
             },{
                 id: 6,
-                list:"Contact We use your personal data to contact you, for example if you contact our customer service, send us an email or request that we exercise a right. We also use your personal data to contact you, for example, when we want to inform you about changes to our services or our terms and conditions. We may also contact you to ask for your feedback on our services for internal research purposes. It is in our legitimate business interests to be able to provide you with appropriate and personal answers, inform you about our services, and conduct research on our business research and development services;"
+                list:"İletişim Kişisel verilerinizi, örneğin müşteri hizmetlerimizle iletişime geçmeniz, bize bir e-posta göndermeniz veya bir hakkımızı kullanmamızı talep etmeniz durumunda sizinle iletişim kurmak için kullanırız. Kişisel verilerinizi ayrıca, örneğin hizmetlerimizde veya hüküm ve koşullarımızdaki değişiklikler hakkında sizi bilgilendirmek istediğimizde sizinle iletişim kurmak için de kullanırız. Ayrıca dahili araştırma amacıyla hizmetlerimiz hakkında geri bildiriminizi almak için sizinle iletişime geçebiliriz. Size uygun ve kişisel yanıtlar sunabilmek, hizmetlerimiz hakkında sizi bilgilendirebilmek ve iş araştırma ve geliştirme hizmetlerimiz hakkında araştırma yapabilmek meşru ticari çıkarlarımızdır;"
             },{
                 id: 7,
                 list:"Reviews We use your personal data when you post comments on forums on our website. For example, if you post a review about a contractor, we may change or remove the review if we think it is irrelevant, offensive, or otherwise inappropriate, possibly at the request of a contractor. It is in our legitimate business interest to provide our users with the ability to post and post reviews and edit or remove reviews as we deem it necessary. This information may be available to third parties under the category of work completed on various pages of our website;"

@@ -1,14 +1,12 @@
 package com.werkspot.business.concretes;
 
 import com.werkspot.business.abstracts.MasterService;
-import com.werkspot.business.requests.CreateJobTitleRequest;
 import com.werkspot.business.requests.CreateMasterRequest;
-import com.werkspot.business.requests.UpdateJobTitleRequest;
 import com.werkspot.business.requests.UpdateMasterRequest;
 import com.werkspot.business.responses.GetAllByIdMastersResponse;
 import com.werkspot.business.responses.GetAllJobTitlesResponse;
 import com.werkspot.business.responses.GetAllMastersResponse;
-import com.werkspot.business.responses.GetJobtitleByName;
+import com.werkspot.business.responses.GetJobTitlesByName;
 import com.werkspot.business.rules.MasterBusinessRules;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
 import com.werkspot.dataAccess.abstracts.JobTitleRepository;
@@ -62,11 +60,11 @@ public class MasterManager implements MasterService {
     }
 
     @Override
-    public GetJobtitleByName getJobTitleByName(String jobTitleName) {
+    public GetJobTitlesByName getJobTitleByName(String jobTitleName) {
         JobTitle jobTitle = this.jobTitleRepository.findByJobTitleName(jobTitleName).orElseThrow();
 
-        GetJobtitleByName response =
-                this.modelMapperService.forResponse().map(jobTitle, GetJobtitleByName.class);
+        GetJobTitlesByName response =
+                this.modelMapperService.forResponse().map(jobTitle, GetJobTitlesByName.class);
 
         return response;
     }

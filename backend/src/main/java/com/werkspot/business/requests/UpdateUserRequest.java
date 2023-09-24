@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateAdsRequest {
-    private int id;
-    private String adName;
-    private String descriptions;
-    private String updateAdDate;
-    private boolean isActive;
+public class UpdateUserRequest {
+    private String name;
+    private String surname;
+    private String email;
+    private String phoneNumber;
+    private String postCode;
 }

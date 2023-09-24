@@ -78,7 +78,7 @@ export default function AccountMenu() {
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          Logout
+          Çıkış Yap
         </MenuItem>
       </Menu>
     </React.Fragment>

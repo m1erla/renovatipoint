@@ -6,7 +6,7 @@ const HomeEveryJob = () => {
   return (
     <div className='everyjob'>
         <div className='container'>
-        <h2 className='everyjob-title'>Find professionals for every job</h2>
+        <h2 className='everyjob-title'>Her iş için profesyonelleri bulun</h2>
         <div className='everjobCards-wrapper'>
             {
                 homeeveryjobData.map((data)=>(

@@ -10,11 +10,11 @@ const Footer = () => {
       <div className="footer-top">
       <div className='footer-Left'>
         <h1>Logo</h1>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quibusdam necessitatibus praesentium sint saepe fuga vitae fugiat consequatur eum velit repellat id nobis sit impedit soluta molestiae aspernatur</p>
+        <p>Merhaba, takip edilmesi gerçekten acı verici. Bazı mevcut ihtiyaçlar genellikle yaşamın uçuşudur.</p>
       </div>
         <div className='footer-Right'>
         <div className='company'>
-        <h2>Company</h2>
+        <h2>Şirket</h2>
         <ul>
         {company.map((company)=>(
           <li key={company.id}>
@@ -24,7 +24,7 @@ const Footer = () => {
         </ul>
         </div>
         <div className='company'>
-        <h2>Help</h2>
+        <h2>Yardım</h2>
         <ul>
         {help.map((help)=>(
           <li key={help.id}>
@@ -34,7 +34,7 @@ const Footer = () => {
         </ul>
         </div>
         <div className='company'>
-        <h2>Partnership</h2>
+        <h2>ortaklık</h2>
         <ul>
         {resource.map((resource)=>(
           <li key={resource.id}>
@@ -55,13 +55,13 @@ const Footer = () => {
             <Link><BsLinkedin/></Link>
             </div>
             <div className="links">
-              <Link onClick={() => window.scrollTo(0, 0)}>Privacy Policy</Link>
-              <Link onClick={() => window.scrollTo(0, 0)}>Terms & Conditions</Link>
-              <Link onClick={() => window.scrollTo(0, 0)}>Support</Link>
+              <Link onClick={() => window.scrollTo(0, 0)}>Gizlilik Politikası</Link>
+              <Link onClick={() => window.scrollTo(0, 0)}>Şartlar ve koşullar</Link>
+              <Link onClick={() => window.scrollTo(0, 0)}>Destek</Link>
             </div>
           </div>
 
-          <p>© 2023 Logo. All rights reserved.</p>
+          <p>© 2023 Logo. Her hakkı saklıdır.</p>
       </div>
       </div>
      

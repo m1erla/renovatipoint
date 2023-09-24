@@ -9,12 +9,12 @@ const QualityReq = () => {
     <div className='container'>
         <div className='qualityReq-hero'>
             <img className='qualityReqImage' alt='image' src={quailt} />
-            <h2>Werkspot Quality Requirements</h2>
-            <p>Every professional joining Werkspot has to meet certain quality requirements. For example, all of our professionals have a Chamber of Commerce registration.</p>
+            <h2>Werkspot Kalite Gereksinimleri</h2>
+            <p>Werkspot'a katılan her profesyonelin belirli kalite gereksinimlerini karşılaması gerekir. Mesela tüm profesyonellerimizin Ticaret Odası kaydı var.</p>
         </div>
         <div className='quailty-content'>
-        <h3>Workspace House Rules</h3>
-        <p>The craftsmen at Werkspot take pride in their work and their relationship with the client. They accept the Werkspot House Rules to ensure that all craftsmen offer the right service and quality.</p>
+        <h3>Çalışma Alanı Ev Kuralları</h3>
+        <p>Werkspot'taki ustalar işlerinden ve müşteriyle olan ilişkilerinden gurur duyuyor. Tüm ustaların doğru hizmet ve kaliteyi sunmasını sağlamak için Werkspot Ev Kurallarını kabul ederler.</p>
         </div>
         <div className='quailty-cards'>
             {
@@ -28,7 +28,7 @@ const QualityReq = () => {
                     />
                 ))
             }
-        <Link onClick={() => window.scrollTo(0, 0)} to="/apply-for-a-job" className='statsBtn'>Post your job posting</Link>
+        <Link onClick={() => window.scrollTo(0, 0)} to="/apply-for-a-job" className='statsBtn'>İş ilanınızı yayınlayın</Link>
         </div>
         </div>
   )

@@ -20,7 +20,7 @@ const HomeCommentsCard = ({ img, text, customerText, comment }) => {
         <label htmlFor="star1"></label>
       </div>
         <div className="card-bot">
-            <p className="customer">This work was done by {customerText}</p>
+            <p className="customer">Bu çalışma tarafından yapıldı {customerText}</p>
             <p>{comment}</p>
         </div>
     

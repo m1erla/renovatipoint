@@ -9,10 +9,10 @@ const ApplyJob = () => {
     <div className="applyjob">
       <div className="container">
         <div className="applyjob-hero">
-        <h2>What is your business?</h2>
+        <h2>Ne iş yapıyorsun?</h2>
         <p>
-          Find the service you need to connect with verified and rated
-          professionals near you.
+          Doğrulanmış ve derecelendirilmiş hizmetlere bağlanmak için ihtiyacınız olan hizmeti bulun
+          yakınınızdaki profesyoneller.
         </p>
         <Search />
         </div>
@@ -20,15 +20,16 @@ const ApplyJob = () => {
           <div className="cards">
            <ApplyjobCard 
            icon={<RxPencil2 />}
-           text="Post your job posting free of charge and without obligation"
+           text="Doğrulanmış ve derecelendirilmiş hizmetlere bağlanmak için ihtiyacınız olan hizmeti bulun
+           yakınınızdaki profesyoneller."
            /> 
            <ApplyjobCard 
            icon={<BsFillPeopleFill />}
-           text="More than 51,360 connected professionals"
+           text="51.360'tan fazla bağlantılı profesyonel"
            /> 
            <ApplyjobCard 
            icon={<BiSolidLike />}
-           text="More than 540,308 verified reviews"
+           text="540.308'den fazla doğrulanmış yorum"
            /> 
           </div>
         </div>

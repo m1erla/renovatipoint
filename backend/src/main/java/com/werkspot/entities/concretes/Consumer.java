@@ -40,12 +40,25 @@ public class Consumer implements UserDetails {
 
     private String password;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_consumer_id")
     private List<Master> masters;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToOne
+    @JoinColumn(name = "fk_user_id")
+    private User user;
+
+    @OneToOne
+    @JoinColumn(name = "fk_ad_id")
+    private Ads ads;
+
+    @OneToOne
+    @JoinColumn(name = "fk_master_id")
+    private Master master;
+
 
     @OneToMany(mappedBy = "consumer")
     private List<Token> token;

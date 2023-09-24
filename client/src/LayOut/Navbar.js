@@ -5,8 +5,10 @@ import { CgClose } from "react-icons/cg";
 import { Loginlinks, accordionMenuLinks, links } from "../data/navbarData";
 import { Link, useLocation } from "react-router-dom";
 import AccountMenu from "../components/AcorrdionMenu";
+import { withTranslation } from "react-i18next";
 
-const Navbar = () => {
+const Navbar = ({t, i18n}) => {
+
   const [isLogin, setIsLogin] = useState(true); //login için bekliyor
   const [menuOpen, setMenuOpen] = useState(false); // toggle deneme
   const [windowWidth, setWindowWidth] = useState(window.innerWidth); //toggle deneme
@@ -15,6 +17,11 @@ const Navbar = () => {
   const linksContainerRef = useRef(null);
   const linksRef = useRef(null);
   const loginLink = links.find((link) => link.text === "Login");
+
+
+  const clickHandle = async (lang) => {
+        await i18n.changeLanguage(lang)
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -46,7 +53,7 @@ const Navbar = () => {
     <nav>
       <div className="nav-center">
         <div className="nav-header">
-          <Link to="/">logo</Link>
+          <Link to="/"></Link>
           <button
             className={isNavOpen ? "nav-toggle cancel-btn" : "nav-toggle"}
             onClick={() => {
@@ -114,7 +121,7 @@ const Navbar = () => {
                       </li>
                     ))}
                     <li>
-                      <Link>log out</Link>
+                      <Link>Çıkış Yap</Link>
                     </li>
                   </ul>):(null)
                 }
@@ -129,4 +136,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default withTranslation()(Navbar);

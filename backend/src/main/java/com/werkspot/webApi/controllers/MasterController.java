@@ -31,7 +31,7 @@ public class MasterController {
         return masterService.getById(id);
     }
     @GetMapping("/{name}")
-    public GetJobtitleByName getJobtitleByName(@PathVariable String name){
+    public GetJobTitlesByName getJobTitlesByName(@PathVariable String name){
         return masterService.getJobTitleByName(name);
     }
 

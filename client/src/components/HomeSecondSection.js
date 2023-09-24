@@ -6,23 +6,23 @@ const HomeSecondSection = () => {
   return (
     <div className='container'>
         <div className='homeSecondSection'>
-            <h2 className='homeSecondSectionTitle'>How does Werkspot work?</h2>
+            <h2 className='homeSecondSectionTitle'>Werkspot nasıl çalışır?</h2>
            <div className='cards'>
            <HomeSecondSectionCard
             icon={<AiOutlineShareAlt/>}
-            text="Post your job posting"
-            subtext="Post your job posting in a few easy steps and invite interesting professionals to respond."
+            text="İş ilanınızı yayınlayın"
+            subtext="İş ilanınızı birkaç kolay adımda yayınlayın ve ilgi çekici profesyonelleri yanıt vermeye davet edin."
             />
              <HomeSecondSectionCard
             icon={<FiRefreshCcw/>}
-            text="Professionals are responding"
-            subtext="Interested masters usually respond within 24 hours of posting your job posting."
+            text="Profesyoneller yanıt veriyor"
+            subtext="İlgilenen ustalar genellikle iş ilanınızı yayınladıktan sonraki 24 saat içinde yanıt verirler."
             />
              <HomeSecondSectionCard
             icon={<AiFillWechat/>}
-            text="Select and join the chat"
+            text="Seçin ve sohbete katılın"
             subtext="
-            Compare profiles and add your favorite professionals to your selection to discuss your work and request quotes."
+            Profilleri karşılaştırın ve çalışmalarınızı tartışmak ve fiyat teklifi istemek için favori profesyonellerinizi seçiminize ekleyin."
             />
            </div>
 

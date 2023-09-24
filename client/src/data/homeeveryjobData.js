@@ -3,60 +3,60 @@ export const homeeveryjobData = [
     {
        id: 1,
        icon: <GiPizzaCutter />,
-       text: "Expansion and renewal",
+       text: "Genişletme ve yenileme",
        to: "/",
        links : [
             {
             id: 1,
-            link:"All information about expansion and renewal",
+            link:"Genişleme ve yenilemeye ilişkin tüm bilgiler",
           },  {
             id: 2,
-            link:"All information about expansion and renewal",
+            link:"Genişleme ve yenilemeye ilişkin tüm bilgiler",
           },
        ]
     },{
         id: 2,
         icon: <GiPizzaCutter />,
-        text: "floors and tiles",
+        text: "zeminler ve fayanslar",
         to: "/",
         links : [
              {
              id: 1,
-             link:"All information about expansion and renewal",
+             link:"Genişleme ve yenilemeye ilişkin tüm bilgiler",
            },  {
              id: 2,
-             link:"All information about expansion and renewal",
+             link:"Genişleme ve yenilemeye ilişkin tüm bilgiler",
            },  {
             id: 3,
-            link:"All information about expansion and renewal",
+            link:"Genişleme ve yenilemeye ilişkin tüm bilgiler",
           },
         ]
      },{
         id: 3,
         icon: <GiPizzaCutter />,
-        text: "Gardening and outdoor",
+        text: "Bahçecilik ve dış mekan",
         to: "/",
         links : [
              {
              id: 1,
-             link:"All information about expansion and renewal",
+             link:"Genişleme ve yenilemeye ilişkin tüm bilgiler",
            },  {
              id: 2,
-             link:"All information about expansion and renewal",
+             link:"Genişleme ve yenilemeye ilişkin tüm bilgiler",
            },
         ]
      },{
         id: 4,
         icon: <GiPizzaCutter />,
-        text: "to paint",
+        text: "boyamak",
         to: "/",
         links : [
              {
              id: 1,
-             link:"All information about expansion and renewal",
+             link:"Genişleme ve yenilemeye ilişkin tüm bilgiler",
            },  {
              id: 2,
-             link:"All information about expansion and renewal",
+             link:"Genişleme ve yenilemeye ilişkin tüm bilgiler",
            },
         ]
      }

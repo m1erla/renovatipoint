@@ -1,7 +1,7 @@
 export const conditions = [
     {
         id:1,
-        hText: "Terms and conditions",
+        hText: "Şartlar ve koşullar",
         subHtext:"For professionals",
         sText:"The following conditions and all applicable legal rules apply to Werkspot services. By using the Werkspot Platform, Professional agrees to be bound by these terms and conditions.",
         articleHead:"Article 1. Definitions",
