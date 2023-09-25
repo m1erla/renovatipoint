@@ -1,9 +1,6 @@
 package com.werkspot.webApi.controllers;
 
-import com.werkspot.business.abstracts.AdsService;
-import com.werkspot.business.abstracts.ConsumerService;
-import com.werkspot.business.abstracts.MasterService;
-import com.werkspot.business.abstracts.UserService;
+import com.werkspot.business.abstracts.*;
 import com.werkspot.business.requests.*;
 import com.werkspot.business.responses.*;
 import lombok.AllArgsConstructor;
@@ -21,6 +18,7 @@ public class UserController {
     private MasterService masterService;
     private ConsumerService consumerService;
     private AdsService adsService;
+    private EmploymentService employmentService;
 
     @GetMapping
     public List<GetAllUsersResponse> getAllUsers(){
@@ -51,15 +49,26 @@ public class UserController {
         return adsService.getById(id);
     }
 
-    @GetMapping("/consumers")
-    public List<GetAllConsumersResponse> getAllConsumers(){
-        return consumerService.getAll();
+
+    @GetMapping("/services")
+    public List<GetAllEmploymentResponse> getAllServices(){
+        return employmentService.getAll();
     }
 
-    @PostMapping("/consumer")
-    public void addConsumer(@RequestBody CreateConsumerRequest createConsumerRequest){
-        this.consumerService.add(createConsumerRequest);
+    @GetMapping("/service/{id}")
+    public GetByIdEmploymentResponse getServiceById(@PathVariable int id){
+        return employmentService.getById(id);
     }
+
+    @PostMapping("/service")
+    public void addService(@RequestBody CreateEmploymentRequest createEmploymentRequest){
+        this.employmentService.add(createEmploymentRequest);
+    }
+
+
+
+
+
 
     @PostMapping("/ad")
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -77,6 +86,10 @@ public class UserController {
     public void updateUser(@RequestBody UpdateUserRequest updateUserRequest){
         this.userService.update(updateUserRequest);
     }
+    @PutMapping("/service_update")
+    public void updateService(@RequestBody UpdateEmploymentRequest updateEmploymentRequest){
+        this.employmentService.update(updateEmploymentRequest);
+    }
 
     @PutMapping("/ad_update")
     public void updateAd(@RequestBody UpdateAdsRequest updateAdsRequest){
@@ -91,6 +104,11 @@ public class UserController {
     @DeleteMapping("/ad/{id}")
     public void deleteAd(@PathVariable int id){
         this.adsService.delete(id);
+    }
+
+    @DeleteMapping("/service/{id}")
+    public void deleteService(@PathVariable int id){
+        this.employmentService.delete(id);
     }
 
 
