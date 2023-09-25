@@ -4,10 +4,7 @@ import com.werkspot.business.abstracts.AdsService;
 import com.werkspot.business.abstracts.ConsumerService;
 import com.werkspot.business.abstracts.MasterService;
 import com.werkspot.business.abstracts.UserService;
-import com.werkspot.business.requests.CreateAdsRequest;
-import com.werkspot.business.requests.CreateUserRequest;
-import com.werkspot.business.requests.UpdateAdsRequest;
-import com.werkspot.business.requests.UpdateUserRequest;
+import com.werkspot.business.requests.*;
 import com.werkspot.business.responses.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -59,13 +56,18 @@ public class UserController {
         return consumerService.getAll();
     }
 
+    @PostMapping("/consumer")
+    public void addConsumer(@RequestBody CreateConsumerRequest createConsumerRequest){
+        this.consumerService.add(createConsumerRequest);
+    }
+
     @PostMapping("/ad")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void addAd(@RequestBody CreateAdsRequest createAdsRequest){
         this.adsService.add(createAdsRequest);
     }
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public void addUser(@RequestBody CreateUserRequest createUserRequest){
         this.userService.add(createUserRequest);
