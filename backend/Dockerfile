@@ -1,5 +1,3 @@
-FROM ubuntu:latest
-LABEL authors="furka"
 FROM maven:3.8.5-openjdk-17 AS build
 COPY . .
 RUN mvn clean package -DskipTests
@@ -7,4 +5,4 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17.0.1-jdk-slim
 COPY --from=build /target/furkankarakus-0.0.1-SNAPSHOT.jar furkankarakus.jar
 EXPOSE 8080
-ENTRYPOINT ["top", "-b", "java", "-jar", "furkankarakus.jar"]
+ENTRYPOINT ["java", "-jar", "furkankarakus.jar"]
