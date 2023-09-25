@@ -54,6 +54,11 @@ public class UserController {
         return adsService.getById(id);
     }
 
+    @GetMapping("/consumers")
+    public List<GetAllConsumersResponse> getAllConsumers(){
+        return consumerService.getAll();
+    }
+
     @PostMapping("/ad")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void addAd(@RequestBody CreateAdsRequest createAdsRequest){
