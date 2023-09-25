@@ -13,6 +13,8 @@ public interface UserService {
 
     GetAllByIdConsumersResponse getConsumerById(int id);
 
+    GetUsersAdById getUsersAdById(int userId, int adId);
+
     GetAdsByIdResponse getAdById(int id);
 
     List<GetAllAdsResponse> getAllAds();

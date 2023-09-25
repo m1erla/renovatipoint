@@ -64,6 +64,19 @@ public class UserManager implements UserService {
     }
 
     @Override
+    public GetUsersAdById getUsersAdById(int userId, int adId) {
+        User user = this.userRepository.findById(userId).orElseThrow();
+        Ads ads = this.adsRepository.findById(adId).orElseThrow();
+
+
+        GetUsersAdById response =
+                this.modelMapperService.forResponse().map(ads, GetUsersAdById.class);
+                this.modelMapperService.forResponse().map(user, GetUsersAdById.class);
+
+        return response;
+    }
+
+    @Override
     public GetAdsByIdResponse getAdById(int id) {
         Ads ads = this.adsRepository.findById(id).orElseThrow();
 

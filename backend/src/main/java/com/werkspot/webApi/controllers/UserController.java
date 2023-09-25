@@ -16,7 +16,6 @@ import java.util.List;
 public class UserController {
     private UserService userService;
     private MasterService masterService;
-    private ConsumerService consumerService;
     private AdsService adsService;
     private EmploymentService employmentService;
 
@@ -49,6 +48,11 @@ public class UserController {
         return adsService.getById(id);
     }
 
+    @GetMapping("/user/{id}/ad/{adId}")
+    public GetUsersAdById getUsersAdById(@PathVariable int userId, @PathVariable int adId){
+        return userService.getUsersAdById(userId, adId);
+    }
+
 
     @GetMapping("/services")
     public List<GetAllEmploymentResponse> getAllServices(){
@@ -64,11 +68,6 @@ public class UserController {
     public void addService(@RequestBody CreateEmploymentRequest createEmploymentRequest){
         this.employmentService.add(createEmploymentRequest);
     }
-
-
-
-
-
 
     @PostMapping("/ad")
     @ResponseStatus(code = HttpStatus.CREATED)

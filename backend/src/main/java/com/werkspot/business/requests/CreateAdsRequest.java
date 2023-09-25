@@ -20,8 +20,8 @@ public class CreateAdsRequest {
     private boolean isActive;
     private String descriptions;
     private String adReleaseDate;
-    private Category categoryId;
-    private Employment serviceId;
-    private User userId;
+    private int categoryId;
+    private int serviceId;
+    private int userId;
 
 }
