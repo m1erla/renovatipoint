@@ -23,11 +23,9 @@ public class Category {
 
     private boolean isActive;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_ad_id")
-    private Ads ads;
+    @OneToMany(mappedBy = "categoryId")
+    private List<Ads> ads;
 
-    @OneToMany
-    @JoinColumn(name = "fk_service_id")
+    @OneToMany(mappedBy = "categoryId")
     private List<Employment> serviceName;
 }

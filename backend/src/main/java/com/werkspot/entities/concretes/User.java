@@ -30,9 +30,8 @@ public class User implements UserDetails {
     private String jobTitleName;
     private String phoneNumber;
     private String postCode;
-    @OneToOne
-    @JoinColumn(name = "fk_ad_id")
-    private Ads ads;
+    @OneToMany(mappedBy = "userId")
+    private List<Ads> ads;
 
     @OneToOne
     @JoinColumn(name = "fk_master_id")

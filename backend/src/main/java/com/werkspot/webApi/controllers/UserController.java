@@ -3,6 +3,7 @@ package com.werkspot.webApi.controllers;
 import com.werkspot.business.abstracts.*;
 import com.werkspot.business.requests.*;
 import com.werkspot.business.responses.*;
+import com.werkspot.entities.concretes.User;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -71,7 +72,7 @@ public class UserController {
 
     @PostMapping("/ad")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void addAd(@RequestBody CreateAdsRequest createAdsRequest){
+    public void addAd(@RequestBody CreateAdsRequest createAdsRequest, @PathVariable(name = "userId") User user){
         this.adsService.add(createAdsRequest);
     }
 

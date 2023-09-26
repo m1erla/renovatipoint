@@ -57,15 +57,17 @@ public class Master implements UserDetails {
     @JoinColumn(name = "fk_user_id")
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "fk_ad_id")
-    private Ads ads;
+    @OneToMany(mappedBy = "masterId")
+    private List<Ads> ads;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "master")
     private List<Token> token;
+
+    @OneToMany(mappedBy = "master")
+    private List<JobTitle> jobTitles;
 
 
     @Override

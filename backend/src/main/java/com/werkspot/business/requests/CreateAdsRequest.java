@@ -7,6 +7,7 @@ import com.werkspot.entities.concretes.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Reference;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -15,13 +16,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateAdsRequest {
-
+    private User userId;
     private String adName;
     private boolean isActive;
     private String descriptions;
     private String adReleaseDate;
-    private int categoryId;
-    private int serviceId;
-    private int userId;
+    private Category categoryId;
+    private Employment serviceId;
+
 
 }
