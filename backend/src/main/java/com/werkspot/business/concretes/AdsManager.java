@@ -43,7 +43,7 @@ public class AdsManager implements AdsService {
     }
 
     @Override
-    public void add(CreateAdsRequest createAdsRequest) {
+    public void add(CreateAdsRequest createAdsRequest, int id) {
         this.adsBusinessRules.checkIfAdsNameExists(createAdsRequest.getAdName());
         Ads ads = this.modelMapperService.forRequest().map(createAdsRequest, Ads.class);
         this.adsRepository.save(ads);

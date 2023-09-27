@@ -26,5 +26,5 @@ public interface UserService {
     void add(CreateUserRequest createUserRequest);
     void update(UpdateUserRequest updateUserRequest);
 
-    void delete(Integer id);
+    void delete(int id);
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateEmploymentRequest {
+    private String jobTitleName;
     private String serviceName;
     private boolean isActive;
 }

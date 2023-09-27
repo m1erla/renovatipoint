@@ -19,13 +19,14 @@ public class UserController {
     private MasterService masterService;
     private AdsService adsService;
     private EmploymentService employmentService;
+    private CategoryService categoryService;
 
     @GetMapping
     public List<GetAllUsersResponse> getAllUsers(){
         return userService.getAll();
     }
     @GetMapping("/{id}")
-    public GetUsersByIdResponse getUsersById(@PathVariable Integer id){
+    public GetUsersByIdResponse getUsersById(@PathVariable int id){
         return userService.getById(id);
     }
 
@@ -49,9 +50,14 @@ public class UserController {
         return adsService.getById(id);
     }
 
-    @GetMapping("/user/{id}/ad/{adId}")
+    @GetMapping("/{id}/ad/{adId}")
     public GetUsersAdById getUsersAdById(@PathVariable int userId, @PathVariable int adId){
         return userService.getUsersAdById(userId, adId);
+    }
+
+    @GetMapping("/categories")
+    public List<GetAllCategoriesResponse> getAllCategories(){
+        return categoryService.getAll();
     }
 
 
@@ -70,9 +76,14 @@ public class UserController {
         this.employmentService.add(createEmploymentRequest);
     }
 
+    @PostMapping("/category")
+    public void addCategory(@RequestBody CreateCategoryRequest createCategoryRequest){
+        this.categoryService.add(createCategoryRequest);
+    }
+
     @PostMapping("/ad")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void addAd(@RequestBody CreateAdsRequest createAdsRequest, @PathVariable(name = "userId") User user){
+    public void addAd(@RequestBody CreateAdsRequest createAdsRequest){
         this.adsService.add(createAdsRequest);
     }
 
@@ -82,22 +93,27 @@ public class UserController {
         this.userService.add(createUserRequest);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public void updateUser(@RequestBody UpdateUserRequest updateUserRequest){
         this.userService.update(updateUserRequest);
     }
-    @PutMapping("/service_update")
+    @PutMapping("/service_update/{id}")
     public void updateService(@RequestBody UpdateEmploymentRequest updateEmploymentRequest){
         this.employmentService.update(updateEmploymentRequest);
     }
 
-    @PutMapping("/ad_update")
+    @PutMapping("/ad_update/{id}")
     public void updateAd(@RequestBody UpdateAdsRequest updateAdsRequest){
         this.adsService.update(updateAdsRequest);
     }
 
+    @PutMapping("/category_update/{id}")
+    public void updateCategory(@RequestBody UpdateCategoryRequest updateCategoryRequest){
+        this.categoryService.update(updateCategoryRequest);
+    }
+
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Integer id){
+    public void deleteUser(@PathVariable int id){
         this.userService.delete(id);
     }
 
@@ -111,6 +127,9 @@ public class UserController {
         this.employmentService.delete(id);
     }
 
-
+    @DeleteMapping("/category/{id}")
+    public void deleteCategory(@PathVariable int id){
+        this.categoryService.delete(id);
+    }
 
 }

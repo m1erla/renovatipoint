@@ -50,14 +50,14 @@ public class Master implements UserDetails {
     private String descriptions;
 
     @ManyToOne
-    @JoinColumn(name = "fk_consumer_id")
+    @JoinColumn(name = "consumer_id")
     private Consumer consumer;
 
     @OneToOne
-    @JoinColumn(name = "fk_user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "masterId")
+    @OneToMany(mappedBy = "master")
     private List<Ads> ads;
 
     @Enumerated(EnumType.STRING)

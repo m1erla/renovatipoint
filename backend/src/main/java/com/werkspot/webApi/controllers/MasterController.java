@@ -53,8 +53,8 @@ public class MasterController {
 
     @PostMapping("/ad")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void addAd(@RequestBody CreateAdsRequest adsRequest){
-        this.adsService.add(adsRequest);
+    public void addAd(@RequestBody CreateAdsRequest adsRequest, int id){
+        this.adsService.add(adsRequest, id);
     }
 
     @PostMapping("/job_titles")

@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class GetByIdEmploymentResponse {
     private int id;
     private String serviceName;
+    private String jobTitleName;
 }

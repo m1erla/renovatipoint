@@ -16,6 +16,7 @@ import java.util.List;
 public class Employment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     private String serviceName;
@@ -23,14 +24,14 @@ public class Employment {
     private boolean isActive;
 
     @ManyToOne
-    @JoinColumn(name = "fk_category_id")
-    private Category categoryId;
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "fk_ad_id")
+    @JoinColumn(name = "ad_id")
     private Ads ads;
 
     @ManyToOne
-    @JoinColumn(name = "fk_job_title_id")
+    @JoinColumn(name = "job_title_id")
     private JobTitle jobTitle;
 }

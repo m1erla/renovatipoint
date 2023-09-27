@@ -21,7 +21,8 @@ import java.util.List;
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
     private String name;
     private String surname;
@@ -30,15 +31,15 @@ public class User implements UserDetails {
     private String jobTitleName;
     private String phoneNumber;
     private String postCode;
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(mappedBy = "user")
     private List<Ads> ads;
 
     @OneToOne
-    @JoinColumn(name = "fk_master_id")
+    @JoinColumn(name = "master_id")
     private Master master;
 
     @OneToOne
-    @JoinColumn(name = "fk_consumer_id")
+    @JoinColumn(name = "consumer_id")
     private Consumer consumer;
 
 

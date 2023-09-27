@@ -11,4 +11,5 @@ public class GetAllJobTitlesResponse {
     private int id;
     private String jobTitleName;
     private String descriptions;
+    private String serviceName;
 }

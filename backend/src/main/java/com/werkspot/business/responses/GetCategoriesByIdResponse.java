@@ -10,4 +10,7 @@ import lombok.NoArgsConstructor;
 public class GetCategoriesByIdResponse {
     private int id;
     private String categoryName;
+    private String serviceName;
+    private int adId;
+    private String adName;
 }

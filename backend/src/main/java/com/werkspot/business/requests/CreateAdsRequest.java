@@ -16,13 +16,14 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateAdsRequest {
-    private User userId;
+    private int userId;
     private String adName;
     private boolean isActive;
     private String descriptions;
     private String adReleaseDate;
-    private Category categoryId;
-    private Employment serviceId;
+    private int categoryId;
+    private int serviceId;
+    private String serviceName;
 
 
 }

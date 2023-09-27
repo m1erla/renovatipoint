@@ -16,6 +16,7 @@ import java.util.List;
 public class JobTitle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     @Column(name = "job_title_name", nullable = false, unique = true)
@@ -26,9 +27,9 @@ public class JobTitle {
 
 
     @OneToMany(mappedBy = "jobTitle")
-    private List<Employment> serviceId;
+    private List<Employment> service;
 
     @ManyToOne
-    @JoinColumn(name = "fk_master_id")
+    @JoinColumn(name = "master_id")
     private Master master;
 }

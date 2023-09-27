@@ -41,22 +41,22 @@ public class Consumer implements UserDetails {
     private String password;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_consumer_id")
+    @JoinColumn(name = "consumer_id")
     private List<Master> masters;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToOne
-    @JoinColumn(name = "fk_user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToOne
-    @JoinColumn(name = "fk_ad_id")
+    @JoinColumn(name = "ad_id")
     private Ads ads;
 
     @OneToOne
-    @JoinColumn(name = "fk_master_id")
+    @JoinColumn(name = "master_id")
     private Master master;
 
 

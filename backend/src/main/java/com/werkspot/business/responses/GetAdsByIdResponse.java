@@ -18,8 +18,11 @@ public class GetAdsByIdResponse {
     private String adName;
     private String descriptions;
     private String adReleaseDate;
-    private Category categoryId;
-    private Employment serviceId;
-    private User userId;
+    private int categoryId;
+    private String categoryName;
+    private int serviceId;
+    private String serviceName;
+    private int userId;
+    private String userName;
 
 }

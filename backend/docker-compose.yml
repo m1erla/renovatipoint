@@ -9,4 +9,4 @@ services:
     environment:
       POSTGRES_USERNAME: postgres
       POSTGRES_PASSWORD: mierla
-      POSTGRES_DB: blog
+      POSTGRES_DB: werkspot

@@ -20,26 +20,27 @@ import java.util.List;
 public class Ads {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     @Column(name = "ad_name")
     private String adName;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_category_id")
-    private Category categoryId;
+    @JoinColumn(name = "category_id")
+    private Category category;
 
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_master_id")
-    private Master masterId;
+    @JoinColumn(name = "master_id")
+    private Master master;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_user_id")
-    private User userId;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "ads")
-    private List<Employment> serviceId;
+    private List<Employment> service;
 
 
     private String adReleaseDate;

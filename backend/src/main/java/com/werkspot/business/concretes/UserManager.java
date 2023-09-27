@@ -120,7 +120,7 @@ public class UserManager implements UserService {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(int id) {
         this.userRepository.deleteById(id);
 
     }
