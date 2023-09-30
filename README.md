@@ -71,20 +71,20 @@
 POSTMAN
 
 //ADDITION
-http://localhost:8080/api/consumers
+http://localhost:8080/api/v1/users
 
 
 //TO LIST
-http://localhost:8080/api/consumers
+http://localhost:8080/api/v1/users
 
 
 //FIND
-http://localhost:8080/consumers/1
+http://localhost:8080/api/v1/users/1
 
 
 
 //DELETE
-http://localhost:8080/consumers/1
+http://localhost:8080/api/v1/users/1
 
 
 ```
