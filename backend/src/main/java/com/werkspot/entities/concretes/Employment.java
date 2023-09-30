@@ -19,19 +19,20 @@ public class Employment {
     @Column(name = "id")
     private int id;
 
-    private String serviceName;
+    private String name;
 
     private boolean isActive;
+
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "ad_id")
-    private Ads ads;
+    @OneToMany(mappedBy = "service")
+    private List<Ads> ads;
 
     @ManyToOne
     @JoinColumn(name = "job_title_id")
     private JobTitle jobTitle;
+
 }

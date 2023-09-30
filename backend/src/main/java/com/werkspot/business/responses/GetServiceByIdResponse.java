@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetByIdEmploymentResponse {
+public class GetServiceByIdResponse {
     private int id;
-    private String serviceName;
+    private String name;
     private String jobTitleName;
+    private String categoryName;
 }

@@ -29,12 +29,12 @@ public class Master implements UserDetails {
 
     @Column(name = "surname")
     private String surname;
-
+    @Column(name = "experience")
     private int experience;
 
-    @Column(name = "job_title")
+    @Column(name = "job_title_name")
     private String jobTitleName;
-
+    @Column(name = "service_name")
     private String serviceName;
 
     @Column(name = "email")
@@ -44,20 +44,20 @@ public class Master implements UserDetails {
 
     @Column(name = "phone_number")
     private String phoneNumber;
-
+    @Column(name = "zip_code")
     private String postCode;
-
+    @Column(name = "descriptions")
     private String descriptions;
 
     @ManyToOne
     @JoinColumn(name = "consumer_id")
     private Consumer consumer;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "master")
+    @OneToMany(mappedBy = "master", cascade = CascadeType.DETACH)
     private List<Ads> ads;
 
     @Enumerated(EnumType.STRING)

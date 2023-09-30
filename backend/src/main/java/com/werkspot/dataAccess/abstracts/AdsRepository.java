@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AdsRepository extends JpaRepository<Ads, Integer> {
 
-    boolean existsByAdName(String adsName);
+    boolean existsByName(String adName);
     boolean isActive(boolean isActive);
 
 }

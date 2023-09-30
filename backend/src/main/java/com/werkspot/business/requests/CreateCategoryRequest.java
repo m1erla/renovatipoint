@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateCategoryRequest {
-    private String categoryName;
+    private String name;
     private boolean isActive;
 }

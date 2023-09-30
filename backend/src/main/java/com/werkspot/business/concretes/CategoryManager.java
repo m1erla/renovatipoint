@@ -46,7 +46,7 @@ public class CategoryManager implements CategoryService {
 
     @Override
     public void add(CreateCategoryRequest createCategoryRequest) {
-        this.categoryBusinessRules.checkIfCategoryExists(createCategoryRequest.getCategoryName());
+        this.categoryBusinessRules.checkIfCategoryExists(createCategoryRequest.getName());
 
         Category category = this.modelMapperService.forRequest().map(createCategoryRequest, Category.class);
         this.categoryRepository.save(category);

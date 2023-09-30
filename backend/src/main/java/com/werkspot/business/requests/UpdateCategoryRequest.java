@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateCategoryRequest {
     private int id;
-    private String categoryName;
+    private String name;
     private boolean isActive;
 }

@@ -11,7 +11,7 @@ public class AdsBusinessRules {
     private AdsRepository adsRepository;
 
     public void checkIfAdsNameExists(String adsName){
-        if (adsRepository.existsByAdName(adsName)){
+        if (adsRepository.existsByName(adsName)){
             throw new BusinessException("This ad is already exists! please try different ad name.");
         }
     }
@@ -23,7 +23,7 @@ public class AdsBusinessRules {
     }
 
     public void checkIfAdsExists(int id, String adsName){
-        if (adsRepository.existsById(id) && adsRepository.existsByAdName(adsName)){
+        if (adsRepository.existsById(id) && adsRepository.existsByName(adsName)){
             throw new BusinessException("This ad is already exists! Please try to create another ad.");
         }
     }

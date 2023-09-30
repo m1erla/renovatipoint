@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateAdsRequest {
     private int id;
-    private String adName;
+    private String name;
     private String descriptions;
-    private String updateAdDate;
+    private String adReleaseDate;
     private boolean isActive;
 }

@@ -24,24 +24,31 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "surname")
     private String surname;
+    @Column(name = "email")
     private String email;
     private String password;
+    @Column(name = "job_title_name")
     private String jobTitleName;
+    @Column(name = "phone_number")
     private String phoneNumber;
+
     private String postCode;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
     private List<Ads> ads;
 
-    @OneToOne
-    @JoinColumn(name = "master_id")
-    private Master master;
+    @OneToMany(mappedBy = "user")
+    private List<Master> masters;
 
     @OneToOne
     @JoinColumn(name = "consumer_id")
     private Consumer consumer;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    private List<JobTitle> jobTitles;
 
     @Enumerated(EnumType.STRING)
     private Role role;

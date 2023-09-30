@@ -2,11 +2,7 @@ package com.werkspot.entities.concretes;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Table(name = "ads")
@@ -23,24 +19,29 @@ public class Ads {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "ad_name")
-    private String adName;
+    @Column(name = "name")
+    private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "master_id")
     private Master master;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "ads")
-    private List<Employment> service;
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private Employment service;
+
+    @ManyToOne
+    @JoinColumn(name = "consumer_id")
+    private Consumer consumer;
 
 
     private String adReleaseDate;

@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface JobTitleRepository extends JpaRepository<JobTitle, Integer> {
 
 
-    boolean existsByJobTitleName(String jobTitleName);
+    boolean existsByName(String jobTitleName);
 
-    Optional<JobTitle> findByJobTitleName(String name);
+    Optional<JobTitle> findByName(String name);
 }

@@ -3,7 +3,6 @@ package com.werkspot.webApi.controllers;
 import com.werkspot.business.abstracts.*;
 import com.werkspot.business.requests.*;
 import com.werkspot.business.responses.*;
-import com.werkspot.entities.concretes.User;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ public class UserController {
     private UserService userService;
     private MasterService masterService;
     private AdsService adsService;
-    private EmploymentService employmentService;
+    private IService iService;
     private CategoryService categoryService;
 
     @GetMapping
@@ -50,11 +49,6 @@ public class UserController {
         return adsService.getById(id);
     }
 
-    @GetMapping("/{id}/ad/{adId}")
-    public GetUsersAdById getUsersAdById(@PathVariable int userId, @PathVariable int adId){
-        return userService.getUsersAdById(userId, adId);
-    }
-
     @GetMapping("/categories")
     public List<GetAllCategoriesResponse> getAllCategories(){
         return categoryService.getAll();
@@ -62,18 +56,18 @@ public class UserController {
 
 
     @GetMapping("/services")
-    public List<GetAllEmploymentResponse> getAllServices(){
-        return employmentService.getAll();
+    public List<GetAllServicesResponse> getAllServices(){
+        return iService.getAll();
     }
 
     @GetMapping("/service/{id}")
-    public GetByIdEmploymentResponse getServiceById(@PathVariable int id){
-        return employmentService.getById(id);
+    public GetServiceByIdResponse getServiceById(@PathVariable int id){
+        return iService.getById(id);
     }
 
     @PostMapping("/service")
-    public void addService(@RequestBody CreateEmploymentRequest createEmploymentRequest){
-        this.employmentService.add(createEmploymentRequest);
+    public void addService(@RequestBody CreateServiceRequest createServiceRequest){
+        this.iService.add(createServiceRequest);
     }
 
     @PostMapping("/category")
@@ -98,8 +92,8 @@ public class UserController {
         this.userService.update(updateUserRequest);
     }
     @PutMapping("/service_update/{id}")
-    public void updateService(@RequestBody UpdateEmploymentRequest updateEmploymentRequest){
-        this.employmentService.update(updateEmploymentRequest);
+    public void updateService(@RequestBody UpdateServiceRequest updateServiceRequest){
+        this.iService.update(updateServiceRequest);
     }
 
     @PutMapping("/ad_update/{id}")
@@ -124,7 +118,7 @@ public class UserController {
 
     @DeleteMapping("/service/{id}")
     public void deleteService(@PathVariable int id){
-        this.employmentService.delete(id);
+        this.iService.delete(id);
     }
 
     @DeleteMapping("/category/{id}")

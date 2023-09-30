@@ -19,17 +19,26 @@ public class JobTitle {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "job_title_name", nullable = false, unique = true)
-    private String jobTitleName;
 
-    @Column(name = "descriptions")
+    private String name;
+
+
     private String descriptions;
 
 
     @OneToMany(mappedBy = "jobTitle")
-    private List<Employment> service;
+    private List<Employment> services;
+
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "master_id")
     private Master master;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

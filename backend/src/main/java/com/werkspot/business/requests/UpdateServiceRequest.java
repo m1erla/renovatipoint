@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateEmploymentRequest {
+public class UpdateServiceRequest {
     private int id;
     private String serviceName;
+    private int categoryId;
+    private int jobTitleId;
 }

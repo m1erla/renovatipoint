@@ -14,7 +14,7 @@ public class JobTitleBusinessRules {
     private JobTitleRepository jobTitleRepository;
 
     public void checkIfJobTitleNameExists(String jobTitle){
-        if (this.jobTitleRepository.existsByJobTitleName(jobTitle)){
+        if (this.jobTitleRepository.existsByName(jobTitle)){
             throw  new BusinessException("The job title is already exist! Please try differ job title name");
         }
     }

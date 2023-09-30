@@ -11,8 +11,7 @@ public class CreateMasterRequest {
     private String name;
     private String surname;
     private int experience;
-    private String jobTitleName;
-    private String serviceName;
+    private int jobTitleId;
     private String email;
     private String phoneNumber;
     private String postCode;

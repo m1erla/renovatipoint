@@ -19,14 +19,16 @@ public class Category {
     @Column(name = "id")
     private int id;
 
-
-    private String categoryName;
+    private String name;
 
     private boolean isActive;
 
-    @OneToMany(mappedBy = "category")
-    private List<Ads> ads;
+    @OneToOne(mappedBy = "category")
+    private Ads ad;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Employment> services;
 
     @OneToMany(mappedBy = "category")
-    private List<Employment> serviceName;
+    private List<JobTitle> jobTitles;
 }

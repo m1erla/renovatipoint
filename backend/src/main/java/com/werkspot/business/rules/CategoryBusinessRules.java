@@ -12,7 +12,7 @@ public class CategoryBusinessRules {
     private CategoryRepository categoryRepository;
 
     public void checkIfCategoryExists(String category){
-        if (categoryRepository.existsByCategoryName(category)){
+        if (categoryRepository.existsByName(category)){
             throw new BusinessException("This category name is already exists! Please try different name");
         }
     }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateJobTitleRequest {
-    private String jobTitleName;
+    private String name;
     private String descriptions;
-    private String serviceName;
+    private int categoryId;
 }

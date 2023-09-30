@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetUsersAdById {
-    private int userId;
-    private int adId;
+public class GetAllServicesResponse {
+    private int id;
+    private String name;
+    private String jobTitleName;
+    private String categoryName;
 
 }
