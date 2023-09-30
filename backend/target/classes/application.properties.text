@@ -1,0 +1,19 @@
+#spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+#spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.hibernate.show-sql=true
+#spring.datasource.url=jdbc:postgresql://localhost:5432/werkspot
+#spring.datasource.username=postgres
+#spring.datasource.password=mierla
+#spring.jpa.properties.javax.persistence.validation.mode = none
+#
+#
+#spring.datasource.driver-class-name=org.postgresql.Driver
+#
+#spring.security.oauth2.resourceserver.jwt.public-key-location=com
+#spring.jpa.properties.hibernate.format_sql=true
+#
+#spring.main.allow-circular-references=true
+
+
+# node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
