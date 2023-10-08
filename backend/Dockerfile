@@ -4,6 +4,5 @@ RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
 COPY --from=build /target/furkankarakus-0.0.1-SNAPSHOT.jar furkankarakus.jar
-COPY ./docker-compose.yml /docker-compose.yml
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","furkankarakus.jar, docker-compose.yml"]
