@@ -7,6 +7,6 @@ services:
     ports:
       - '5432:5432'
     environment:
-      - POSTGRES_PASSWORD=mierla
-      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Rc001rY3JKXmFnvV7hglropMmn1aPzIr
+      - POSTGRES_USER=werkspot_user
       - POSTGRES_DB=werkspot
