@@ -19,6 +19,7 @@ public class UserController {
     private AdsService adsService;
     private IService iService;
     private CategoryService categoryService;
+    private JobTitleService jobTitleService;
 
     @GetMapping
     public List<GetAllUsersResponse> getAllUsers(){
@@ -65,6 +66,11 @@ public class UserController {
         return iService.getById(id);
     }
 
+    @GetMapping("/job_titles")
+    public List<GetAllJobTitlesResponse> getAllJobTitlesResponseList(){
+        return jobTitleService.getAllJobTitlesResponseList();
+    }
+
     @PostMapping("/service")
     public void addService(@RequestBody CreateServiceRequest createServiceRequest){
         this.iService.add(createServiceRequest);
@@ -86,6 +92,11 @@ public class UserController {
     public void addUser(@RequestBody CreateUserRequest createUserRequest){
         this.userService.add(createUserRequest);
     }
+    @PostMapping("/job_titles")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void addJobTitle(@RequestBody CreateJobTitleRequest jobTitleRequest){
+        this.jobTitleService.add(jobTitleRequest);
+    }
 
     @PutMapping("/{id}")
     public void updateUser(@RequestBody UpdateUserRequest updateUserRequest){
@@ -104,6 +115,10 @@ public class UserController {
     @PutMapping("/category_update/{id}")
     public void updateCategory(@RequestBody UpdateCategoryRequest updateCategoryRequest){
         this.categoryService.update(updateCategoryRequest);
+    }
+    @PutMapping("/job_titles_update")
+    public void updateJobTitle(@RequestBody UpdateJobTitleRequest jobTitleRequest){
+        this.jobTitleService.update(jobTitleRequest);
     }
 
     @DeleteMapping("/{id}")
@@ -124,6 +139,11 @@ public class UserController {
     @DeleteMapping("/category/{id}")
     public void deleteCategory(@PathVariable int id){
         this.categoryService.delete(id);
+    }
+
+    @DeleteMapping("/job_titles/{id}")
+    public void deleteJobTitle(@PathVariable int id){
+        this.jobTitleService.delete(id);
     }
 
 }
