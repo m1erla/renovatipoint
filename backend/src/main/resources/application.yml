@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/werkspot
+    url: jdbc:postgresql://localhost:6464/werkspot
     username: postgres
     password: mierla
     driver-class-name: org.postgresql.Driver
@@ -17,7 +17,7 @@ spring:
 application:
   security:
     jwt:
-      secret-key: yxFh9a2cayJdQhmqeE6r4Es1StFwwZFHMLNHSsiT41E=
+      secret-key: 1ac787d4a30791538418e5ed1a55ae5032bb1557002868ab871890c71aed8edb
       expiration: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 days
