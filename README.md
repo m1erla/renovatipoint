@@ -71,20 +71,36 @@
 POSTMAN
 
 //ADDITION
-http://localhost:8080/api/v1/users
+https://myklus.onrender.com/api/v1/users
+https://myklus.onrender.com/api/v1/users/ad
+https://myklus.onrender.com/api/v1/users/job_titles
+https://myklus.onrender.com/api/v1/users/category
+https://myklus.onrender.com/api/v1/users/service
 
 
 //TO LIST
-http://localhost:8080/api/v1/users
+https://myklus.onrender.com/api/v1/users
+https://myklus.onrender.com/api/v1/users/ads
+https://myklus.onrender.com/api/v1/users/job_titles
+https://myklus.onrender.com/api/v1/users/categories
+https://myklus.onrender.com/api/v1/users/services
 
 
 //FIND
-http://localhost:8080/api/v1/users/1
+https://myklus.onrender.com/api/v1/users/1
+https://myklus.onrender.com/api/v1/users/ad/1
+https://myklus.onrender.com/api/v1/users/job_titles/1
+https://myklus.onrender.com/api/v1/users/category/1
+https://myklus.onrender.com/api/v1/users/service/1
 
 
 
 //DELETE
-http://localhost:8080/api/v1/users/1
+https://myklus.onrender.com/api/v1/users/1
+https://myklus.onrender.com/api/v1/users/ad/1
+https://myklus.onrender.com/api/v1/users/category/1
+https://myklus.onrender.com/api/v1/users/service/1
+https://myklus.onrender.com/api/v1/users/job_titles/1
 
 
 ```
