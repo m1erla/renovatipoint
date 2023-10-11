@@ -15,8 +15,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 
 import static com.werkspot.security.user.Permission.*;
-import static com.werkspot.security.user.Role.ADMIN;
-import static com.werkspot.security.user.Role.MANAGER;
+import static com.werkspot.security.user.Role.*;
 import static org.springframework.http.HttpMethod.*;
 
 @Configuration
@@ -37,7 +36,6 @@ public class SecurityConfiguration {
                 .requestMatchers(
                         "/api/v1/auth/**",
                         "/api/v1/consumers/**",
-                        "/api/v1/users/**",
                         "/api/v1/masters/**",
                         "/ws",
                         "/app",
@@ -57,7 +55,7 @@ public class SecurityConfiguration {
                         "/swagger-ui.html"
                 )
                 .permitAll()
-
+                .requestMatchers("api/v1/users/**").hasAnyAuthority(USER.name())
 
                 .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
 
