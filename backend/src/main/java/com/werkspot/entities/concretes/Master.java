@@ -3,6 +3,7 @@ package com.werkspot.entities.concretes;
 import com.werkspot.security.token.Token;
 import com.werkspot.security.user.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +37,7 @@ public class Master implements UserDetails {
     private String jobTitleName;
     @Column(name = "service_name")
     private String serviceName;
-
+    @Email
     @Column(name = "email")
     private String email;
 

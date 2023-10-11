@@ -3,6 +3,7 @@ package com.werkspot.entities.concretes;
 import com.werkspot.security.token.Token;
 import com.werkspot.security.user.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +30,7 @@ public class Consumer implements UserDetails {
 
     @Column(name = "surname")
     private String surname;
-
+    @Email
     @Column(name = "email")
     private String email;
 
