@@ -3,8 +3,10 @@ package com.werkspot;
 import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.core.utilities.exceptions.ProblemDetails;
 import com.werkspot.core.utilities.exceptions.ValidationProblemDetails;
+import com.werkspot.security.auth.AuthenticationRequest;
 import com.werkspot.security.auth.AuthenticationService;
 import com.werkspot.security.auth.RegisterRequest;
+import com.werkspot.security.user.Role;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
@@ -36,52 +38,23 @@ public class BackendApplication {
             AuthenticationService service
     ) {
         return args -> {
-            var admin = RegisterRequest.builder()
-                    .name("Admin")
-                    .surname("Admin")
-                    .email("admin@mail.com")
+            var user = RegisterRequest.builder()
+                    .name("User")
+                    .surname("User")
+                    .email("user@mail.com")
                     .password("password")
-                    .role(ADMIN)
+                    .phoneNumber("05334332233")
+                    .jobTitleName("Softawre Developer")
+                    .postCode("4002")
+                    .role(Role.USER)
                     .build();
-            System.out.println("Admin token: " + service.register(admin).getAccessToken());
+            System.out.println("Admin token: " + service.register(user).getAccessToken());
 
-            var manager = RegisterRequest.builder()
-                    .name("Admin")
-                    .surname("Admin")
-                    .email("manager@mail.com")
-                    .password("password")
-                    .role(MANAGER)
-                    .build();
-            System.out.println("Manager token: " + service.register(manager).getAccessToken());
+//            var user = AuthenticationRequest.builder()
+//                    .email("test@mail.com")
+//                    .password("password")
+//                    .build();
+//            System.out.println("User token: " + service.authenticate(user).getAccessToken());
         };
     }
-
-
-    @ExceptionHandler
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public ProblemDetails handleBusinessException(BusinessException businessException){
-        ProblemDetails problemDetails = new ProblemDetails();
-        problemDetails.setMessage(businessException.getMessage());
-
-        return problemDetails;
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public ProblemDetails handleValidationException(MethodArgumentNotValidException validException){
-        ValidationProblemDetails validationProblemDetails = new ValidationProblemDetails();
-        validationProblemDetails.setMessage("VALIDATION.EXCEPTION");
-        validationProblemDetails.setValidationErrors(new HashMap<String, String>());
-
-        for(FieldError fieldError : validException.getBindingResult().getFieldErrors()){
-            validationProblemDetails.getValidationErrors().put(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-
-        return validationProblemDetails;
-    }
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
 }

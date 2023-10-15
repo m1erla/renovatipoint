@@ -19,5 +19,4 @@ public class RegisterRequest {
     private String jobTitleName;
     private String postCode;
     private Role role;
-
 }

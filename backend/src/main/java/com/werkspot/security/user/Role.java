@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import static com.werkspot.security.user.Permission.*;
 
+
 @RequiredArgsConstructor
 public enum Role {
     USER(Collections.emptySet()),

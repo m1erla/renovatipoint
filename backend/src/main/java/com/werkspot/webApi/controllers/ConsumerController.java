@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/consumers")
 @AllArgsConstructor
-@CrossOrigin("*")
 public class ConsumerController {
     private ConsumerService consumerService;
 

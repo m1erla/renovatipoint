@@ -1,4 +1,4 @@
-package com.werkspot.config;
+package com.werkspot.security.config;
 
 import com.werkspot.chat.ChatMessage;
 import com.werkspot.chat.MessageType;

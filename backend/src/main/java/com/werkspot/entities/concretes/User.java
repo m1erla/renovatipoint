@@ -4,13 +4,11 @@ import com.werkspot.security.token.Token;
 import com.werkspot.security.user.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,21 +23,27 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "surname")
     private String surname;
 
     @Email
     @Column(name = "email")
     private String email;
+
     private String password;
+
     @Column(name = "job_title_name")
     private String jobTitleName;
+
     @Column(name = "phone_number")
     private String phoneNumber;
 
     private String postCode;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
     private List<Ads> ads;
 

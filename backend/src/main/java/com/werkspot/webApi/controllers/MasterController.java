@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/masters")
 @AllArgsConstructor
-@CrossOrigin("*")
 public class MasterController {
 
     private MasterService masterService;

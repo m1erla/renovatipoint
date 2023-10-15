@@ -7,6 +7,7 @@ import com.werkspot.dataAccess.abstracts.UserRepository;
 import com.werkspot.security.token.Token;
 import com.werkspot.security.token.TokenRepository;
 import com.werkspot.security.token.TokenType;
+import com.werkspot.security.user.Role;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

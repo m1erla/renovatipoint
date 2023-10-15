@@ -1,4 +1,4 @@
-package com.werkspot.config;
+package com.werkspot.security.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

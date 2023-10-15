@@ -3,6 +3,7 @@ package com.werkspot.security.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,6 +38,10 @@ public class SecurityConfiguration {
                         "/api/v1/auth/**",
                         "/api/v1/consumers/**",
                         "/api/v1/masters/**",
+                        "/api/v1/ads/**",
+                        "/api/v1/job_titles/**",
+                        "/api/v1/services/**",
+                        "/api/v1/categories/**",
                         "/ws",
                         "/app",
                         "/app/ws",
@@ -55,11 +60,8 @@ public class SecurityConfiguration {
                         "/swagger-ui.html"
                 )
                 .permitAll()
-                .requestMatchers("api/v1/users/**").hasAnyAuthority(USER.name())
-                .requestMatchers("api/v1/users/**").hasAnyRole(USER.name())
+                .requestMatchers("/api/v1/users/**").hasAnyRole(USER.name())
                 .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
-
-
                 .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
                 .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
                 .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
@@ -72,8 +74,6 @@ public class SecurityConfiguration {
                  .requestMatchers(POST, "/api/v1/admin/**").hasAuthority(ADMIN_CREATE.name())
                  .requestMatchers(PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
                  .requestMatchers(DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())*/
-
-
                 .anyRequest()
                 .authenticated()
                 .and()
