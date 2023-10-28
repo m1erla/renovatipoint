@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResponse {
-     @JsonIgnoreProperties
+     @JsonProperty
      String accessToken;
 
-     @JsonIgnoreProperties
+     @JsonProperty
      String refreshToken;
 }
