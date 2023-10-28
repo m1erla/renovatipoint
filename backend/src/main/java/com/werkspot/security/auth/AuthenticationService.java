@@ -28,7 +28,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register( RegisterRequest request){
+    public RegisterResponse register( RegisterRequest request){
          var user = User.builder()
                  .name(request.getName())
                  .surname(request.getSurname())
@@ -43,7 +43,7 @@ public class AuthenticationService {
          var jwtToken = jwtService.generateToken(user);
          var refreshToken = jwtService.generateRefreshToken(user);
          saveUserToken(savedUser, jwtToken);
-         return AuthenticationResponse.builder()
+         return RegisterResponse.builder()
                  .accessToken(jwtToken)
                  .refreshToken(refreshToken)
                  .build();

@@ -22,7 +22,7 @@ import java.util.Base64;
 public class AuthenticationController {
     private final AuthenticationService service;
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
+    public ResponseEntity<RegisterResponse> register(
             @RequestBody RegisterRequest request
     ){
 //        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
@@ -31,7 +31,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.register(request));
     }
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
+    public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequest request
     ){
         return ResponseEntity.ok(service.authenticate(request));
