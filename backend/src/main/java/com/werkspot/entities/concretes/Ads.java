@@ -1,8 +1,13 @@
 package com.werkspot.entities.concretes;
 
 import jakarta.persistence.*;
+import jdk.jfr.Timestamp;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Table(name = "ads")
@@ -43,8 +48,11 @@ public class Ads {
     @JoinColumn(name = "consumer_id")
     private Consumer consumer;
 
-
-    private String adReleaseDate;
+    @Column(name = "ad_release_date")
+    @CreatedDate
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date adReleaseDate;
 
     private String descriptions;
 

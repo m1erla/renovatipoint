@@ -19,7 +19,7 @@ public class JobTitle {
     @Column(name = "id")
     private int id;
 
-
+    @Column(unique = true)
     private String name;
 
 

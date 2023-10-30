@@ -31,7 +31,7 @@ public class User implements UserDetails {
     private String surname;
 
     @Email
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     private String password;
@@ -39,7 +39,7 @@ public class User implements UserDetails {
     @Column(name = "job_title_name")
     private String jobTitleName;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
     private String postCode;
