@@ -16,4 +16,8 @@ public class UserBusinessRules {
             throw new BusinessException("This email is already exists!");
         }
     }
+
+    public boolean userExists(String email){
+        return userRepository.existsByEmail(email);
+    }
 }

@@ -2,12 +2,14 @@ package com.werkspot.security.auth;
 
 import com.werkspot.business.abstracts.UserService;
 import com.werkspot.business.requests.CreateUserRequest;
+import com.werkspot.business.rules.UserBusinessRules;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +25,7 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService service;
-    private final UserService userService;
+    private final UserBusinessRules userBusinessRules;
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(
             @RequestBody CreateUserRequest request
@@ -31,6 +33,10 @@ public class AuthenticationController {
 //        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 //        System.out.println("The secret key is : " + key);
 //        System.out.println(Base64.getEncoder().encodeToString(key.getEncoded()));
+        if (userBusinessRules.userExists(request.getEmail())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new RegisterResponse("User with this email already exists! ", 0, null));
+        }
         return ResponseEntity.ok(service.register(request));
     }
     @PostMapping("/authenticate")
