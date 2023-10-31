@@ -49,7 +49,7 @@ public class AuthenticationService {
          var refreshToken = jwtService.generateRefreshToken(user);
          saveUserToken(savedUser, jwtToken);
          RegisterResponse registerResponse = new RegisterResponse();
-        if (userService.getByEmail(user.getEmail()) != null) {
+        if (userService.getByEmail(request.getEmail()) != null) {
            registerResponse.setMessage("Such a user already exists!");
            return  registerResponse;
         }
