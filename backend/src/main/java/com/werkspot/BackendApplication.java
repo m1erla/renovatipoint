@@ -38,41 +38,10 @@ public class BackendApplication {
             AuthenticationService service
     ) {
         return args -> {
-            var user = RegisterRequest.builder()
-                    .name("User")
-                    .surname("User")
-                    .email("user@mail.com")
-                    .password("password")
-                    .phoneNumber("05334332233")
-                    .jobTitleName("Software Developer")
-                    .postCode("4002")
-                    .role(Role.USER)
-                    .build();
-            System.out.println("User token: " + service.register(user).getAccessToken());
-
             var admin = RegisterRequest.builder()
-                    .name("Admin")
-                    .surname("Admin")
-                    .email("admin@mail.com")
-                    .password("password")
-                    .phoneNumber("05334332233")
-                    .jobTitleName("Admin")
-                    .postCode("5433")
-                    .role(ADMIN)
                     .build();
-            System.out.println("Admin token: " + service.register(admin).getAccessToken());
-
             var manager = RegisterRequest.builder()
-                    .name("Admin")
-                    .surname("Admin")
-                    .email("manager@mail.com")
-                    .password("password")
-                    .phoneNumber("05334332233")
-                    .jobTitleName("Manager")
-                    .postCode("7894")
-                    .role(MANAGER)
                     .build();
-            System.out.println("Manager token: " + service.register(manager).getAccessToken());
         };
     }
 }

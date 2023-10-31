@@ -1,5 +1,7 @@
 package com.werkspot.security.auth;
 
+import com.werkspot.business.abstracts.UserService;
+import com.werkspot.business.requests.CreateUserRequest;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +23,10 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService service;
+    private final UserService userService;
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(
-            @RequestBody RegisterRequest request
+            @RequestBody CreateUserRequest request
     ){
 //        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 //        System.out.println("The secret key is : " + key);

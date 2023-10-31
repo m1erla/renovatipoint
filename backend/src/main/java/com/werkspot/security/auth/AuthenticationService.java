@@ -1,6 +1,9 @@
 package com.werkspot.security.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.werkspot.business.abstracts.UserService;
+import com.werkspot.business.requests.CreateUserRequest;
+import com.werkspot.business.responses.GetUsersByEmailResponse;
 import com.werkspot.security.config.JwtService;
 import com.werkspot.entities.concretes.User;
 import com.werkspot.dataAccess.abstracts.UserRepository;
@@ -27,8 +30,9 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
-    public RegisterResponse register( RegisterRequest request){
+    public RegisterResponse register(CreateUserRequest request){
          var user = User.builder()
                  .name(request.getName())
                  .surname(request.getSurname())
@@ -37,15 +41,16 @@ public class AuthenticationService {
                  .password(passwordEncoder.encode(request.getPassword()))
                  .jobTitleName(request.getJobTitleName())
                  .postCode(request.getPostCode())
-                 .role(request.getRole())
                  .build();
          var savedUser = repository.save(user);
          var jwtToken = jwtService.generateToken(user);
+         GetUsersByEmailResponse getUser = userService.getByEmail(user.getEmail());
          var refreshToken = jwtService.generateRefreshToken(user);
          saveUserToken(savedUser, jwtToken);
          return RegisterResponse.builder()
-                 .accessToken(jwtToken)
-                 .refreshToken(refreshToken)
+                 .message("User Created Successfully!")
+                 .userId(user.getId())
+                 .email(user.getEmail())
                  .build();
 
     }

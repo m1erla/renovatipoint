@@ -64,6 +64,16 @@ public class UserManager implements UserService {
     }
 
     @Override
+    public GetUsersByEmailResponse getByEmail(String email) {
+        User user = this.userRepository.findByEmail(email).orElseThrow();
+
+        GetUsersByEmailResponse response =
+                this.modelMapperService.forResponse().map(user, GetUsersByEmailResponse.class);
+
+        return response;
+    }
+
+    @Override
     public GetAdsByIdResponse getAdById(int id) {
         Ads ads = this.adsRepository.findById(id).orElseThrow();
 

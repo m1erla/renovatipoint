@@ -13,6 +13,7 @@ public interface UserService {
 
     GetAllByIdConsumersResponse getConsumerById(int id);
 
+    GetUsersByEmailResponse getByEmail(String email);
     GetAdsByIdResponse getAdById(int id);
 
     List<GetAllAdsResponse> getAllAds();
