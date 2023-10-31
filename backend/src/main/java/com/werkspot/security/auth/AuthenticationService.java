@@ -48,7 +48,12 @@ public class AuthenticationService {
          var jwtToken = jwtService.generateToken(user);
          var refreshToken = jwtService.generateRefreshToken(user);
          saveUserToken(savedUser, jwtToken);
-         this.userBusinessRules.checkIfEmailExists(user.getEmail());
+         RegisterResponse registerResponse = new RegisterResponse();
+        if (userService.getByEmail(user.getEmail()) != null) {
+           registerResponse.setMessage("Such a user already exists!");
+           return  registerResponse;
+        }
+
          return RegisterResponse.builder()
                  .message("User Created Successfully!")
                  .userId(user.getId())
