@@ -63,8 +63,8 @@ public class AuthenticationService implements UserDetailsService {
 
     }
 
-    public ResponseEntity<String> authenticate( AuthenticationRequest request){
-        try {
+    public AuthenticationResponse authenticate( AuthenticationRequest request){
+
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(),
@@ -78,11 +78,10 @@ public class AuthenticationService implements UserDetailsService {
             revokeAllUserTokens(user);
             saveUserToken(user, jwtToken);
 
-            return ResponseEntity.ok(jwtToken);
+            return AuthenticationResponse.builder()
+                    .accessToken(jwtToken)
+                    .build();
 
-        }catch (AuthenticationException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
 
 
     }

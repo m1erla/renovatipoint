@@ -33,12 +33,12 @@ public class AuthenticationController {
 //        System.out.println(Base64.getEncoder().encodeToString(key.getEncoded()));
         if (userBusinessRules.userExists(request.getEmail())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new RegisterResponse("User with this email already exists! ", 0, null));
+                    .body(new RegisterResponse("User with this email already exists! ", 0, request.getEmail()));
         }
         return ResponseEntity.ok(service.register(request));
     }
     @PostMapping("/authenticate")
-    public ResponseEntity<ResponseEntity<String>> authenticate(
+    public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
     ){
 
