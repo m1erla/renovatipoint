@@ -49,6 +49,7 @@ public class AuthenticationService implements UserDetailsService {
                  .password(passwordEncoder.encode(request.getPassword()))
                  .jobTitleName(request.getJobTitleName())
                  .postCode(request.getPostCode())
+                 .role(request.getRole())
                  .build();
          var savedUser = repository.save(user);
          var jwtToken = jwtService.generateToken(user);
@@ -63,7 +64,7 @@ public class AuthenticationService implements UserDetailsService {
 
     }
 
-    public AuthenticationResponse authenticate( AuthenticationRequest request){
+    public String authenticate( AuthenticationRequest request){
 
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -78,9 +79,7 @@ public class AuthenticationService implements UserDetailsService {
             revokeAllUserTokens(user);
             saveUserToken(user, jwtToken);
 
-            return AuthenticationResponse.builder()
-                    .accessToken(jwtToken)
-                    .build();
+            return jwtToken;
 
 
 
