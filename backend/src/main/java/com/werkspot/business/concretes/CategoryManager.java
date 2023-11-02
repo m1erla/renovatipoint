@@ -4,11 +4,13 @@ import com.werkspot.business.abstracts.CategoryService;
 import com.werkspot.business.requests.CreateCategoryRequest;
 import com.werkspot.business.requests.UpdateCategoryRequest;
 import com.werkspot.business.responses.GetAllCategoriesResponse;
+import com.werkspot.business.responses.GetAllJobTitlesResponse;
 import com.werkspot.business.responses.GetCategoriesByIdResponse;
 import com.werkspot.business.rules.CategoryBusinessRules;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
 import com.werkspot.dataAccess.abstracts.CategoryRepository;
 import com.werkspot.entities.concretes.Category;
+import com.werkspot.entities.concretes.JobTitle;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -65,6 +67,18 @@ public class CategoryManager implements CategoryService {
     @Override
     public void delete(int id) {
         this.categoryRepository.deleteById(id);
+
+    }
+
+    @Override
+    public List<GetAllJobTitlesResponse> getJobTitlesByCategory(String categoryName) {
+        Category category = categoryRepository.findByName(categoryName).orElseThrow(() -> new EntityNotFoundException("Category not found!"));
+        List<JobTitle> jobTitles = category.getJobTitles();
+
+        return jobTitles.stream()
+                .map(jobTitle -> modelMapperService.forResponse().map(jobTitle, GetAllJobTitlesResponse.class))
+                .collect(Collectors.toList());
+
 
     }
 }

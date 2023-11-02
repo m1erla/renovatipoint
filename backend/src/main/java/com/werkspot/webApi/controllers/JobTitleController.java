@@ -33,6 +33,12 @@ public class JobTitleController {
         this.jobTitleService.update(jobTitleRequest);
     }
 
+    @PostMapping("/category/{categoryName}/jobTitle")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void addJobTitleToCategory(@PathVariable String categoryName, @RequestBody CreateJobTitleRequest createJobTitleRequest){
+        this.jobTitleService.addJobTitleToCategory(createJobTitleRequest, categoryName);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteJobTitle(@PathVariable int id){
         this.jobTitleService.delete(id);

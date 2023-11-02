@@ -6,6 +6,7 @@ import com.werkspot.business.requests.CreateCategoryRequest;
 import com.werkspot.business.requests.CreateJobTitleRequest;
 import com.werkspot.business.requests.UpdateCategoryRequest;
 import com.werkspot.business.responses.GetAllCategoriesResponse;
+import com.werkspot.business.responses.GetAllJobTitlesResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +18,15 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryController {
     private CategoryService categoryService;
-    private JobTitleService jobTitleService;
 
     @GetMapping
     public List<GetAllCategoriesResponse> getAllCategories(){
         return categoryService.getAll();
+    }
+
+    @GetMapping("/{cateogryName}/jobTitles")
+    public List<GetAllJobTitlesResponse> getJobTitlesByCategory(@PathVariable String categoryName){
+        return categoryService.getJobTitlesByCategory(categoryName);
     }
 
 
@@ -30,11 +35,7 @@ public class CategoryController {
     public void addCategory(@RequestBody CreateCategoryRequest createCategoryRequest){
         this.categoryService.add(createCategoryRequest);
     }
-    @PostMapping("/category/{categoryName}/jobTitle")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public void addJobTitleToCategory(@PathVariable String categoryName, @RequestBody CreateJobTitleRequest createJobTitleRequest){
-        this.jobTitleService.addJobTitleToCategory(createJobTitleRequest, categoryName);
-    }
+
 
 
     @PutMapping("/category_update/{id}")

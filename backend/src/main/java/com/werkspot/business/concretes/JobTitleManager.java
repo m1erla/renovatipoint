@@ -56,7 +56,7 @@ public class JobTitleManager implements JobTitleService {
     public void delete(int id) {
         this.jobTitleRepository.deleteById(id);
     }
-
+    @Override
     public void addJobTitleToCategory(CreateJobTitleRequest createJobTitleRequest, String categoryName){
         Category category = categoryRepository.findByName(categoryName)
                 .orElseGet(() -> {
