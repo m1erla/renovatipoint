@@ -24,7 +24,7 @@ public class CategoryController {
         return categoryService.getAll();
     }
 
-    @GetMapping("/{cateogryName}/jobTitles")
+    @GetMapping("/{categoryName}/jobTitles")
     public List<GetAllJobTitlesResponse> getJobTitlesByCategory(@PathVariable String categoryName){
         return categoryService.getJobTitlesByCategory(categoryName);
     }
