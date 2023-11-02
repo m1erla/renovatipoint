@@ -6,6 +6,7 @@ import com.werkspot.business.requests.UpdateServiceRequest;
 import com.werkspot.business.responses.GetAllServicesResponse;
 import com.werkspot.business.responses.GetServiceByIdResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class ServicesController {
     }
 
     @PostMapping("/service")
+    @ResponseStatus(code = HttpStatus.CREATED)
     public void addService(@RequestBody CreateServiceRequest createServiceRequest){
         this.iService.add(createServiceRequest);
     }

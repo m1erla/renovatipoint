@@ -9,6 +9,7 @@ import com.werkspot.business.rules.CategoryBusinessRules;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
 import com.werkspot.dataAccess.abstracts.CategoryRepository;
 import com.werkspot.entities.concretes.Category;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,20 +29,22 @@ public class CategoryManager implements CategoryService {
     public List<GetAllCategoriesResponse> getAll() {
         List<Category> categories = categoryRepository.findAll();
 
-        List<GetAllCategoriesResponse> categoriesResponses =
-                categories.stream().map(category -> this.modelMapperService.forResponse().map(category, GetAllCategoriesResponse.class)).collect(Collectors.toList());
+//        List<GetAllCategoriesResponse> categoriesResponses =
+//                categories.stream().map(category -> this.modelMapperService.forResponse().map(category, GetAllCategoriesResponse.class)).collect(Collectors.toList());
 
-
-        return categoriesResponses;
+        return categories.stream()
+                .map(category -> modelMapperService.forResponse().map(category, GetAllCategoriesResponse.class))
+                .collect(Collectors.toList());
     }
 
     @Override
     public GetCategoriesByIdResponse getById(int id) {
-        Category category = this.categoryRepository.findById(id).orElseThrow();
+        Category category = this.categoryRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
 
-        GetCategoriesByIdResponse response =
-                this.modelMapperService.forResponse().map(category, GetCategoriesByIdResponse.class);
-        return response;
+
+              return this.modelMapperService.forResponse().map(category, GetCategoriesByIdResponse.class);
+
     }
 
     @Override

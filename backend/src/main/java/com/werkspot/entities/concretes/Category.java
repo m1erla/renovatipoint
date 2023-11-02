@@ -31,4 +31,9 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<JobTitle> jobTitles;
+
+    public void addJobTitle(JobTitle jobTitle){
+        jobTitles.add(jobTitle);
+        jobTitle.setCategory(this);
+    }
 }
