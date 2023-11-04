@@ -19,7 +19,7 @@ public class JobTitle {
     @Column(name = "id")
     private int id;
 
-    @Column(unique = true)
+    @Column
     private String name;
 
 
@@ -30,7 +30,7 @@ public class JobTitle {
     private List<Employment> services;
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
