@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class CreateJobTitleRequest {
     private String name;
     private String descriptions;
-    private int categoryId;
+    private String categoryName;
 }

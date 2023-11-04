@@ -26,10 +26,10 @@ public class Category {
     @OneToOne(mappedBy = "category")
     private Ads ad;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Employment> services;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<JobTitle> jobTitles;
 
     public void addJobTitle(JobTitle jobTitle){
