@@ -12,5 +12,6 @@ public class GetAllServicesResponse {
     private String name;
     private String jobTitleName;
     private String categoryName;
+    private boolean isActive;
 
 }

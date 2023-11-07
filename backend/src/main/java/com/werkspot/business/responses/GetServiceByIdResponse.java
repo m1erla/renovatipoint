@@ -12,4 +12,5 @@ public class GetServiceByIdResponse {
     private String name;
     private String jobTitleName;
     private String categoryName;
+    private boolean isActive;
 }
