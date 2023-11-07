@@ -34,13 +34,9 @@ public class CategoryManager implements CategoryService {
     public List<GetAllCategoriesResponse> getAll() {
         List<Category> categories = categoryRepository.findAll();
 
-//        List<GetAllCategoriesResponse> categoriesResponses =
-//                categories.stream().map(category -> this.modelMapperService.forResponse().map(category, GetAllCategoriesResponse.class)).collect(Collectors.toList());
         List<GetAllCategoriesResponse> categoriesResponses =
-                categories.stream().map(category -> {
-                    List<GetAllJobTitlesResponse> jobTitles = jobTitleService.getAllOrByCategoryId(Optional.of(category.getId()));
-                    return new GetAllCategoriesResponse(category, jobTitles);
-                }).collect(Collectors.toList());
+                categories.stream().map(category ->
+                        this.modelMapperService.forResponse().map(category, GetAllCategoriesResponse.class)).collect(Collectors.toList());
 
         return categoriesResponses;
 

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/job_titles")
@@ -31,6 +32,11 @@ public class JobTitleController {
     @PutMapping("/job_titles_update")
     public void updateJobTitle(@RequestBody UpdateJobTitleRequest jobTitleRequest){
         this.jobTitleService.update(jobTitleRequest);
+    }
+
+    @GetMapping("/allOrByCategoryId")
+    public List<GetAllJobTitlesResponse> getAllOrByCategoryId(@RequestParam(required = false) Optional<Integer> categoryId) {
+        return jobTitleService.getAllOrByCategoryId(categoryId);
     }
 
     @PostMapping("/category/{categoryName}/jobTitle")

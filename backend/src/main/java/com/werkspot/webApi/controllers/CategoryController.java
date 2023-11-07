@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -34,6 +35,11 @@ public class CategoryController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public void addCategory(@RequestBody CreateCategoryRequest createCategoryRequest){
         this.categoryService.add(createCategoryRequest);
+    }
+
+    @GetMapping("/allOrByJobTitleId")
+    public List<GetAllCategoriesResponse> getAllOrByJobTitleId(@RequestParam(required = false) Optional<Integer> jobTitleId) {
+        return categoryService.getAllOrByJobTitleId(jobTitleId);
     }
 
 
