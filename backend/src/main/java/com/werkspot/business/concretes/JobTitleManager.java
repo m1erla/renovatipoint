@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class JobTitleManager implements JobTitleService {
-    private ModelMapperService modelMapperService;
+    public ModelMapperService modelMapperService;
     private JobTitleRepository jobTitleRepository;
     private JobTitleBusinessRules jobTitleBusinessRules;
     private CategoryRepository categoryRepository;
@@ -33,10 +33,7 @@ public class JobTitleManager implements JobTitleService {
         List<JobTitle> jobTitles = jobTitleRepository.findAll();
 
         List<GetAllJobTitlesResponse> jobTitlesResponses =
-                jobTitles.stream().map(jobTitle -> {
-                    List<GetAllCategoriesResponse> categoriesResponses = categoryService.getAllOrByJobTitleId(Optional.of(jobTitle.getId()));
-                    return new GetAllJobTitlesResponse(jobTitle, categoriesResponses);
-                }).collect(Collectors.toList());
+                jobTitles.stream().map(jobTitle -> this.modelMapperService.forResponse().map(jobTitle, GetAllJobTitlesResponse.class)).collect(Collectors.toList());
 
             return jobTitlesResponses;
 
@@ -47,7 +44,18 @@ public class JobTitleManager implements JobTitleService {
 
     @Override
     public List<GetAllJobTitlesResponse> getAllOrByCategoryId(Optional<Integer> categoryId) {
-        return null;
+        if(categoryId.isPresent()){
+            List<JobTitle> jotTitlesByCategory = jobTitleRepository.findByCategory_Id(categoryId.get());
+
+
+            return jotTitlesByCategory.stream()
+                    .map(jobTitle -> modelMapperService.forResponse().map(jobTitle, GetAllJobTitlesResponse.class))
+                    .collect(Collectors.toList());
+
+        }else {
+            return getAllJobTitlesResponseList();
+        }
+
     }
 
     @Override
