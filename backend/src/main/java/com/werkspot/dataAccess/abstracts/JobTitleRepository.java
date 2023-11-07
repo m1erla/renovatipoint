@@ -16,5 +16,4 @@ public interface JobTitleRepository extends JpaRepository<JobTitle, Integer> {
 
 
 
-    List<JobTitle> findById(int jobTitleId);
 }

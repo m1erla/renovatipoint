@@ -37,11 +37,6 @@ public class CategoryController {
         this.categoryService.add(createCategoryRequest);
     }
 
-    @GetMapping("/allOrByJobTitleId")
-    public List<GetAllCategoriesResponse> getAllOrByJobTitleId(@RequestParam(required = false) Optional<Integer> jobTitleId) {
-        return categoryService.getAllOrByJobTitleId(jobTitleId);
-    }
-
 
 
     @PutMapping("/category_update/{id}")

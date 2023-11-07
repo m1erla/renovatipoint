@@ -29,7 +29,6 @@ public class JobTitleManager implements JobTitleService {
     private JobTitleRepository jobTitleRepository;
     private JobTitleBusinessRules jobTitleBusinessRules;
     private CategoryRepository categoryRepository;
-    private CategoryService categoryService;
     @Override
     public List<GetAllJobTitlesResponse> getAllJobTitlesResponseList() {
         List<JobTitle> jobTitles = jobTitleRepository.findAll();
@@ -39,24 +38,6 @@ public class JobTitleManager implements JobTitleService {
 
             return jobTitlesResponses;
 
-
-
-
-    }
-
-    @Override
-    public List<GetAllJobTitlesResponse> getAllOrByCategoryId(Optional<Integer> categoryId) {
-        if(categoryId.isPresent()){
-            Optional<JobTitle> jotTitlesByCategory = jobTitleRepository.findById(categoryId.get());
-
-
-            return jotTitlesByCategory.stream()
-                    .map(jobTitle -> modelMapperService.forResponse().map(jobTitle, GetAllJobTitlesResponse.class))
-                    .collect(Collectors.toList());
-
-        }else {
-            return getAllJobTitlesResponseList();
-        }
 
     }
 

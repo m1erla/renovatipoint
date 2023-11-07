@@ -14,8 +14,6 @@ public interface CategoryService {
 
     GetCategoriesByIdResponse getById(int id);
 
-    List<GetAllCategoriesResponse> getAllOrByJobTitleId(Optional<Integer> jobTitleId);
-
     void add(CreateCategoryRequest createCategoryRequest);
     void update(UpdateCategoryRequest updateCategoryRequest);
 

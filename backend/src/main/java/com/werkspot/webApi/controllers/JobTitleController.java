@@ -34,10 +34,6 @@ public class JobTitleController {
         this.jobTitleService.update(jobTitleRequest);
     }
 
-    @GetMapping("/allOrByCategoryId")
-    public List<GetAllJobTitlesResponse> getAllOrByCategoryId(@RequestParam(required = false) Optional<Integer> categoryId) {
-        return jobTitleService.getAllOrByCategoryId(categoryId);
-    }
 
     @PostMapping("/category/{categoryName}/jobTitle")
     @ResponseStatus(code = HttpStatus.CREATED)

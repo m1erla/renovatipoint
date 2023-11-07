@@ -29,8 +29,6 @@ public class CategoryManager implements CategoryService {
     private ModelMapperService modelMapperService;
     private CategoryRepository categoryRepository;
     private CategoryBusinessRules categoryBusinessRules;
-    private CategoryService categoryService;
-    private JobTitleService jobTitleService;
 
     @Override
     public List<GetAllCategoriesResponse> getAll() {
@@ -54,23 +52,6 @@ public class CategoryManager implements CategoryService {
 
     }
 
-    @Override
-    public List<GetAllCategoriesResponse> getAllOrByJobTitleId(Optional<Integer> jobTitleId) {
-        if (jobTitleId.isPresent()) {
-            List<Category> categories = categoryRepository.findByCategoryId(jobTitleId.get());
-            return mapCategoriesToResponses(categories);
-        }else {
-            return getAll();
-        }
-
-    }
-
-    private List<GetAllCategoriesResponse> mapCategoriesToResponses(List<Category> categories){
-        return categories.stream().map(category -> {
-            List<GetAllJobTitlesResponse> jobTitles = jobTitleService.getAllOrByCategoryId(Optional.of(category.getId()));
-            return new GetAllCategoriesResponse(category, jobTitles);
-        }).collect(Collectors.toList());
-    }
 
     @Override
     public void add(CreateCategoryRequest createCategoryRequest) {

@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface JobTitleService {
     List<GetAllJobTitlesResponse> getAllJobTitlesResponseList();
 
-    List<GetAllJobTitlesResponse> getAllOrByCategoryId(Optional<Integer> categoryId);
 
     public void add(CreateJobTitleRequest createJobTitleRequest);
 
