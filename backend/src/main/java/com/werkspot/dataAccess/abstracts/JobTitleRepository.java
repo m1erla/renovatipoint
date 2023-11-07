@@ -1,5 +1,6 @@
 package com.werkspot.dataAccess.abstracts;
 
+import com.werkspot.entities.concretes.Category;
 import com.werkspot.entities.concretes.JobTitle;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,5 +16,5 @@ public interface JobTitleRepository extends JpaRepository<JobTitle, Integer> {
 
     Optional<JobTitle> findById(Optional<Integer> categoryId);
 
-    List<JobTitle> findByCategory_Id(int categoryId);
+    List<JobTitle> findAllByJobTitles_Id(int jobTitleId);
 }
