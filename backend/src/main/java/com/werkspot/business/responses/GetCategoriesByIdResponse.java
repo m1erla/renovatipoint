@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class GetCategoriesByIdResponse {
     private int id;
     private String name;
+    private String jobTitleName;
+    private boolean isActive;
 }

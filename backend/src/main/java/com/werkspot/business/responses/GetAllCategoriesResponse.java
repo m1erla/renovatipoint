@@ -14,7 +14,7 @@ import java.util.List;
 public class GetAllCategoriesResponse {
     private int id;
     private String name;
-    private String jobTitles;
+    private String jobTitleName;
     private boolean isActive;
 
 
