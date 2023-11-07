@@ -1,5 +1,6 @@
 package com.werkspot.business.responses;
 
+import com.werkspot.entities.concretes.Category;
 import com.werkspot.entities.concretes.JobTitle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,9 @@ import java.util.List;
 public class GetAllCategoriesResponse {
     private int id;
     private String name;
-    private List<JobTitle> jobTitles;
+    private JobTitle jobTitles;
     private boolean isActive;
+
+
+
 }
