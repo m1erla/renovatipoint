@@ -13,6 +13,7 @@ import com.werkspot.dataAccess.abstracts.JobTitleRepository;
 import com.werkspot.entities.concretes.Category;
 import com.werkspot.entities.concretes.JobTitle;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Lazy
 public class JobTitleManager implements JobTitleService {
     public ModelMapperService modelMapperService;
     private JobTitleRepository jobTitleRepository;

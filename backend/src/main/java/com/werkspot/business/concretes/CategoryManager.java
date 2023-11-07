@@ -14,6 +14,7 @@ import com.werkspot.entities.concretes.Category;
 import com.werkspot.entities.concretes.JobTitle;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Lazy
 public class CategoryManager implements CategoryService {
 
     private ModelMapperService modelMapperService;
