@@ -1,8 +1,11 @@
 package com.werkspot.business.responses;
 
+import com.werkspot.entities.concretes.JobTitle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -10,5 +13,6 @@ import lombok.NoArgsConstructor;
 public class GetAllCategoriesResponse {
     private int id;
     private String name;
+    private List<JobTitle> jobTitles;
     private boolean isActive;
 }

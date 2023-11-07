@@ -52,7 +52,7 @@ public class Ads {
     @CreatedDate
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    private Date adReleaseDate;
+    Date adReleaseDate;
 
     private String descriptions;
 

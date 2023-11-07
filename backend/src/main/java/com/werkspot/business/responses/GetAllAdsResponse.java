@@ -1,8 +1,12 @@
 package com.werkspot.business.responses;
 
+import com.werkspot.entities.concretes.Ads;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -11,7 +15,7 @@ public class GetAllAdsResponse {
     private int id;
     private String name;
     private String descriptions;
-    private String adReleaseDate;
+    private Date adReleaseDate;
     private int categoryId;
     private String categoryName;
     private int serviceId;

@@ -11,6 +11,5 @@ public class CreateServiceRequest {
     private String name;
     private int jobTitleId;
     private int categoryId;
-    private int adId;
     private boolean isActive;
 }
