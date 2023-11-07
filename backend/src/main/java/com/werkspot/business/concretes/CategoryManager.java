@@ -57,7 +57,7 @@ public class CategoryManager implements CategoryService {
     @Override
     public List<GetAllCategoriesResponse> getAllOrByJobTitleId(Optional<Integer> jobTitleId) {
         if (jobTitleId.isPresent()) {
-            List<Category> categories = categoryRepository.findByCategory_Id(jobTitleId.get());
+            List<Category> categories = categoryRepository.findByCategoryId(jobTitleId.get());
             return mapCategoriesToResponses(categories);
         }else {
             return getAll();

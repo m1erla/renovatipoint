@@ -47,7 +47,7 @@ public class JobTitleManager implements JobTitleService {
     @Override
     public List<GetAllJobTitlesResponse> getAllOrByCategoryId(Optional<Integer> categoryId) {
         if(categoryId.isPresent()){
-            List<JobTitle> jotTitlesByCategory = jobTitleRepository.findAllByJobTitles_Id(categoryId.get());
+            Optional<JobTitle> jotTitlesByCategory = jobTitleRepository.findById(categoryId.get());
 
 
             return jotTitlesByCategory.stream()

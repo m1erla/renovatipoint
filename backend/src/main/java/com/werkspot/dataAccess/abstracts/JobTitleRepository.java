@@ -14,7 +14,7 @@ public interface JobTitleRepository extends JpaRepository<JobTitle, Integer> {
 
     Optional<JobTitle> findByName(String name);
 
-    Optional<JobTitle> findById(Optional<Integer> categoryId);
 
-    List<JobTitle> findAllByJobTitles_Id(int jobTitleId);
+
+    List<JobTitle> findById(int jobTitleId);
 }
