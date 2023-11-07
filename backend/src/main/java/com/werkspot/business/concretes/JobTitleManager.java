@@ -1,8 +1,10 @@
 package com.werkspot.business.concretes;
 
+import com.werkspot.business.abstracts.CategoryService;
 import com.werkspot.business.abstracts.JobTitleService;
 import com.werkspot.business.requests.CreateJobTitleRequest;
 import com.werkspot.business.requests.UpdateJobTitleRequest;
+import com.werkspot.business.responses.GetAllCategoriesResponse;
 import com.werkspot.business.responses.GetAllJobTitlesResponse;
 import com.werkspot.business.rules.JobTitleBusinessRules;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,17 +27,27 @@ public class JobTitleManager implements JobTitleService {
     private JobTitleRepository jobTitleRepository;
     private JobTitleBusinessRules jobTitleBusinessRules;
     private CategoryRepository categoryRepository;
+    private CategoryService categoryService;
     @Override
     public List<GetAllJobTitlesResponse> getAllJobTitlesResponseList() {
         List<JobTitle> jobTitles = jobTitleRepository.findAll();
 
+        List<GetAllJobTitlesResponse> jobTitlesResponses =
+                jobTitles.stream().map(jobTitle -> {
+                    List<GetAllCategoriesResponse> categoriesResponses = categoryService.getAllOrByJobTitleId(Optional.of(jobTitle.getId()));
+                    return new GetAllJobTitlesResponse(jobTitle, categoriesResponses);
+                }).collect(Collectors.toList());
 
-            return jobTitles.stream().map(jobTitle ->
-                        this.modelMapperService.forResponse()
-                                .map(jobTitle, GetAllJobTitlesResponse.class))
-                        .collect(Collectors.toList());
+            return jobTitlesResponses;
 
 
+
+
+    }
+
+    @Override
+    public List<GetAllJobTitlesResponse> getAllOrByCategoryId(Optional<Integer> categoryId) {
+        return null;
     }
 
     @Override

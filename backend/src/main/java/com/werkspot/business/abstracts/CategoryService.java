@@ -7,11 +7,14 @@ import com.werkspot.business.responses.GetAllJobTitlesResponse;
 import com.werkspot.business.responses.GetCategoriesByIdResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryService {
     List<GetAllCategoriesResponse> getAll();
 
     GetCategoriesByIdResponse getById(int id);
+
+    List<GetAllCategoriesResponse> getAllOrByJobTitleId(Optional<Integer> jobTitleId);
 
     void add(CreateCategoryRequest createCategoryRequest);
     void update(UpdateCategoryRequest updateCategoryRequest);

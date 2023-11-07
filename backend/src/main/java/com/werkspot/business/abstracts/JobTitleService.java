@@ -6,9 +6,12 @@ import com.werkspot.business.responses.GetAllJobTitlesResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface JobTitleService {
     List<GetAllJobTitlesResponse> getAllJobTitlesResponseList();
+
+    List<GetAllJobTitlesResponse> getAllOrByCategoryId(Optional<Integer> categoryId);
 
     public void add(CreateJobTitleRequest createJobTitleRequest);
 

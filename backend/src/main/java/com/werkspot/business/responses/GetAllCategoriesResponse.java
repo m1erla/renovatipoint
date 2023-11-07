@@ -14,8 +14,16 @@ import java.util.List;
 public class GetAllCategoriesResponse {
     private int id;
     private String name;
-    private String jobTitleName;
+    private List<GetAllJobTitlesResponse> jobTitleName;
     private boolean isActive;
+
+
+    public GetAllCategoriesResponse(Category entity, List<GetAllJobTitlesResponse> jobTitles){
+        this.id = entity.getId();
+        this.name = entity.getName();
+        this.jobTitleName = jobTitles;
+        this.isActive = entity.isActive();
+    }
 
 
 

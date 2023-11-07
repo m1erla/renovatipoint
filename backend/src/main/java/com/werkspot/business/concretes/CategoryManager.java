@@ -1,6 +1,7 @@
 package com.werkspot.business.concretes;
 
 import com.werkspot.business.abstracts.CategoryService;
+import com.werkspot.business.abstracts.JobTitleService;
 import com.werkspot.business.requests.CreateCategoryRequest;
 import com.werkspot.business.requests.UpdateCategoryRequest;
 import com.werkspot.business.responses.GetAllCategoriesResponse;
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,7 +27,8 @@ public class CategoryManager implements CategoryService {
     private ModelMapperService modelMapperService;
     private CategoryRepository categoryRepository;
     private CategoryBusinessRules categoryBusinessRules;
-
+    private CategoryService categoryService;
+    private JobTitleService jobTitleService;
 
     @Override
     public List<GetAllCategoriesResponse> getAll() {
@@ -33,10 +36,14 @@ public class CategoryManager implements CategoryService {
 
 //        List<GetAllCategoriesResponse> categoriesResponses =
 //                categories.stream().map(category -> this.modelMapperService.forResponse().map(category, GetAllCategoriesResponse.class)).collect(Collectors.toList());
+        List<GetAllCategoriesResponse> categoriesResponses =
+                categories.stream().map(category -> {
+                    List<GetAllJobTitlesResponse> jobTitles = jobTitleService.getAllOrByCategoryId(Optional.of(category.getId()));
+                    return new GetAllCategoriesResponse(category, jobTitles);
+                }).collect(Collectors.toList());
 
-        return categories.stream()
-                .map(category -> modelMapperService.forResponse().map(category, GetAllCategoriesResponse.class))
-                .collect(Collectors.toList());
+        return categoriesResponses;
+
     }
 
     @Override
@@ -47,6 +54,11 @@ public class CategoryManager implements CategoryService {
 
               return this.modelMapperService.forResponse().map(category, GetCategoriesByIdResponse.class);
 
+    }
+
+    @Override
+    public List<GetAllCategoriesResponse> getAllOrByJobTitleId(Optional<Integer> jobTitleId) {
+        return null;
     }
 
     @Override
