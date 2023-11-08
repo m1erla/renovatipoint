@@ -12,4 +12,5 @@ public class UpdateJobTitleRequest {
     private String name;
     private String descriptions;
     private String categoryName;
+    private int categoryId;
 }
