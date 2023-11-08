@@ -60,22 +60,22 @@ public class JobTitleManager implements JobTitleService {
     public void delete(int id) {
         this.jobTitleRepository.deleteById(id);
     }
-    @Override
-    public void addJobTitleToCategory(CreateJobTitleRequest createJobTitleRequest, String categoryName){
-        Category category = categoryRepository.findByName(categoryName)
-                .orElseGet(() -> {
-                    Category newCategory = Category.builder()
-                            .name(categoryName)
-                            .isActive(true)
-                            .build();
-                    return categoryRepository.save(newCategory);
-                });
-
-
-        JobTitle jobTitle = modelMapperService.forRequest().map(createJobTitleRequest, JobTitle.class);
-
-        category.addJobTitle(jobTitle);
-
-        categoryRepository.save(category);
-    }
+//    @Override
+//    public void addJobTitleToCategory(CreateJobTitleRequest createJobTitleRequest, String categoryName){
+//        Category category = categoryRepository.findByName(categoryName)
+//                .orElseGet(() -> {
+//                    Category newCategory = Category.builder()
+//                            .name(categoryName)
+//                            .isActive(true)
+//                            .build();
+//                    return categoryRepository.save(newCategory);
+//                });
+//
+//
+//        JobTitle jobTitle = modelMapperService.forRequest().map(createJobTitleRequest, JobTitle.class);
+//
+//        category.addJobTitle(jobTitle);
+//
+//        categoryRepository.save(category);
+//    }
 }

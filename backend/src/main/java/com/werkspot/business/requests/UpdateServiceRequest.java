@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class UpdateServiceRequest {
     private int id;
     private String serviceName;
-    private int categoryId;
-    private int jobTitleId;
+    private String categoryName;
+    private String jobTitleName;
+    private boolean isActive;
 }

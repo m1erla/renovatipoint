@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateServiceRequest {
     private String name;
-    private int jobTitleId;
-    private int categoryId;
+    private String jobTitleName;
+    private String categoryName;
     private boolean isActive;
 }

@@ -18,5 +18,5 @@ public interface JobTitleService {
 
     public void delete(int id);
 
-    public void addJobTitleToCategory(CreateJobTitleRequest createJobTitleRequest, String categoryName);
+   // public void addJobTitleToCategory(CreateJobTitleRequest createJobTitleRequest, String categoryName);
 }
