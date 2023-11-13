@@ -41,6 +41,9 @@ public class AuthenticationController {
     public ResponseEntity<String> authenticate(
             @RequestBody AuthenticationRequest request
     ){
+        if(!userBusinessRules.userExists(request.getEmail()) & !userBusinessRules.userExists(request.getPassword())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found! Email or password is incorrect!");
+        }
 
         return ResponseEntity.ok(service.authenticate(request));
     }
