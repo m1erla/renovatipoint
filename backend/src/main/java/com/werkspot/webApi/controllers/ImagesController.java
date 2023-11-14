@@ -29,6 +29,6 @@ public class ImagesController {
     public ResponseEntity<?> downloadImage(@PathVariable String fileName) {
        byte[] imageData = manager.downloadImage(fileName);
        return ResponseEntity.status(HttpStatus.OK)
-               .contentType(MediaType.valueOf("image/png")).body(imageData);
+               .contentType(MediaType.valueOf("images/png")).body(imageData);
     }
 }
