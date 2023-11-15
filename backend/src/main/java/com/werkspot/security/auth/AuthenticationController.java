@@ -2,6 +2,7 @@ package com.werkspot.security.auth;
 
 import com.werkspot.business.requests.CreateUserRequest;
 import com.werkspot.business.rules.UserBusinessRules;
+import com.werkspot.entities.concretes.User;
 import com.werkspot.security.config.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -41,7 +39,7 @@ public class AuthenticationController {
     public ResponseEntity<String> authenticate(
             @RequestBody AuthenticationRequest request
     ){
-        if(!userBusinessRules.userExists(request.getEmail()) & !userBusinessRules.userExists(request.getPassword())){
+        if(!userBusinessRules.userExists(request.getEmail()) || !userBusinessRules.userExists(request.getPassword())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found! Email or password is incorrect!");
         }
 
@@ -53,6 +51,17 @@ public class AuthenticationController {
             HttpServletResponse response
     )throws IOException {
                  service.refreshToken(request, response);
+    }
+
+    @GetMapping("/confirm")
+    public ResponseEntity<User> confirmUser(@RequestParam("token") String token){
+        User user = jwtService.decodeToken(token);
+
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
 }

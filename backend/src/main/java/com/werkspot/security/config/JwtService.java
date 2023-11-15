@@ -1,12 +1,16 @@
 package com.werkspot.security.config;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.werkspot.dataAccess.abstracts.UserRepository;
+import com.werkspot.entities.concretes.User;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.InvalidKeyException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.WeakKeyException;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -17,9 +21,13 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor(force = true)
+@Slf4j
 public class JwtService {
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
@@ -28,8 +36,41 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
+    private final UserRepository userRepository;
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public User decodeToken(String token){
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            String email = claims.getSubject();
+
+            if (email != null){
+                Optional<User> optionalUser = userRepository.findByEmail(email);
+                return optionalUser.orElse(null);
+            }else {
+                log.error("Token does not contain a valid subject: {}", token);
+                return null;
+            }
+
+
+
+        }
+        catch (ExpiredJwtException e){
+            log.error("Token expired: {}", token);
+            return null;
+        }
+
+        catch (JwtException e){
+            log.error("Error decoding token: {}", token);
+            return null;
+        }
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
