@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,6 +54,7 @@ public class AuthenticationController {
                  service.refreshToken(request, response);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/confirm")
     public ResponseEntity<User> confirmUser(@RequestParam("token") String token){
         User user = jwtService.decodeToken(token);
