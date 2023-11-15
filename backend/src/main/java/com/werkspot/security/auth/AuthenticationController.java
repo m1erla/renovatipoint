@@ -54,8 +54,8 @@ public class AuthenticationController {
                  service.refreshToken(request, response);
     }
 
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/confirm")
+
+    @GetMapping(path = "confirm")
     public ResponseEntity<String> confirmUser(@RequestParam("token") String token){
         String user = jwtService.decodeToken(token);
 
