@@ -56,8 +56,8 @@ public class AuthenticationController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/confirm")
-    public ResponseEntity<User> confirmUser(@RequestParam("token") String token){
-        User user = jwtService.decodeToken(token);
+    public ResponseEntity<String> confirmUser(@RequestParam("token") String token){
+        String user = jwtService.decodeToken(token);
 
         if (user != null) {
             return ResponseEntity.ok(user);
@@ -65,5 +65,7 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
+
 
 }

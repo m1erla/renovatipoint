@@ -7,6 +7,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.InvalidKeyException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.WeakKeyException;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -42,7 +43,8 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public User decodeToken(String token){
+    @Transactional
+    public String decodeToken(String token){
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(secretKey)
@@ -52,11 +54,11 @@ public class JwtService {
             String email = claims.getSubject();
 
             if (email != null){
-                Optional<User> optionalUser = userRepository.findByEmail(email);
-                return optionalUser.orElse(null);
+                assert userRepository != null;
+                return String.valueOf(userRepository.findByEmail(email));
             }else {
                 log.error("Token does not contain a valid subject: {}", token);
-                return null;
+                return "confirm not correct";
             }
 
 
