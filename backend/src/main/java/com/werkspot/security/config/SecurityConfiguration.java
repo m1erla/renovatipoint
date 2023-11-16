@@ -33,13 +33,11 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(
                         "/api/v1/auth/**",
-                        "/api/v1/auth/confirm",
-                        "/api/v1/images/png",
+                        "/api/v1/images/**",
                         "/api/v1/consumers/**",
                         "/api/v1/masters/**",
                         "/api/v1/ads/**",

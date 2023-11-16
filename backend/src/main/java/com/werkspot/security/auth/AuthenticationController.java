@@ -55,9 +55,9 @@ public class AuthenticationController {
     }
 
 
-    @GetMapping(path = "confirm")
-    public ResponseEntity<String> confirmUser(@RequestParam("token") String token){
-        String user = jwtService.decodeToken(token);
+    @GetMapping( "/confirm")
+    public ResponseEntity<User> confirmUser(@RequestParam("token") String token){
+        User user = jwtService.decodeToken(token);
 
         if (user != null) {
             return ResponseEntity.ok(user);

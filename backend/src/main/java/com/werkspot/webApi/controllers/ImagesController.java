@@ -16,10 +16,9 @@ import java.io.IOException;
 @AllArgsConstructor
 public class ImagesController {
 
-    @Autowired
     private StorageManager manager;
     @PostMapping
-    public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
+    public ResponseEntity<?> uploadImage(@RequestParam("images")MultipartFile file) throws IOException {
            String uploadImage = manager.uploadImage(file);
            return ResponseEntity.status(HttpStatus.OK)
                    .body(uploadImage);

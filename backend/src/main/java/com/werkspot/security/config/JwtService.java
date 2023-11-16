@@ -44,10 +44,10 @@ public class JwtService {
     }
 
     @Transactional
-    public String decodeToken(String token){
+    public User decodeToken(String token){
         try {
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
+                    .setSigningKey(getSignInKey())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
@@ -55,14 +55,12 @@ public class JwtService {
 
             if (email != null){
                 assert userRepository != null;
-                return String.valueOf(userRepository.findByEmail(email));
+                Optional<User> user = userRepository.findByEmail(email);
+                return user.orElse(null);
             }else {
                 log.error("Token does not contain a valid subject: {}", token);
-                return "confirm not correct";
+                return null;
             }
-
-
-
         }
         catch (ExpiredJwtException e){
             log.error("Token expired: {}", token);
