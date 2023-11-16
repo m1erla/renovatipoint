@@ -28,7 +28,6 @@ import java.util.function.Function;
 @Service
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
-@Slf4j
 public class JwtService {
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
@@ -45,7 +44,7 @@ public class JwtService {
 
     @Transactional
     public User decodeToken(String token){
-        try {
+
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(getSignInKey())
                     .build()
@@ -54,23 +53,11 @@ public class JwtService {
             String email = claims.getSubject();
 
             if (email != null){
-                assert userRepository != null;
                 Optional<User> user = userRepository.findByEmail(email);
                 return user.orElse(null);
             }else {
-                log.error("Token does not contain a valid subject: {}", token);
                 return null;
             }
-        }
-        catch (ExpiredJwtException e){
-            log.error("Token expired: {}", token);
-            return null;
-        }
-
-        catch (JwtException e){
-            log.error("Error decoding token: {}", token);
-            return null;
-        }
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

@@ -54,18 +54,4 @@ public class AuthenticationController {
                  service.refreshToken(request, response);
     }
 
-
-    @GetMapping( "/confirm")
-    public ResponseEntity<User> confirmUser(@RequestParam("token") String token){
-        User user = jwtService.decodeToken(token);
-
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        }else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
-
-
-
 }
