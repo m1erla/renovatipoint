@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ import java.util.function.Function;
 @Service
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
+@Slf4j
 public class JwtService {
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
@@ -41,14 +43,23 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    @Transactional
-    public Claims decodeToken(String token){
 
-            return  Jwts.parserBuilder()
-                    .setSigningKey(getSignInKey())
+    public static String decodeToken(HttpHeaders headers, String secret){
+        log.debug("Token Util Start");
+
+            String token = headers.get("Authorization").get(0);
+            String jwt = token.replace("Bearer", "");
+
+            log.info("JWT : " + jwt);
+
+            String userId = Jwts.parserBuilder()
+                    .setSigningKey(secret)
                     .build()
                     .parseClaimsJws(token)
-                    .getBody();
+                    .getBody().getSubject();
+            log.info("getUserId End");
+
+            return userId;
 
     }
 

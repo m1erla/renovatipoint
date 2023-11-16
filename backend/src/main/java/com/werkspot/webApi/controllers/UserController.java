@@ -8,6 +8,8 @@ import com.werkspot.security.config.JwtService;
 import com.werkspot.security.token.Token;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,19 +22,30 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
     private UserService userService;
+
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     public List<GetAllUsersResponse> getAllUsers(){
         return userService.getAll();
     }
 
-    @GetMapping( "/confirm")
-    public ResponseEntity<GetUserByTokenResponse> confirmUser(@RequestParam("token") String token){
+    @GetMapping( "/{token}")
+    public ResponseEntity<GetUserByTokenResponse> confirmUser(@PathVariable String token){
         GetUserByTokenResponse response = userService.getUserByToken(token);
         if (response != null){
             return ResponseEntity.ok(response);
         }else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @GetMapping("/getToken")
+    public ResponseEntity<String> getToken(@RequestHeader HttpHeaders header){
+        try {
+            String userId = JwtService.decodeToken(header, "c8146b630205b8b3bc8c255b2eb2757f874e27ab40c478c0d2f93e8dbfb3418b");
+            return ResponseEntity.status(HttpStatus.OK).body(userId);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Token!");
         }
     }
     @GetMapping("/{id}")
