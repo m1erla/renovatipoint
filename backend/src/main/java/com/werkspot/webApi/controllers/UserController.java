@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users")
 @AllArgsConstructor
-@CrossOrigin(origins = "https://myklus.onrender.com", allowCredentials = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "https://myklus.onrender.com", allowCredentials = "true", allowedHeaders = "*")
 public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
