@@ -23,36 +23,14 @@ import java.util.List;
 @CrossOrigin(origins = "https://myklus.onrender.com", allowCredentials = "true", allowedHeaders = "*")
 public class UserController {
     private final UserService userService;
-    private final JwtService jwtService;
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     public List<GetAllUsersResponse> getAllUsers(){
         return userService.getAll();
     }
 
-    @GetMapping( "/{token}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<GetUserByTokenResponse> confirmUser(@PathVariable String token){
-        GetUserByTokenResponse response = userService.getUserByToken(token);
-        if (response != null){
-            return ResponseEntity.ok(response);
-        }else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
 
-    @GetMapping("/getToken")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<String> getToken(@RequestHeader HttpHeaders header){
-        try {
-            String userId = jwtService.decodeToken(header, "c8146b630205b8b3bc8c255b2eb2757f874e27ab40c478c0d2f93e8dbfb3418b");
-            return ResponseEntity.status(HttpStatus.OK).body(userId);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Token!");
-        }
-    }
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
     public GetUsersByIdResponse getUsersById(@PathVariable int id){
         return userService.getById(id);
     }
