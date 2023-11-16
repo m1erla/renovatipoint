@@ -1,6 +1,5 @@
 package com.werkspot.business.concretes;
 
-import com.werkspot.business.abstracts.MasterService;
 import com.werkspot.business.abstracts.UserService;
 import com.werkspot.business.requests.CreateUserRequest;
 import com.werkspot.business.requests.UpdateUserRequest;
@@ -15,10 +14,12 @@ import com.werkspot.entities.concretes.Ads;
 import com.werkspot.entities.concretes.Consumer;
 import com.werkspot.entities.concretes.Master;
 import com.werkspot.entities.concretes.User;
+import com.werkspot.security.token.Token;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,6 +53,16 @@ public class UserManager implements UserService {
                 this.modelMapperService.forResponse().map(master, GetAllByIdMastersResponse.class);
         return response;
     }
+
+    @Override
+    public GetUserByTokenResponse getUserByToken(List<Token> token) {
+        Optional<User> user = this.userRepository.findByToken(token);
+
+        GetUserByTokenResponse response = this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
+        return response;
+    }
+
+
 
     @Override
     public GetAllByIdConsumersResponse getConsumerById(int id) {

@@ -36,28 +36,20 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
-    private final UserRepository userRepository;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     @Transactional
-    public User decodeToken(String token){
+    public Claims decodeToken(String token){
 
-            Claims claims = Jwts.parserBuilder()
+            return  Jwts.parserBuilder()
                     .setSigningKey(getSignInKey())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-            String email = claims.getSubject();
 
-            if (email != null){
-                Optional<User> user = userRepository.findByEmail(email);
-                return user.orElse(null);
-            }else {
-                return null;
-            }
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
