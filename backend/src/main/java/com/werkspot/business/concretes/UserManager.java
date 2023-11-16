@@ -55,7 +55,7 @@ public class UserManager implements UserService {
 
     @Override
     public GetUserByTokenResponse getUserByToken(String token) {
-        Optional<User> user = this.userRepository.findBy(token);
+        Optional<User> user = this.userRepository.findByToken(token);
 
         GetUserByTokenResponse response = this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
         return response;
