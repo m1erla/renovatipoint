@@ -26,9 +26,9 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping( "/confirm")
+    @GetMapping( "/{token}")
     @PreAuthorize("hasRole('USER')")
-    public GetUserByTokenResponse confirmUser(@RequestParam("token") String token){
+    public GetUserByTokenResponse confirmUser(@PathVariable String token){
          return userService.getUserByToken(token);
     }
     @GetMapping("/{id}")
