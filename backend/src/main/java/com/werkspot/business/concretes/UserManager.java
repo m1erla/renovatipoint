@@ -14,7 +14,6 @@ import com.werkspot.entities.concretes.Ads;
 import com.werkspot.entities.concretes.Consumer;
 import com.werkspot.entities.concretes.Master;
 import com.werkspot.entities.concretes.User;
-import com.werkspot.security.token.Token;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -55,8 +54,8 @@ public class UserManager implements UserService {
     }
 
     @Override
-    public GetUserByTokenResponse getUserByToken(List<Token> token) {
-        Optional<User> user = this.userRepository.findByToken(token);
+    public GetUserByTokenResponse getUserByToken(String token) {
+        Optional<User> user = this.userRepository.findBy(token);
 
         GetUserByTokenResponse response = this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
         return response;

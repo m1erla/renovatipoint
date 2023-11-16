@@ -12,9 +12,7 @@ public interface UserService {
 
     GetAllByIdMastersResponse getMasterById(int id);
 
-    GetUserByTokenResponse getUserByToken(List<Token> token);
-
-//    GetUserByTokenResponse getUserByToken(String token);
+    GetUserByTokenResponse getUserByToken(String token);
 
     GetAllByIdConsumersResponse getConsumerById(int id);
 
