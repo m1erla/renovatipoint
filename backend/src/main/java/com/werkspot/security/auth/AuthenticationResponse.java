@@ -17,7 +17,11 @@ public class AuthenticationResponse {
 
      @JsonProperty("refresh-token")
      private String refreshToken;
-
+     String name;
+     String surname;
+     String postCode;
+     String phoneNumber;
+     String jobTitleName;
      String message;
      int userId;
      String email;

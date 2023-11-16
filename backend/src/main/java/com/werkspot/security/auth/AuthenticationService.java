@@ -3,32 +3,22 @@ package com.werkspot.security.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.werkspot.business.abstracts.UserService;
 import com.werkspot.business.requests.CreateUserRequest;
-import com.werkspot.business.responses.GetUsersByEmailResponse;
 import com.werkspot.business.rules.UserBusinessRules;
 import com.werkspot.security.config.JwtService;
 import com.werkspot.entities.concretes.User;
 import com.werkspot.dataAccess.abstracts.UserRepository;
-import com.werkspot.security.token.Token;
-import com.werkspot.security.token.TokenRepository;
-import com.werkspot.security.token.TokenType;
-import com.werkspot.security.user.Role;
+import com.werkspot.security.token.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +30,8 @@ public class AuthenticationService{
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final UserBusinessRules userBusinessRules;
+    private final ConfirmationTokenService confirmationTokenService;
+    private final EmailValidator emailValidator;
 
     public RegisterResponse register(CreateUserRequest request){
          var user = User.builder()
@@ -65,6 +57,30 @@ public class AuthenticationService{
 
     }
 
+    public AuthenticationResponse confirmLogin(AuthenticationRequest request){
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+        var user = repository.findByEmail(request.getEmail()).orElseThrow();
+        var jwtToken = jwtService.generateToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
+
+        return AuthenticationResponse.builder()
+                .message("User Successfully Login!")
+                .userId(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .surname(user.getSurname())
+                .phoneNumber(user.getPhoneNumber())
+                .postCode(user.getPostCode())
+                .jobTitleName(user.getJobTitleName())
+                .build();
+    }
+
     public String authenticate( AuthenticationRequest request){
 
             authenticationManager.authenticate(
@@ -84,6 +100,26 @@ public class AuthenticationService{
 
     }
 
+    public String confirmToken(String token){
+        ConfirmationToken confirmationToken = confirmationTokenService
+                .getToken(token)
+                .orElseThrow(() -> new IllegalStateException("token not found!"));
+
+        if (confirmationToken.getConfirmedAt() != null){
+            throw new IllegalStateException("email already confirmed");
+        }
+
+        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
+
+        if (expiredAt.isBefore(LocalDateTime.now())){
+            throw new IllegalStateException("token expired");
+
+        }
+        confirmationTokenService.setConfirmedAt(token);
+
+
+        return "confirm";
+    }
 
 
 

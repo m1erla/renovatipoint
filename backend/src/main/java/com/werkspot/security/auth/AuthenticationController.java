@@ -58,11 +58,11 @@ public class AuthenticationController {
                  service.refreshToken(request, response);
     }
 
-    @GetMapping( "/{token}")
-    public ResponseEntity<GetUserByTokenResponse> confirmUser(@PathVariable String token){
-        GetUserByTokenResponse response = userService.getUserByToken(token);
+    @GetMapping( "/confirmLogin")
+    public ResponseEntity<AuthenticationResponse> confirmLogin(@RequestBody AuthenticationRequest confirmLogin){
+        GetUserByTokenResponse response = userService.getUserByToken(String.valueOf(confirmLogin));
         if (response != null){
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(service.confirmLogin(confirmLogin));
         }else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }

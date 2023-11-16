@@ -20,6 +20,7 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,6 +65,10 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Token> token;
+
+    private boolean locked = false;
+
+    private boolean enabled = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
