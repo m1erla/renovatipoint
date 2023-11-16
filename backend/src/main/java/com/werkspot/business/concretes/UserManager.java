@@ -15,6 +15,8 @@ import com.werkspot.entities.concretes.Consumer;
 import com.werkspot.entities.concretes.Master;
 import com.werkspot.entities.concretes.User;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,10 +57,17 @@ public class UserManager implements UserService {
 
     @Override
     public GetUserByTokenResponse getUserByToken(String token) {
-        Optional<User> user = this.userRepository.findByToken(token);
+        Optional<User> userOptional = this.userRepository.findByToken(token);
 
-        GetUserByTokenResponse response = this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
-        return response;
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            GetUserByTokenResponse response = this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
+            return response;
+        }else {
+            return null;
+        }
+
+
     }
 
 

@@ -28,8 +28,13 @@ public class UserController {
 
     @GetMapping( "/{token}")
     @PreAuthorize("hasRole('USER')")
-    public GetUserByTokenResponse confirmUser(@PathVariable String token){
-         return userService.getUserByToken(token);
+    public ResponseEntity<GetUserByTokenResponse> confirmUser(@PathVariable String token){
+        GetUserByTokenResponse response = userService.getUserByToken(token);
+        if (response != null){
+            return ResponseEntity.ok(response);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
     @GetMapping("/{id}")
     public GetUsersByIdResponse getUsersById(@PathVariable int id){
