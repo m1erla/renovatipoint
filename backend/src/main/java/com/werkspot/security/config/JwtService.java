@@ -44,7 +44,7 @@ public class JwtService {
     }
 
 
-    public static String decodeToken(HttpHeaders headers, String secret){
+    public String decodeToken(HttpHeaders headers, String secret){
         log.debug("Token Util Start");
 
             String token = headers.get("Authorization").get(0);
