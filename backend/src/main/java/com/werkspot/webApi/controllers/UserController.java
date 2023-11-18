@@ -37,8 +37,9 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public GetUserByTokenResponse confirm(@RequestHeader("Authorization") String token) throws BusinessException{
-        return userService.findUserProfileByToken(token);
+    public ResponseEntity<GetUserByTokenResponse> getUsersByToken(@RequestHeader("Authorization") String token) throws BusinessException{
+        GetUserByTokenResponse user = userService.findUserProfileByToken(token);
+        return new ResponseEntity<GetUserByTokenResponse>(user, HttpStatus.ACCEPTED);
     }
 
     @PostMapping
