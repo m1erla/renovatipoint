@@ -5,6 +5,7 @@ import com.werkspot.business.requests.CreateUserRequest;
 import com.werkspot.business.requests.UpdateUserRequest;
 import com.werkspot.business.responses.*;
 import com.werkspot.business.rules.UserBusinessRules;
+import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
 import com.werkspot.dataAccess.abstracts.AdsRepository;
 import com.werkspot.dataAccess.abstracts.ConsumerRepository;
@@ -14,9 +15,8 @@ import com.werkspot.entities.concretes.Ads;
 import com.werkspot.entities.concretes.Consumer;
 import com.werkspot.entities.concretes.Master;
 import com.werkspot.entities.concretes.User;
+import com.werkspot.security.config.JwtService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +32,7 @@ public class UserManager implements UserService {
     private MasterRepository masterRepository;
     private AdsRepository adsRepository;
     private ConsumerRepository consumerRepository;
+    private JwtService jwtService;
 
     @Override
     public List<GetAllUsersResponse> getAll() {
@@ -56,20 +57,17 @@ public class UserManager implements UserService {
     }
 
     @Override
-    public GetUserByTokenResponse getUserByToken(String token) {
-        Optional<User> userOptional = this.userRepository.findByToken(token);
+    public Optional<User> findUserProfileByToken(String token) throws BusinessException {
+        String email = jwtService.decodeToken(token);
 
-        if (userOptional.isPresent()){
-            User user = userOptional.get();
-            GetUserByTokenResponse response = this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
-            return response;
-        }else {
-            return null;
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isEmpty()){
+            throw new BusinessException("User not found with email " + email);
         }
 
-
+        return user;
     }
-
 
 
     @Override
@@ -119,7 +117,21 @@ public class UserManager implements UserService {
                 this.modelMapperService.forResponse().map(user, GetUsersByIdResponse.class);
         return response;
     }
+    @Override
+    public GetUserByTokenResponse getUserByToken(String token) {
 
+        Optional<User> userOptional = this.userRepository.findByEmail(token);
+
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            GetUserByTokenResponse response = this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
+            return response;
+        }else {
+            return null;
+        }
+
+
+    }
     @Override
     public void add(CreateUserRequest createUserRequest) {
        this.userBusinessRules.checkIfEmailExists(createUserRequest.getEmail());

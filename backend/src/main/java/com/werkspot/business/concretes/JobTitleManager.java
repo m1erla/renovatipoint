@@ -29,6 +29,7 @@ public class JobTitleManager implements JobTitleService {
     private JobTitleRepository jobTitleRepository;
     private JobTitleBusinessRules jobTitleBusinessRules;
     private CategoryRepository categoryRepository;
+
     @Override
     public List<GetAllJobTitlesResponse> getAllJobTitlesResponseList() {
         List<JobTitle> jobTitles = jobTitleRepository.findAll();

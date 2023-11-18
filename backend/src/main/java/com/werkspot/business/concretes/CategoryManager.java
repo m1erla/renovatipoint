@@ -29,7 +29,6 @@ public class CategoryManager implements CategoryService {
     private ModelMapperService modelMapperService;
     private CategoryRepository categoryRepository;
     private CategoryBusinessRules categoryBusinessRules;
-
     @Override
     public List<GetAllCategoriesResponse> getAll() {
         List<Category> categories = categoryRepository.findAll();

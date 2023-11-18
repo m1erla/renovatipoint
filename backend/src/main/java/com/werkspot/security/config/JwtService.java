@@ -29,7 +29,6 @@ import java.util.function.Function;
 @Service
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
-@Slf4j
 public class JwtService {
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
@@ -44,24 +43,21 @@ public class JwtService {
     }
 
 
-    public String decodeToken(HttpHeaders headers, String secret){
-        log.debug("Token Util Start");
+    public String decodeToken(String token){
+        token = token.substring(7);
 
-            String token = headers.get("Authorization").get(0);
-            String jwt = token.replace("Bearer", "");
-
-            log.info("JWT : " + jwt);
-
-            String userId = Jwts.parserBuilder()
-                    .setSigningKey(secret)
+        Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(getSignInKey())
                     .build()
                     .parseClaimsJws(token)
-                    .getBody().getSubject();
-            log.info("getUserId End");
+                    .getBody();
+        String email = String.valueOf(claims.get("email"));
 
-            return userId;
+            return email;
 
     }
+
+
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);

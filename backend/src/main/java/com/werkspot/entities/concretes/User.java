@@ -20,16 +20,17 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
-@EqualsAndHashCode
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
+    @Getter
     @Column(name = "name")
     private String name;
 
+    @Getter
     @Column(name = "surname")
     private String surname;
 

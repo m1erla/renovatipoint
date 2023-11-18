@@ -4,6 +4,7 @@ import com.werkspot.business.abstracts.UserService;
 import com.werkspot.business.requests.CreateUserRequest;
 import com.werkspot.business.responses.GetUserByTokenResponse;
 import com.werkspot.business.rules.UserBusinessRules;
+import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.entities.concretes.User;
 import com.werkspot.security.config.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -68,14 +70,10 @@ public class AuthenticationController {
         }
     }
 
-    @GetMapping("/getToken")
-    public ResponseEntity<String> getToken(@RequestHeader HttpHeaders header){
-        try {
-            String userId = jwtService.decodeToken(header, "c8146b630205b8b3bc8c255b2eb2757f874e27ab40c478c0d2f93e8dbfb3418b");
-            return ResponseEntity.status(HttpStatus.OK).body(userId);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Token!");
-        }
+    @GetMapping("/profile")
+    public ResponseEntity<Optional<User>> confirm(@RequestHeader("Authorization") String token) throws BusinessException {
+        Optional<User> user = userService.findUserProfileByToken(token);
+        return new ResponseEntity<Optional<User>>(user, HttpStatus.ACCEPTED);
     }
 
 }
