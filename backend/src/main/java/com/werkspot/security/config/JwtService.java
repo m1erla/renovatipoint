@@ -51,9 +51,8 @@ public class JwtService {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        String email = String.valueOf(claims.get("email"));
 
-            return email;
+        return String.valueOf(claims.get("email"));
 
     }
 
