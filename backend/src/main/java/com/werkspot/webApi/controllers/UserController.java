@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<GetUserByTokenResponse> getUsersByToken(@RequestHeader("Authorization") String token) throws BusinessException{
+    public ResponseEntity<GetUserByTokenResponse> getUsersByToken(@RequestHeader("Authorization") UserDetails token) throws BusinessException{
         GetUserByTokenResponse user = userService.findUserProfileByToken(token);
         return new ResponseEntity<GetUserByTokenResponse>(user, HttpStatus.ACCEPTED);
     }

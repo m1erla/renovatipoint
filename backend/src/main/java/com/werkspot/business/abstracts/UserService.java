@@ -5,6 +5,7 @@ import com.werkspot.business.requests.UpdateUserRequest;
 import com.werkspot.business.responses.*;
 import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.entities.concretes.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public interface UserService {
 
     GetAllByIdMastersResponse getMasterById(int id);
 
-    GetUserByTokenResponse findUserProfileByToken(String token);
+    GetUserByTokenResponse findUserProfileByToken(UserDetails token);
 
 
     GetAllByIdConsumersResponse getConsumerById(int id);

@@ -17,6 +17,7 @@ import com.werkspot.entities.concretes.Master;
 import com.werkspot.entities.concretes.User;
 import com.werkspot.security.config.JwtService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,8 +58,8 @@ public class UserManager implements UserService {
     }
 
     @Override
-    public GetUserByTokenResponse findUserProfileByToken(String token) throws BusinessException {
-        String email = jwtService.decodeToken(token);
+    public GetUserByTokenResponse findUserProfileByToken(UserDetails token) throws BusinessException {
+        var email = jwtService.generateToken(token);
 
         Optional<User> user = userRepository.findByEmail(email);
 
