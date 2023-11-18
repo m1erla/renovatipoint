@@ -1,5 +1,6 @@
 package com.werkspot.security.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static com.werkspot.security.user.Permission.*;
 import static com.werkspot.security.user.Role.*;
@@ -39,14 +46,7 @@ public class SecurityConfiguration {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(
-                        "/api/v1/auth/**",
-                        "/api/v1/images/**",
-                        "/api/v1/consumers/**",
-                        "/api/v1/masters/**",
-                        "/api/v1/ads/**",
-                        "/api/v1/job_titles/**",
-                        "/api/v1/services/**",
-                        "/api/v1/categories/**",
+                        "/api/**",
                         "/ws",
                         "/app",
                         "/app/ws",
@@ -65,7 +65,7 @@ public class SecurityConfiguration {
                         "/swagger-ui.html"
                 )
                 .permitAll()
-                .requestMatchers("/api/v1/users/**").hasAnyRole(USER.name())
+                .requestMatchers("/api/v1/users/**").hasAnyRole("USER")
                 .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
                 .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
                 .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
@@ -80,12 +80,38 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout()
-                .logoutUrl("/api/v1/auth/logout")
-                .addLogoutHandler(logoutHandler)
-                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-        ;
+                        .logoutUrl("/api/v1/auth/logout")
+                        .addLogoutHandler(logoutHandler)
+                        .logoutSuccessHandler(
+                                (request, response, authentication) -> SecurityContextHolder.clearContext()
+                        )
+                .permitAll()
+                .and()
+                .httpBasic()
+                .and()
+                .formLogin()
+                .and();
 
         return http.build();
+    }
+
+    private CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList(
+                "https://myklus.onrender.com/api/v1/auth/**",
+                "https://myklus.onrender.com/api/v1/users/**",
+                "/api/v1/auth/**",
+                "/api/v1/users/**"
+        ));
+        configuration.setAllowedMethods(Collections.singletonList("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 }
