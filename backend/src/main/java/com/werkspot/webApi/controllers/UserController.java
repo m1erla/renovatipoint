@@ -25,7 +25,7 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     public List<GetAllUsersResponse> getAllUsers(){
         return userService.getAll();
     }
@@ -37,8 +37,8 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    @PreAuthorize("hasAnyRole('USER')")
-    public GetUserByTokenResponse confirm(@RequestHeader("Authorization") String token){
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public GetUserByTokenResponse confirm(@RequestHeader("Authorization") String token) throws BusinessException{
         return userService.findUserProfileByToken(token);
     }
 

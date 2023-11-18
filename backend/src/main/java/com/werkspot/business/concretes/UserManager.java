@@ -60,9 +60,9 @@ public class UserManager implements UserService {
     public GetUserByTokenResponse findUserProfileByToken(String token) throws BusinessException {
         String email = jwtService.decodeToken(token);
 
-        User user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
 
-        if (user == null){
+        if (user.isEmpty()){
             throw new BusinessException("User not found with email " + email);
         }
         GetUserByTokenResponse response =
@@ -85,7 +85,7 @@ public class UserManager implements UserService {
 
     @Override
     public GetUsersByEmailResponse getByEmail(String email) {
-        User user = this.userRepository.findByEmail(email);
+        Optional<User> user = this.userRepository.findByEmail(email);
 
         GetUsersByEmailResponse response =
                 this.modelMapperService.forResponse().map(user, GetUsersByEmailResponse.class);
