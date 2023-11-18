@@ -67,9 +67,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Token> token;
 
-    private boolean locked = false;
-
-    private boolean enabled = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class Ads {
     @CreatedDate
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    Date adReleaseDate;
+    LocalDateTime adReleaseDate;
 
     private String descriptions;
 
