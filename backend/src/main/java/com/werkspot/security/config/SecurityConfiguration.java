@@ -94,10 +94,11 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
-    private CorsConfigurationSource corsConfigurationSource(){
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
+                "https://myklus.onrender.com",
                 "https://myklus.onrender.com/api/v1/auth/**",
                 "https://myklus.onrender.com/api/v1/users/**",
                 "/api/v1/auth/**",
