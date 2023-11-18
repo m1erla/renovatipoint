@@ -25,7 +25,7 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER')")
     public List<GetAllUsersResponse> getAllUsers(){
         return userService.getAll();
     }
@@ -37,6 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<User> confirm(@RequestHeader("Authorization") String token) throws BusinessException {
         User user = userService.findUserProfileByToken(token);
         return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
