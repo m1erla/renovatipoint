@@ -37,7 +37,6 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
     public GetUserByTokenResponse confirm(@RequestHeader("Authorization") String token) throws BusinessException{
         return userService.findUserProfileByToken(token);
     }
