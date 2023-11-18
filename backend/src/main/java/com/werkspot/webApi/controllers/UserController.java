@@ -38,9 +38,8 @@ public class UserController {
 
     @GetMapping("/profile")
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<User> confirm(@RequestHeader("Authorization") String token) throws BusinessException {
-        User user = userService.findUserProfileByToken(token);
-        return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
+    public GetUserByTokenResponse confirm(@RequestHeader("Authorization") String token){
+        return userService.findUserProfileByToken(token);
     }
 
     @PostMapping
