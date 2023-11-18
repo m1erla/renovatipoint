@@ -60,20 +60,16 @@ public class AuthenticationController {
                  service.refreshToken(request, response);
     }
 
-    @GetMapping( "/confirmLogin")
-    public ResponseEntity<AuthenticationResponse> confirmLogin(@RequestBody AuthenticationRequest confirmLogin){
-        GetUserByTokenResponse response = userService.getUserByToken(String.valueOf(confirmLogin));
-        if (response != null){
-            return ResponseEntity.ok(service.confirmLogin(confirmLogin));
-        }else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
+//    @GetMapping( "/confirmLogin")
+//    public ResponseEntity<AuthenticationResponse> confirmLogin(@RequestBody AuthenticationRequest confirmLogin){
+//        GetUserByTokenResponse response = userService.getUserByToken(String.valueOf(confirmLogin));
+//        if (response != null){
+//            return ResponseEntity.ok(service.confirmLogin(confirmLogin));
+//        }else {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//    }
 
-    @GetMapping("/profile")
-    public ResponseEntity<Optional<User>> confirm(@RequestHeader("Authorization") String token) throws BusinessException {
-        Optional<User> user = userService.findUserProfileByToken(token);
-        return new ResponseEntity<Optional<User>>(user, HttpStatus.ACCEPTED);
-    }
+
 
 }

@@ -3,6 +3,7 @@ package com.werkspot.webApi.controllers;
 import com.werkspot.business.abstracts.*;
 import com.werkspot.business.requests.*;
 import com.werkspot.business.responses.*;
+import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.entities.concretes.User;
 import com.werkspot.security.config.JwtService;
 import com.werkspot.security.token.Token;
@@ -16,11 +17,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @AllArgsConstructor
-@CrossOrigin(origins = "https://myklus.onrender.com", allowCredentials = "true", allowedHeaders = "*")
 public class UserController {
     private final UserService userService;
     @GetMapping
@@ -33,6 +34,12 @@ public class UserController {
     @GetMapping("/{id}")
     public GetUsersByIdResponse getUsersById(@PathVariable int id){
         return userService.getById(id);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<User> confirm(@RequestHeader("Authorization") String token) throws BusinessException {
+        User user = userService.findUserProfileByToken(token);
+        return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
     }
 
     @PostMapping

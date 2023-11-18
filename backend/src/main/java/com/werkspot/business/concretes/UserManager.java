@@ -57,12 +57,12 @@ public class UserManager implements UserService {
     }
 
     @Override
-    public Optional<User> findUserProfileByToken(String token) throws BusinessException {
+    public User findUserProfileByToken(String token) throws BusinessException {
         String email = jwtService.decodeToken(token);
 
-        Optional<User> user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
 
-        if (user.isEmpty()){
+        if (user == null){
             throw new BusinessException("User not found with email " + email);
         }
 
@@ -82,7 +82,7 @@ public class UserManager implements UserService {
 
     @Override
     public GetUsersByEmailResponse getByEmail(String email) {
-        User user = this.userRepository.findByEmail(email).orElseThrow();
+        User user = this.userRepository.findByEmail(email);
 
         GetUsersByEmailResponse response =
                 this.modelMapperService.forResponse().map(user, GetUsersByEmailResponse.class);
@@ -117,21 +117,7 @@ public class UserManager implements UserService {
                 this.modelMapperService.forResponse().map(user, GetUsersByIdResponse.class);
         return response;
     }
-    @Override
-    public GetUserByTokenResponse getUserByToken(String token) {
 
-        Optional<User> userOptional = this.userRepository.findByEmail(token);
-
-        if (userOptional.isPresent()){
-            User user = userOptional.get();
-            GetUserByTokenResponse response = this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
-            return response;
-        }else {
-            return null;
-        }
-
-
-    }
     @Override
     public void add(CreateUserRequest createUserRequest) {
        this.userBusinessRules.checkIfEmailExists(createUserRequest.getEmail());

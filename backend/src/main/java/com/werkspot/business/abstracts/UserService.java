@@ -14,9 +14,8 @@ public interface UserService {
 
     GetAllByIdMastersResponse getMasterById(int id);
 
-    Optional<User> findUserProfileByToken(String token) throws BusinessException;
+    User findUserProfileByToken(String token) throws BusinessException;
 
-    GetUserByTokenResponse getUserByToken(String token);
 
     GetAllByIdConsumersResponse getConsumerById(int id);
 
