@@ -48,11 +48,12 @@ public class SecurityConfiguration {
             http
                     .csrf()
                     .disable()
+                    .cors()
+                    .configurationSource(corsConfigurationSource())
+                    .and()
                     .authorizeHttpRequests()
                     .requestMatchers(GET, "/api/v1/users/profile").permitAll()
                     .requestMatchers(GET,"/api/v1/auth/confirmLogin").permitAll()
-                    .anyRequest()
-                    .authenticated()
                     .requestMatchers(
                             "/api/v1/**",
                             "/ws",
