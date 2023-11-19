@@ -28,7 +28,7 @@ import java.util.function.Function;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 public class JwtService {
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
@@ -41,9 +41,6 @@ public class JwtService {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-
-
-
 
 
 
@@ -62,18 +59,17 @@ public class JwtService {
     ) {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
-    public String decodeToken(String token){
-        token = token.substring(7);
-
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSignInKey())
+    public Claims decodeToken(String token){
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        String email = String.valueOf(claims.get("email"));
 
-        return email;
+    }
 
+    public String extractUsernameByToken(String token){
+        return decodeToken(token).getSubject();
     }
     public String generateRefreshToken(
             UserDetails userDetails

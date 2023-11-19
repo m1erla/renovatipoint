@@ -61,7 +61,7 @@ public class UserManager implements UserService {
     public Optional<User> getUserProfileByToken(String token) throws BusinessException {
         var email = jwtService.decodeToken(token);
 
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(String.valueOf(email));
 
         if (user.isEmpty()){
             throw new BusinessException("User not found with email " + email);

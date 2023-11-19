@@ -91,7 +91,8 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
-                "https://myklus.onrender.com"
+                "https://myklus.onrender.com",
+                "http://localhost:5173"
         ));
         configuration.setAllowedMethods(Collections.singletonList("*"));
         configuration.setAllowCredentials(true);

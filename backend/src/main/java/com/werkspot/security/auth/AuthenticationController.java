@@ -53,9 +53,10 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
-    public ResponseEntity<AuthenticationResponse> getUserByToken(@RequestBody AuthenticationRequest request) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<AuthenticationResponse> getUserByToken(@RequestHeader("Authorization") AuthenticationRequest request) {
         return ResponseEntity.ok(service.confirmLogin(request));
     }
     @PostMapping("/refresh-token")

@@ -39,13 +39,13 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<Optional<User>> getUsersByToken(@RequestHeader("Authorization") String token) throws BusinessException{
         Optional<User> user = userService.getUserProfileByToken(token);
         return new ResponseEntity<Optional<User>>(user, HttpStatus.ACCEPTED);
     }
     @GetMapping("/jwt")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public GetUserByTokenResponse getUserByJwt(@RequestParam("jwt") String jwt) {
         return userService.getUserByJwt(jwt);
     }
