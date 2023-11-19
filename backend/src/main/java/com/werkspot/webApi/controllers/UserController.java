@@ -42,6 +42,10 @@ public class UserController {
         Optional<User> user = userService.getUserProfileByToken(token);
         return new ResponseEntity<Optional<User>>(user, HttpStatus.ACCEPTED);
     }
+    @GetMapping("/jwt")
+    public GetUserByTokenResponse getUserByJwt(@RequestParam("jwt") String jwt) {
+        return userService.getUserByJwt(jwt);
+    }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)

@@ -73,6 +73,14 @@ public class UserManager implements UserService {
         return user;
     }
 
+    @Override
+    public GetUserByTokenResponse getUserByJwt(String jwt) {
+        User user = this.userRepository.findByEmail(jwt).orElseThrow();
+        GetUserByTokenResponse response =
+                this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
+        return response;
+    }
+
 
     @Override
     public GetAllByIdConsumersResponse getConsumerById(int id) {

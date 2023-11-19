@@ -97,9 +97,7 @@ public class SecurityConfiguration {
                     .and()
                     .httpBasic()
                     .and()
-                    .formLogin(Customizer.withDefaults())
-                    .build()
-            ;
+                    .formLogin();
 
             return http.build();
         }

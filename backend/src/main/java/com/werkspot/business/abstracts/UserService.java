@@ -17,6 +17,8 @@ public interface UserService {
 
     Optional<User> getUserProfileByToken(String token);
 
+    GetUserByTokenResponse getUserByJwt(String jwt);
+
 
     GetAllByIdConsumersResponse getConsumerById(int id);
 
