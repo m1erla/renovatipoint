@@ -66,7 +66,7 @@ public class JwtService {
         token = token.substring(7);
 
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+                .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,6 +20,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 
 import java.util.Arrays;
@@ -46,8 +48,12 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
+                .requestMatchers(GET, "/api/v1/users/profile").permitAll()
+                .requestMatchers(GET,"/api/v1/auth/confirmLogin").permitAll()
+                .anyRequest()
+                .authenticated()
                 .requestMatchers(
-                        "/api/**",
+                        "/api/v1/**",
                         "/ws",
                         "/app",
                         "/app/ws",
@@ -65,9 +71,10 @@ public class SecurityConfiguration {
                         "/webjars/**",
                         "/swagger-ui.html"
                 )
+                .authenticated()
+                .anyRequest()
                 .permitAll()
-                .requestMatchers("/api/v1/users/**").hasAnyRole(USER_READ.name())
-                .requestMatchers("/api/v1/users/**").hasAnyAuthority(USER_READ.name())
+                .requestMatchers("/api/v1/users/**").hasAnyRole(USER.name())
                 .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
                 .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
                 .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
@@ -81,6 +88,27 @@ public class SecurityConfiguration {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .csrf()
+                .disable()
+                .cors()
+                .configurationSource(new CorsConfigurationSource() {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                        CorsConfiguration configuration = new CorsConfiguration();
+                        configuration.setAllowedOrigins(Arrays.asList(
+                                "https://myklus.onrender.com"
+                        ));
+                        configuration.setAllowedMethods(Collections.singletonList("*"));
+                        configuration.setAllowCredentials(true);
+                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+                        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+                        configuration.setMaxAge(3600L);
+
+
+                        return configuration;
+                    }
+                })
+                .and()
                 .logout()
                         .logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)
@@ -91,30 +119,31 @@ public class SecurityConfiguration {
                 .and()
                 .httpBasic()
                 .and()
-                .formLogin()
+                .formLogin(Customizer.withDefaults())
+                .build()
         ;
 
         return http.build();
     }
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(
-                "https://myklus.onrender.com",
-                "https://myklus.onrender.com/api/v1/auth/**",
-                "https://myklus.onrender.com/api/v1/users/**",
-                "/api/v1/auth/**",
-                "/api/v1/users/**"
-        ));
-        configuration.setAllowedMethods(Collections.singletonList("*"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Collections.singletonList("*"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization"));
-        configuration.setMaxAge(3600L);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource(HttpServletRequest request){
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList(
+//                "https://myklus.onrender.com",
+//                "https://myklus.onrender.com/api/v1/auth/**",
+//                "https://myklus.onrender.com/api/v1/users/**",
+//                "/api/v1/auth/**",
+//                "/api/v1/users/**"
+//        ));
+//        configuration.setAllowedMethods(Collections.singletonList("*"));
+//        configuration.setAllowCredentials(true);
+//        configuration.setAllowedHeaders(Collections.singletonList("*"));
+//        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+//        configuration.setMaxAge(3600L);
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
 }

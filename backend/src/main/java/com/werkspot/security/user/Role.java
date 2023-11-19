@@ -14,9 +14,7 @@ import static com.werkspot.security.user.Permission.*;
 
 @RequiredArgsConstructor
 public enum Role {
-    USER(Set.of(
-            USER_READ
-    )),
+    USER(Collections.emptySet()),
     CONSUMER(Collections.emptySet()),
 
     MASTER(Collections.emptySet()),
