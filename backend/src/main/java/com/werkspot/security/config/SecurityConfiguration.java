@@ -67,7 +67,7 @@ public class SecurityConfiguration {
                                 "/swagger-ui.html"
                                 )
                                 .permitAll()
-                                .requestMatchers(GET, "/api/v1/users/**").permitAll()
+                                .requestMatchers(GET, "/api/v1/users/**").hasAnyRole(ADMIN.name())
                                 .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
                                 .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
                                 .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
@@ -79,7 +79,6 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-
                 .logout(logout ->
                         logout.logoutUrl("/api/v1/auth/logout")
                                 .addLogoutHandler(logoutHandler)

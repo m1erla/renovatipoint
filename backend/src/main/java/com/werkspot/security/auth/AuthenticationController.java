@@ -52,6 +52,12 @@ public class AuthenticationController {
 
         return ResponseEntity.ok(service.authenticate(request));
     }
+
+    @PostMapping("/login")
+    @ResponseStatus(code = HttpStatus.ACCEPTED)
+    public ResponseEntity<AuthenticationResponse> getUserByToken(@RequestBody AuthenticationRequest request) {
+        return ResponseEntity.ok(service.confirmLogin(request));
+    }
     @PostMapping("/refresh-token")
     public void refreshToken(
             HttpServletRequest request,
@@ -61,8 +67,8 @@ public class AuthenticationController {
     }
 
     @GetMapping( "/confirmLogin")
-    public ResponseEntity<AuthenticationResponse> confirmLogin(@RequestHeader("Authorization") String confirmLogin){
-        Optional<User> response = userService.getUserProfileByToken(confirmLogin);
+    public ResponseEntity<AuthenticationResponse> confirmLogin(@RequestHeader("Authorization") AuthenticationRequest confirmLogin){
+        Optional<User> response = userService.getUserProfileByToken(String.valueOf(confirmLogin));
         if (response.isPresent()){
             return ResponseEntity.ok(service.confirmLogin(confirmLogin));
         }else {

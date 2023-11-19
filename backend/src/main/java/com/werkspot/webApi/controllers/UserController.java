@@ -5,6 +5,7 @@ import com.werkspot.business.requests.*;
 import com.werkspot.business.responses.*;
 import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.entities.concretes.User;
+import com.werkspot.security.auth.AuthenticationRequest;
 import com.werkspot.security.config.JwtService;
 import com.werkspot.security.token.Token;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -26,7 +27,7 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<GetAllUsersResponse> getAllUsers(){
         return userService.getAll();
     }
@@ -38,14 +39,18 @@ public class UserController {
     }
 
     @GetMapping("/profile")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Optional<User>> getUsersByToken(@RequestHeader("Authorization") String token) throws BusinessException{
         Optional<User> user = userService.getUserProfileByToken(token);
         return new ResponseEntity<Optional<User>>(user, HttpStatus.ACCEPTED);
     }
     @GetMapping("/jwt")
+    @PreAuthorize("hasRole('ADMIN')")
     public GetUserByTokenResponse getUserByJwt(@RequestParam("jwt") String jwt) {
         return userService.getUserByJwt(jwt);
     }
+
+
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
