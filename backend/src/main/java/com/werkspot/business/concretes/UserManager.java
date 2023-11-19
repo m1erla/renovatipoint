@@ -58,19 +58,19 @@ public class UserManager implements UserService {
     }
 
     @Override
-    public GetUserByTokenResponse findUserProfileByToken(UserDetails token) throws BusinessException {
-        var email = jwtService.generateToken(token);
+    public Optional<User> getUserProfileByToken(String token) throws BusinessException {
+        var email = jwtService.decodeToken(token);
 
         Optional<User> user = userRepository.findByEmail(email);
 
         if (user.isEmpty()){
             throw new BusinessException("User not found with email " + email);
         }
-        GetUserByTokenResponse response =
-                this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
+//        GetUserByTokenResponse response =
+//                this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
 
 
-        return response;
+        return user;
     }
 
 

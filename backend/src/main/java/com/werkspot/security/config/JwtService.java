@@ -43,18 +43,7 @@ public class JwtService {
     }
 
 
-    public String decodeToken(String token){
-        token = token.substring(7);
 
-        Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(getSignInKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-        return String.valueOf(claims.get("email"));
-
-    }
 
 
 
@@ -73,7 +62,19 @@ public class JwtService {
     ) {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
+    public String decodeToken(String token){
+        token = token.substring(7);
 
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        String email = String.valueOf(claims.get("email"));
+
+        return email;
+
+    }
     public String generateRefreshToken(
             UserDetails userDetails
     ) {

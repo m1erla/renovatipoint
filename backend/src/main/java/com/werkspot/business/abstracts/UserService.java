@@ -15,7 +15,7 @@ public interface UserService {
 
     GetAllByIdMastersResponse getMasterById(int id);
 
-    GetUserByTokenResponse findUserProfileByToken(UserDetails token);
+    Optional<User> getUserProfileByToken(String token);
 
 
     GetAllByIdConsumersResponse getConsumerById(int id);

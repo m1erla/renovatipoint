@@ -54,14 +54,9 @@ public class AuthenticationService{
 
     }
 
-    public AuthenticationResponse confirmLogin(AuthenticationRequest request){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var user = repository.findByEmail(request.getEmail()).orElseThrow();
+    public AuthenticationResponse confirmLogin(String request){
+
+        var user = repository.findByEmail(request).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);

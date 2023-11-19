@@ -26,6 +26,7 @@ import java.util.Collections;
 
 import static com.werkspot.security.user.Permission.*;
 import static com.werkspot.security.user.Role.*;
+import static com.werkspot.security.user.Role.USER;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -65,7 +66,8 @@ public class SecurityConfiguration {
                         "/swagger-ui.html"
                 )
                 .permitAll()
-                .requestMatchers("/api/v1/users/**").hasAnyRole(USER.name())
+                .requestMatchers("/api/v1/users/**").hasAnyRole(USER_READ.name())
+                .requestMatchers("/api/v1/users/**").hasAnyAuthority(USER_READ.name())
                 .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
                 .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
                 .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
@@ -89,7 +91,8 @@ public class SecurityConfiguration {
                 .and()
                 .httpBasic()
                 .and()
-                .formLogin();
+                .formLogin()
+        ;
 
         return http.build();
     }
