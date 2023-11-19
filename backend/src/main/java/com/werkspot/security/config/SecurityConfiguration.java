@@ -88,27 +88,6 @@ public class SecurityConfiguration {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .csrf()
-                .disable()
-                .cors()
-                .configurationSource(new CorsConfigurationSource() {
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                        CorsConfiguration configuration = new CorsConfiguration();
-                        configuration.setAllowedOrigins(Arrays.asList(
-                                "https://myklus.onrender.com"
-                        ));
-                        configuration.setAllowedMethods(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
-                        configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setExposedHeaders(Arrays.asList("Authorization"));
-                        configuration.setMaxAge(3600L);
-
-
-                        return configuration;
-                    }
-                })
-                .and()
                 .logout()
                         .logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)
@@ -125,25 +104,40 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource(HttpServletRequest request){
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList(
-//                "https://myklus.onrender.com",
-//                "https://myklus.onrender.com/api/v1/auth/**",
-//                "https://myklus.onrender.com/api/v1/users/**",
-//                "/api/v1/auth/**",
-//                "/api/v1/users/**"
-//        ));
-//        configuration.setAllowedMethods(Collections.singletonList("*"));
-//        configuration.setAllowCredentials(true);
-//        configuration.setAllowedHeaders(Collections.singletonList("*"));
-//        configuration.setExposedHeaders(Arrays.asList("Authorization"));
-//        configuration.setMaxAge(3600L);
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList(
+                "https://myklus.onrender.com"
+        ));
+        configuration.setAllowedMethods(Collections.singletonList("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("https://myklus.onrender.com");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("OPTIONS");
+        config.addAllowedMethod("HEAD");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("PATCH");
+        source.registerCorsConfiguration("/**", config);
+
+        return new CorsFilter(source);
+    }
 
 }
