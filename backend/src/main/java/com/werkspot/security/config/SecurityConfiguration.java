@@ -52,8 +52,8 @@ public class SecurityConfiguration {
                     .configurationSource(corsConfigurationSource())
                     .and()
                     .authorizeHttpRequests()
-                    .requestMatchers(GET, "/api/v1/users/profile").permitAll()
-                    .requestMatchers(GET,"/api/v1/auth/confirmLogin").permitAll()
+//                    .requestMatchers(GET, "/api/v1/users/profile").permitAll()
+//                    .requestMatchers(GET,"/api/v1/auth/confirmLogin").permitAll()
                     .requestMatchers(
                             "/api/v1/**",
                             "/ws",
