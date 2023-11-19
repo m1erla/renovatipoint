@@ -2,6 +2,7 @@ package com.werkspot.security.jwt;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.config.Customizer;
@@ -58,5 +59,50 @@ public class SecurityConfig   {
 //        return users;
 //    }
 
-
+// http
+//         .csrf().disable()
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.GET, "/api/v1/users/profile").permitAll()
+//                .antMatchers(HttpMethod.GET,"/api/v1/auth/confirmLogin").permitAll()
+//                .antMatchers(
+//                        "/api/v1/**",
+//                                "/ws",
+//                                "/app",
+//                                "/app/ws",
+//                                "/app/topic/public",
+//                                "/app/topic",
+//                                "/chat.sendMessage",
+//                                "/v3/api-docs/**",
+//                                "/v3/api-docs",
+//                                "/v2/api-docs",
+//                                "/swagger-resources",
+//                                "/swagger-resources/**",
+//                                "/configuration/ui",
+//                                "/configuration/security",
+//                                "/swagger-ui/**",
+//                                "/webjars/**",
+//                                "/swagger-ui.html"
+//    ).authenticated()
+//                .antMatchers("/api/v1/users/**").hasAnyRole(USER.name())
+//            .antMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
+//            .antMatchers(HttpMethod.GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
+//            .antMatchers(HttpMethod.POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
+//            .antMatchers(HttpMethod.PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
+//            .antMatchers(HttpMethod.DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
+//            .anyRequest().authenticated()
+//                .and()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .authenticationProvider(authenticationProvider)
+//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+//                .logout()
+//                .logoutUrl("/api/v1/auth/logout")
+//                .addLogoutHandler(logoutHandler)
+//                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+//            .permitAll()
+//                .and()
+//                .httpBasic().and()
+//                .formLogin().withDefaults();
+//
+//        return http.build();
 }
