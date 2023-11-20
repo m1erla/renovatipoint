@@ -30,7 +30,7 @@ public class SecurityPrincipal {
 
     public User getLoggedInPrincipal(){
         if (principal != null){
-            UserDetails loggedInPrincipal = (UserDetails)
+            User loggedInPrincipal = (User)
                     principal.getPrincipal();
             return userService.findByName(loggedInPrincipal.getUsername());
         }
