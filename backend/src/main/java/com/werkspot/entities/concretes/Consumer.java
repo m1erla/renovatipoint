@@ -40,7 +40,8 @@ public class Consumer implements UserDetails {
 
     private String password;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "role_id", insertable = true, updatable = true)
     private Role role;
 
     @OneToOne

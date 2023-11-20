@@ -60,7 +60,9 @@ public class Master implements UserDetails {
     @OneToMany(mappedBy = "master", cascade = CascadeType.DETACH)
     private List<Ads> ads;
 
-    @Enumerated(EnumType.STRING)
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", insertable = true, updatable = true)
     private Role role;
 
     @OneToMany(mappedBy = "master")
