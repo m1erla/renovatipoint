@@ -1,4 +1,4 @@
-package com.werkspot.security.user;
+package com.werkspot.entities.concretes;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,16 +9,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.werkspot.security.user.Permission.*;
+import static com.werkspot.entities.concretes.Permission.*;
 
 
 @RequiredArgsConstructor
 public enum Role {
-    USER(Collections.emptySet()),
-    CONSUMER(Collections.emptySet()),
+    ROLE_USER(Collections.emptySet()),
 
-    MASTER(Collections.emptySet()),
-    ADMIN(
+    ROLE_ADMIN(
             Set.of(
                     ADMIN_READ,
                     ADMIN_UPDATE,
@@ -30,7 +28,7 @@ public enum Role {
                     MANAGER_DELETE
             )
     ),
-    MANAGER(
+    ROLE_MANAGER(
             Set.of(
                     MANAGER_CREATE,
                     MANAGER_DELETE,

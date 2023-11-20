@@ -7,6 +7,7 @@ import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.entities.concretes.User;
 import com.werkspot.security.auth.AuthenticationRequest;
 import com.werkspot.security.config.JwtService;
+import com.werkspot.security.service.CustomUserService;
 import com.werkspot.security.token.Token;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
@@ -26,8 +27,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final CustomUserService customUserService;
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<GetAllUsersResponse> getAllUsers(){
         return userService.getAll();
     }
@@ -39,17 +41,9 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<Optional<User>> getUsersByToken(@RequestHeader("Authorization") String token) throws BusinessException{
-        Optional<User> user = userService.getUserProfileByToken(token);
-        return new ResponseEntity<Optional<User>>(user, HttpStatus.ACCEPTED);
+    public ResponseEntity<Object> getUsersByToken() throws BusinessException{
+        return EntityResponse.generateResponse("User Profile", HttpStatus.OK, customUserService.findCurrentUser());
     }
-    @GetMapping("/jwt")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public GetUserByTokenResponse getUserByJwt(@RequestParam("jwt") String jwt) {
-        return userService.getUserByJwt(jwt);
-    }
-
 
 
     @PostMapping

@@ -1,6 +1,6 @@
 package com.werkspot.security.auth;
 
-import com.werkspot.security.user.Role;
+import com.werkspot.entities.concretes.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

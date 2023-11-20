@@ -1,6 +1,6 @@
 package com.werkspot.business.requests;
 
-import com.werkspot.security.user.Role;
+import com.werkspot.entities.concretes.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

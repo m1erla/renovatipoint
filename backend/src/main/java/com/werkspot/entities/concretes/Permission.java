@@ -1,4 +1,4 @@
-package com.werkspot.security.user;
+package com.werkspot.entities.concretes;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
