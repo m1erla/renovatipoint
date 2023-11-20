@@ -1,9 +1,14 @@
 package com.werkspot.entities.concretes;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -12,40 +17,24 @@ import java.util.stream.Collectors;
 import static com.werkspot.entities.concretes.Permission.*;
 
 
-@RequiredArgsConstructor
-public enum Role {
-    USER(Collections.emptySet()),
+@Entity
+@Table(name = "Role")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
+public class Role implements Serializable {
 
-    ADMIN(
-            Set.of(
-                    ADMIN_READ,
-                    ADMIN_UPDATE,
-                    ADMIN_CREATE,
-                    ADMIN_DELETE,
-                    MANAGER_CREATE,
-                    MANAGER_READ,
-                    MANAGER_UPDATE,
-                    MANAGER_DELETE
-            )
-    ),
-    MANAGER(
-            Set.of(
-                    MANAGER_CREATE,
-                    MANAGER_DELETE,
-                    MANAGER_READ,
-                    MANAGER_UPDATE
-            )
-    )
-    ;
-    @Getter
-    private final Set<Permission> permissions;
+    @Serial
+    private static final long serialVersionUID = 5123124124512414254L;
+    @Id
+            @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int id;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    public List<SimpleGrantedAuthority> getAuthorities(){
-        var authorities = getPermissions()
-                .stream()
-                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
-                .collect(Collectors.toList());
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
-        return authorities;
-    }
+
+
+
+
+
 }

@@ -24,7 +24,6 @@ import java.util.Collections;
 
 import static com.werkspot.entities.concretes.Permission.*;
 import static com.werkspot.entities.concretes.Role.*;
-import static com.werkspot.entities.concretes.Role.USER;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -71,11 +70,6 @@ public class SecurityConfiguration {
                                 "/swagger-ui.html"
                                 )
                                 .permitAll()
-                                .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
-                                .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
-                                .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
-                                .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
-                                .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
                                 .anyRequest()
                                 .authenticated()
                 )
@@ -129,25 +123,25 @@ public class SecurityConfiguration {
 //        return http.build();
 //    }
 //
-//    @Bean
-//    public SecurityFilterChain securityFilterChainGlobalAdminAPI(HttpSecurity http) throws Exception{
-//        sharedSecurityConfiguration(http);
-//        http.securityMatcher("/api/v1/admin/**").authorizeHttpRequests(auth ->{
-//            auth.anyRequest()
-//                    .hasRole("ADMIN");
-//        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-//        return http.build();
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain securityFilterChainGlobalUserProfileAPI(HttpSecurity http) throws Exception{
-//        sharedSecurityConfiguration(http);
-//        http.securityMatcher("/api/v1/users/profile").authorizeHttpRequests(auth ->{
-//            auth.anyRequest().hasRole("USER");
-//
-//        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-//        return http.build();
-//    }
+    @Bean
+    public SecurityFilterChain securityFilterChainGlobalAdminAPI(HttpSecurity http) throws Exception{
+        sharedSecurityConfiguration(http);
+        http.securityMatcher("api/v1/admin/**").authorizeHttpRequests(auth ->{
+            auth.anyRequest()
+                    .hasRole("ADMIN");
+        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChainGlobalUserProfileAPI(HttpSecurity http) throws Exception{
+        sharedSecurityConfiguration(http);
+        http.securityMatcher("api/v1/users/profile").authorizeHttpRequests(auth ->{
+            auth.anyRequest().hasRole("USER");
+
+        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
 
 
 

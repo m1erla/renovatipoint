@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -29,6 +30,7 @@ import java.util.function.Function;
 @Service
 @AllArgsConstructor
 @NoArgsConstructor
+@Component
 public class JwtService {
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
@@ -42,8 +44,32 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String getUsernameFromToken(String token){
+        return getClaimFromToken(token, Claims::getSubject);
+    }
 
 
+    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver){
+        final Claims claims = getAllClaimsFromToken(token);
+        if (claims != null){
+            return claimsResolver.apply(claims);
+        }
+        return null;
+    }
+
+    public Claims getAllClaimsFromToken(String token){
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);

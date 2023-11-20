@@ -42,7 +42,7 @@ public class ApplicationConfig {
         return authProvider;
     }
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         final List<GlobalAuthenticationConfigurerAdapter> configurers = new ArrayList<>();
         configurers.add(new GlobalAuthenticationConfigurerAdapter() {
             @Override
@@ -50,8 +50,7 @@ public class ApplicationConfig {
                 auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
             }
         });
-
-        return config.getAuthenticationManager();
+        return authConfig.getAuthenticationManager();
     }
     @Bean
     public PasswordEncoder passwordEncoder(){
