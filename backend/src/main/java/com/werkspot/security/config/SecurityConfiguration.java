@@ -24,7 +24,7 @@ import java.util.Collections;
 
 import static com.werkspot.entities.concretes.Permission.*;
 import static com.werkspot.entities.concretes.Role.*;
-import static com.werkspot.entities.concretes.Role.ROLE_USER;
+import static com.werkspot.entities.concretes.Role.USER;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -65,8 +65,8 @@ public class SecurityConfiguration {
                                 "/swagger-ui.html"
                                 )
                                 .permitAll()
-                                .requestMatchers(GET, "/api/v1/users/**").hasAnyRole(ROLE_ADMIN.name(), ROLE_USER.name())
-                                .requestMatchers("/api/v1/management/**").hasAnyRole(ROLE_ADMIN.name(), ROLE_MANAGER.name())
+                                .requestMatchers(GET, "/api/v1/users/**").hasAnyRole(ADMIN.name(), USER.name())
+                                .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
                                 .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
                                 .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
                                 .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())

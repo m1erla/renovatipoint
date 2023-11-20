@@ -14,9 +14,9 @@ import static com.werkspot.entities.concretes.Permission.*;
 
 @RequiredArgsConstructor
 public enum Role {
-    ROLE_USER(Collections.emptySet()),
+    USER(Collections.emptySet()),
 
-    ROLE_ADMIN(
+    ADMIN(
             Set.of(
                     ADMIN_READ,
                     ADMIN_UPDATE,
@@ -28,7 +28,7 @@ public enum Role {
                     MANAGER_DELETE
             )
     ),
-    ROLE_MANAGER(
+    MANAGER(
             Set.of(
                     MANAGER_CREATE,
                     MANAGER_DELETE,
