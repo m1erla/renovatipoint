@@ -29,7 +29,6 @@ public class UserController {
     private final UserService userService;
     private final CustomUserService customUserService;
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<GetAllUsersResponse> getAllUsers(){
         return userService.getAll();
     }

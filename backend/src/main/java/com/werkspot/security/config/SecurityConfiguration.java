@@ -65,7 +65,6 @@ public class SecurityConfiguration {
                                 "/swagger-ui.html"
                                 )
                                 .permitAll()
-                                .requestMatchers(GET, "/api/v1/users/**").hasAnyRole(ADMIN.name(), USER.name())
                                 .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
                                 .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
                                 .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
@@ -114,35 +113,35 @@ public class SecurityConfiguration {
         return source;
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChainGlobalAPI(HttpSecurity http) throws Exception{
-        sharedSecurityConfiguration(http);
-        http.securityMatcher("/api/v1/users", "/api/v1/admin").authorizeHttpRequests(auth ->{
-            auth.anyRequest().authenticated();
-        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChainGlobalAdminAPI(HttpSecurity http) throws Exception{
-        sharedSecurityConfiguration(http);
-        http.securityMatcher("/api/v1/admin/**").authorizeHttpRequests(auth ->{
-            auth.anyRequest()
-                    .hasRole("ADMIN");
-        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChainGlobalUserProfileAPI(HttpSecurity http) throws Exception{
-        sharedSecurityConfiguration(http);
-        http.securityMatcher("/api/v1/users/profile").authorizeHttpRequests(auth ->{
-            auth.anyRequest().hasRole("USER");
-
-        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+//    @Bean
+//    public SecurityFilterChain securityFilterChainGlobalAPI(HttpSecurity http) throws Exception{
+//        sharedSecurityConfiguration(http);
+//        http.securityMatcher("/api/v1/users", "/api/v1/admin").authorizeHttpRequests(auth ->{
+//            auth.anyRequest().authenticated();
+//        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+//
+//        return http.build();
+//    }
+//
+//    @Bean
+//    public SecurityFilterChain securityFilterChainGlobalAdminAPI(HttpSecurity http) throws Exception{
+//        sharedSecurityConfiguration(http);
+//        http.securityMatcher("/api/v1/admin/**").authorizeHttpRequests(auth ->{
+//            auth.anyRequest()
+//                    .hasRole("ADMIN");
+//        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+//        return http.build();
+//    }
+//
+//    @Bean
+//    public SecurityFilterChain securityFilterChainGlobalUserProfileAPI(HttpSecurity http) throws Exception{
+//        sharedSecurityConfiguration(http);
+//        http.securityMatcher("/api/v1/users/profile").authorizeHttpRequests(auth ->{
+//            auth.anyRequest().hasRole("USER");
+//
+//        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+//        return http.build();
+//    }
 
 
 

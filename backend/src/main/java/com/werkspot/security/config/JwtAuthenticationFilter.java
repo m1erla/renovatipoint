@@ -9,6 +9,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
               return;
           }
 
-          final String authHeader = request.getHeader("Authorization");
+          final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
           final String jwt;
           final String userEmail;
           if (authHeader == null || !authHeader.startsWith("Bearer")){
