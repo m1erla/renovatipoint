@@ -55,7 +55,6 @@ public class AuthenticationController {
 
     @GetMapping("/login")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<AuthenticationResponse> getUserByToken(@RequestHeader("Authorization") AuthenticationRequest request) {
         return ResponseEntity.ok(service.confirmLogin(request));
     }

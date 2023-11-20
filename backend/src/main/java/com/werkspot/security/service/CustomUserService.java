@@ -1,6 +1,8 @@
 package com.werkspot.security.service;
 
 import com.werkspot.business.requests.CreateUserRequest;
+import com.werkspot.business.responses.GetUsersByIdResponse;
+import com.werkspot.core.utilities.mappers.ModelMapperService;
 import com.werkspot.dataAccess.abstracts.UserRepository;
 import com.werkspot.entities.concretes.Role;
 import com.werkspot.entities.concretes.User;
@@ -23,7 +25,7 @@ public class CustomUserService implements UserDetailsService {
     private static final Logger LOG = LoggerFactory.getLogger(CustomUserService.class);
 
     private final UserRepository userRepository;
-
+    private final ModelMapperService modelMapperService;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
@@ -34,8 +36,12 @@ public class CustomUserService implements UserDetailsService {
         return userRepository.findByName(name);
     }
 
-    public User findCurrentUser(){
-        return userRepository.findById(SecurityPrincipal.getInstance().getLoggedInPrincipal().getId()).get();
+    public GetUsersByIdResponse findCurrentUser(int id){
+        User user = this.userRepository.findById(id).orElseThrow();
+
+        GetUsersByIdResponse response =
+                this.modelMapperService.forResponse().map(user, GetUsersByIdResponse.class);
+        return response;
     }
 
     private Object dtoMapperRequestDtoToUser(CreateUserRequest request){

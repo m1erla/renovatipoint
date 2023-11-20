@@ -40,8 +40,8 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<Object> getUsersByToken() throws BusinessException{
-        return EntityResponse.generateResponse("User Profile", HttpStatus.OK, customUserService.findCurrentUser());
+    public ResponseEntity<Object> getUsersByToken(int id) throws BusinessException{
+        return EntityResponse.generateResponse("User Profile", HttpStatus.OK, customUserService.findCurrentUser(id));
     }
 
 
