@@ -103,7 +103,6 @@ public class AuthenticationController {
     }
 
 
-
     @GetMapping("/login")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public ResponseEntity<AuthenticationResponse> getUserByToken(@RequestHeader("Authorization") AuthenticationRequest request) {
@@ -117,15 +116,6 @@ public class AuthenticationController {
                  service.refreshToken(request, response);
     }
 
-    @GetMapping( "/confirmLogin")
-    public ResponseEntity<AuthenticationResponse> confirmLogin(@RequestHeader("Authorization") AuthenticationRequest confirmLogin){
-        Optional<User> response = userService.getUserProfileByToken(String.valueOf(confirmLogin));
-        if (response.isPresent()){
-            return ResponseEntity.ok(service.confirmLogin(confirmLogin));
-        }else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
 
 
 

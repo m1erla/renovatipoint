@@ -5,7 +5,6 @@ import com.werkspot.business.requests.CreateUserRequest;
 import com.werkspot.business.requests.UpdateUserRequest;
 import com.werkspot.business.responses.*;
 import com.werkspot.business.rules.UserBusinessRules;
-import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
 import com.werkspot.dataAccess.abstracts.AdsRepository;
 import com.werkspot.dataAccess.abstracts.UserRepository;
@@ -26,7 +25,6 @@ public class UserManager implements UserService {
     private UserRepository userRepository;
     private UserBusinessRules userBusinessRules;
     private AdsRepository adsRepository;
-    private JwtService jwtService;
 
     @Override
     public List<GetAllUsersResponse> getAll() {
@@ -42,21 +40,6 @@ public class UserManager implements UserService {
     }
 
 
-    @Override
-    public Optional<User> getUserProfileByToken(String token) throws BusinessException {
-        var email = jwtService.decodeToken(token);
-
-        Optional<User> user = userRepository.findByEmail(String.valueOf(email));
-
-        if (user.isEmpty()){
-            throw new BusinessException("User not found with email " + email);
-        }
-//        GetUserByTokenResponse response =
-//                this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
-
-
-        return user;
-    }
 
     @Override
     public GetUserByTokenResponse getUserByJwt(String jwt) {
@@ -75,25 +58,6 @@ public class UserManager implements UserService {
                 this.modelMapperService.forResponse().map(user, GetUsersByEmailResponse.class);
 
         return response;
-    }
-
-    @Override
-    public GetAdsByIdResponse getAdById(int id) {
-        Ads ads = this.adsRepository.findById(id).orElseThrow();
-
-        GetAdsByIdResponse response =
-                this.modelMapperService.forResponse().map(ads, GetAdsByIdResponse.class);
-        return response;
-    }
-
-    @Override
-    public List<GetAllAdsResponse> getAllAds() {
-        List<Ads> ads = adsRepository.findAll();
-
-        List<GetAllAdsResponse> adsResponses =
-                ads.stream().map(ads1 -> this.modelMapperService.forResponse().map(ads1, GetAllAdsResponse.class)).collect(Collectors.toList());
-
-        return adsResponses;
     }
 
     @Override

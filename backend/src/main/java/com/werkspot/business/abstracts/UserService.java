@@ -14,14 +14,9 @@ public interface UserService {
     List<GetAllUsersResponse> getAll();
 
 
-    Optional<User> getUserProfileByToken(String token);
-
     GetUserByTokenResponse getUserByJwt(String jwt);
 
     GetUsersByEmailResponse getByEmail(String email);
-    GetAdsByIdResponse getAdById(int id);
-
-    List<GetAllAdsResponse> getAllAds();
 
     GetUsersByIdResponse getById(int id);
 
