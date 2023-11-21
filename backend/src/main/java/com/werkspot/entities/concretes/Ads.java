@@ -52,7 +52,6 @@ public class Ads {
     @Column(name = "ad_release_date", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     @CreatedDate
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime adReleaseDate;
 
     private String descriptions;
