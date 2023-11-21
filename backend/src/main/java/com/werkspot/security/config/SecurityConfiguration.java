@@ -121,6 +121,7 @@ public class SecurityConfiguration {
                                 .anyRequest()
                                 .authenticated()
                 )
+                .securityMatcher("")
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout ->
@@ -154,7 +155,30 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChainGlobalAPI(HttpSecurity http) throws Exception{
         sharedSecurityConfiguration(http);
-        http.securityMatcher("/api/v1/users/**", "/api/v1/admin").authorizeHttpRequests(auth ->{
+        http.securityMatcher("/api/v1/auth/**",
+                 "/api/v1/admin",
+                "/api/v1/users/**",
+                "/api/v1/categories/**",
+                "/api/v1/services/**",
+                "/api/v1/job_titles/**",
+                "/api/v1/ads/**",
+                "/api/v1/images",
+                "/ws",
+                "/app",
+                "/app/ws",
+                "/app/topic/public",
+                "/app/topic",
+                "/chat.sendMessage",
+                "/v3/api-docs/**",
+                "/v3/api-docs",
+                "/v2/api-docs",
+                "/swagger-resources",
+                "/swagger-resources/**",
+                "/configuration/ui",
+                "/configuration/security",
+                "/swagger-ui/**",
+                "/webjars/**",
+                "/swagger-ui.html").authorizeHttpRequests(auth ->{
             auth.anyRequest().authenticated();
         }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
