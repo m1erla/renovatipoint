@@ -31,13 +31,6 @@ public class Token {
     @JoinColumn(name = "user_id")
     public User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "consumer_id")
-    public Consumer consumer;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "master_id")
-    public Master master;
 
 
 }
