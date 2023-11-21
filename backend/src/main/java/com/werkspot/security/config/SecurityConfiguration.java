@@ -132,7 +132,7 @@ public class SecurityConfiguration {
                                 "/swagger-ui.html"
 
         ).authorizeHttpRequests(auth -> {
-            auth.anyRequest().permitAll();
+            auth.anyRequest().authenticated();
         }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
