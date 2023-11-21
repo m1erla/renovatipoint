@@ -34,9 +34,6 @@ public class JobTitle {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "master_id")
-    private Master master;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

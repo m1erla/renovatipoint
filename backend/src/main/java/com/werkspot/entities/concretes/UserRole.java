@@ -12,7 +12,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "user_role")
 @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class UserRole implements Serializable {
      private static final long serialVersionUID = 5921348912324124L;
 

@@ -1,7 +1,5 @@
 package com.werkspot.security.token;
 
-import com.werkspot.entities.concretes.Consumer;
-import com.werkspot.entities.concretes.Master;
 import com.werkspot.entities.concretes.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

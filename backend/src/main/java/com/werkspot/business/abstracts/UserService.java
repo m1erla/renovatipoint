@@ -13,14 +13,10 @@ import java.util.Optional;
 public interface UserService {
     List<GetAllUsersResponse> getAll();
 
-    GetAllByIdMastersResponse getMasterById(int id);
 
     Optional<User> getUserProfileByToken(String token);
 
     GetUserByTokenResponse getUserByJwt(String jwt);
-
-
-    GetAllByIdConsumersResponse getConsumerById(int id);
 
     GetUsersByEmailResponse getByEmail(String email);
     GetAdsByIdResponse getAdById(int id);

@@ -34,10 +34,6 @@ public class Ads {
 
 
     @ManyToOne
-    @JoinColumn(name = "master_id")
-    private Master master;
-
-    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -45,9 +41,6 @@ public class Ads {
     @JoinColumn(name = "service_id")
     private Employment service;
 
-    @ManyToOne
-    @JoinColumn(name = "consumer_id")
-    private Consumer consumer;
 
     @Column(name = "ad_release_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     @CreatedDate

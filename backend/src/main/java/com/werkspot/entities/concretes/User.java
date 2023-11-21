@@ -53,15 +53,12 @@ public class User implements UserDetails, Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
     private List<Ads> ads;
 
-    @OneToMany(mappedBy = "user")
-    private List<Master> masters;
+
 
     @ManyToOne
     @JoinColumn(name = "role_id", insertable = true, updatable = true)
     private Role role;
-    @OneToOne
-    @JoinColumn(name = "consumer_id")
-    private Consumer consumer;
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
     private List<JobTitle> jobTitles;

@@ -8,16 +8,11 @@ import com.werkspot.business.rules.UserBusinessRules;
 import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
 import com.werkspot.dataAccess.abstracts.AdsRepository;
-import com.werkspot.dataAccess.abstracts.ConsumerRepository;
-import com.werkspot.dataAccess.abstracts.MasterRepository;
 import com.werkspot.dataAccess.abstracts.UserRepository;
 import com.werkspot.entities.concretes.Ads;
-import com.werkspot.entities.concretes.Consumer;
-import com.werkspot.entities.concretes.Master;
 import com.werkspot.entities.concretes.User;
 import com.werkspot.security.config.JwtService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,9 +25,7 @@ public class UserManager implements UserService {
     private ModelMapperService modelMapperService;
     private UserRepository userRepository;
     private UserBusinessRules userBusinessRules;
-    private MasterRepository masterRepository;
     private AdsRepository adsRepository;
-    private ConsumerRepository consumerRepository;
     private JwtService jwtService;
 
     @Override
@@ -48,14 +41,6 @@ public class UserManager implements UserService {
         return usersResponses;
     }
 
-    @Override
-    public GetAllByIdMastersResponse getMasterById(int id) {
-        Master master = this.masterRepository.findById(id).orElseThrow();
-
-        GetAllByIdMastersResponse response =
-                this.modelMapperService.forResponse().map(master, GetAllByIdMastersResponse.class);
-        return response;
-    }
 
     @Override
     public Optional<User> getUserProfileByToken(String token) throws BusinessException {
@@ -81,16 +66,6 @@ public class UserManager implements UserService {
         return response;
     }
 
-
-    @Override
-    public GetAllByIdConsumersResponse getConsumerById(int id) {
-        Consumer consumer = this.consumerRepository.findById(id).orElseThrow();
-
-        GetAllByIdConsumersResponse response =
-                this.modelMapperService.forResponse().map(consumer, GetAllByIdConsumersResponse.class);
-
-        return response;
-    }
 
     @Override
     public GetUsersByEmailResponse getByEmail(String email) {
