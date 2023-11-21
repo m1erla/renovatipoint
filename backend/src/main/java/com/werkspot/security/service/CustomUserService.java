@@ -126,7 +126,6 @@ public class CustomUserService implements UserDetailsService {
         target.setPassword(request.getPassword());
         target.setPostCode(request.getPostCode());
         target.setPhoneNumber(request.getPhoneNumber());
-        target.setRole((Role) request.getRoleList());
 
         return target;
     }

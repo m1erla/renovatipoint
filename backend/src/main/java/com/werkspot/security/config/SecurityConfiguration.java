@@ -162,7 +162,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChainLoginAPI(HttpSecurity httpSecurity) throws Exception {
         sharedSecurityConfiguration(httpSecurity);
-        httpSecurity.securityMatcher("/api/v1/auth/authenticated").authorizeHttpRequests(auth -> {
+        httpSecurity.securityMatcher("/api/v1/auth/**").authorizeHttpRequests(auth -> {
             auth.anyRequest().permitAll();
         }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -172,7 +172,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChainRegisterAPI(HttpSecurity httpSecurity) throws Exception {
         sharedSecurityConfiguration(httpSecurity);
-        httpSecurity.securityMatcher("/api/v1/auth/registered").authorizeHttpRequests(auth -> {
+        httpSecurity.securityMatcher("/api/v1/auth/**").authorizeHttpRequests(auth -> {
             auth.anyRequest().permitAll();
         }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
