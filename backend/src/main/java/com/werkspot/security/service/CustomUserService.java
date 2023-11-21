@@ -4,8 +4,10 @@ import com.werkspot.business.requests.CreateUserRequest;
 import com.werkspot.business.responses.GetUsersByIdResponse;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
 import com.werkspot.dataAccess.abstracts.UserRepository;
+import com.werkspot.dataAccess.abstracts.UserRoleRepository;
 import com.werkspot.entities.concretes.Role;
 import com.werkspot.entities.concretes.User;
+import com.werkspot.entities.concretes.UserRole;
 import com.werkspot.security.auth.RegisterRequest;
 import com.werkspot.security.config.SecurityPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +32,13 @@ public class CustomUserService implements UserDetailsService {
     private static final Logger LOG = LoggerFactory.getLogger(CustomUserService.class);
 
     private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
     CustomRoleService roleService;
     @Override
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByName(username);
         if (user != null){
-            List<User> userRoles = userRepository.findAllById(user.getId());
+            List<UserRole> userRoles = userRoleRepository.findAllByUserId(user.getId());
 
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             userRoles.forEach(userRole -> {
@@ -81,8 +84,18 @@ public class CustomUserService implements UserDetailsService {
         return userRepository.findById(SecurityPrincipal.getInstance().getLoggedInPrincipal().getId()).get();
     }
 
-    public List<User> findAllCurrentUserRole(){
-        return userRepository.findAllById(SecurityPrincipal.getInstance().getLoggedInPrincipal().getId());
+    public List<UserRole> findAllCurrentUserRole(){
+        return userRoleRepository.findAllByUserId(SecurityPrincipal.getInstance().getLoggedInPrincipal().getId());
+    }
+
+    public User updateUser(RegisterRequest userRequestDTO) {
+
+        User user = (User) dtoMapperRequestDtoToUser(userRequestDTO);
+
+        user = userRepository.save(user);
+        addUserRole(user, null);
+
+        return user;
     }
 
     public List<User> retrieveAllUserList(){
@@ -94,7 +107,7 @@ public class CustomUserService implements UserDetailsService {
     }
 
     public void addUserRole(User user, Role role){
-        User userRole = new User();
+        UserRole userRole = new UserRole();
         userRole.setUser(user);
 
         if (role == null){
@@ -102,7 +115,7 @@ public class CustomUserService implements UserDetailsService {
         }
 
         userRole.setRole(role);
-        userRepository.save(userRole);
+        userRoleRepository.save(userRole);
     }
     private Object dtoMapperRequestDtoToUser(RegisterRequest request){
         User target = new User();

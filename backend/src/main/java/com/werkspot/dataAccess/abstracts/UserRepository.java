@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
+@Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     User findUserByNameAndPassword(String name, String password);
 

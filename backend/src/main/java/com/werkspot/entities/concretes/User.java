@@ -1,5 +1,6 @@
 package com.werkspot.entities.concretes;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.werkspot.security.token.Token;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -20,7 +21,7 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
-@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
