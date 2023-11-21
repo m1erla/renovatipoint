@@ -114,7 +114,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChainGlobalAPI(HttpSecurity http) throws Exception{
         sharedSecurityConfiguration(http);
-        http.securityMatcher("/api/v1/users/**","/api/v1/auth/**",  "/v3/api-docs/**",
+        http.securityMatcher("/api/v1/users/**","/api/v1/auth/**",
+                                "/v3/api-docs/**",
                                 "/v3/api-docs",
                                 "/v2/api-docs",
                                 "/swagger-resources",
@@ -123,7 +124,14 @@ public class SecurityConfiguration {
                                 "/configuration/security",
                                 "/swagger-ui/**",
                                 "/webjars/**",
-                                "/swagger-ui.html", "/api/v1/admin").authorizeHttpRequests(auth -> {
+                                "/swagger-ui.html",
+                                "/api/v1/admin",
+                                "/api/v1/categories/**",
+                                "/api/v1/services/**",
+                                "/api/v1/job_titles/**",
+                                "/api/v1/ads/**",
+                                "/api/v1/images"
+        ).authorizeHttpRequests(auth -> {
             auth.anyRequest().authenticated();
         }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
