@@ -49,11 +49,11 @@ public class Ads {
     @JoinColumn(name = "consumer_id")
     private Consumer consumer;
 
-    @Column(name = "ad_release_date")
+    @Column(name = "ad_release_date", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     @CreatedDate
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    LocalDateTime adReleaseDate;
+    private LocalDateTime adReleaseDate;
 
     private String descriptions;
 
