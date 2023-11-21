@@ -96,7 +96,7 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("registered")
+    @PostMapping("/registered")
     public ResponseEntity<Object> register(@RequestBody RegisterRequest request){
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         return EntityResponse.generateResponse("Register User", HttpStatus.OK, customUserService.createUser(request));
