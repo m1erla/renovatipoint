@@ -115,7 +115,9 @@ public class SecurityConfiguration {
                                 "/swagger-ui/**",
                                 "/webjars/**",
                                 "/swagger-ui.html"
-                                )
+                                ).permitAll()
+                                .anyRequest()
+                                .authenticated()
                 )
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("/api/v1/users/profile").authenticated()
