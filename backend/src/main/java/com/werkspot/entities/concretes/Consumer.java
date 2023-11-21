@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-
+@Data
 @Table(name = "consumers")
 @Getter
 @Setter
@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Data
+
 public class Consumer implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

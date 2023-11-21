@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-
+@Data
 @Table(name = "categories")
 @Getter
 @Setter
@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Data
+
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

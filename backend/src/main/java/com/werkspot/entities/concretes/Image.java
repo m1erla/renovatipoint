@@ -2,10 +2,9 @@ package com.werkspot.entities.concretes;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+@Data
 @Table(name = "image_data")
 @Entity
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

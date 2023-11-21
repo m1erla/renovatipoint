@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +19,6 @@ public class CreateUserRequest {
     private String phoneNumber;
     private String postCode;
     private String jobTitleName;
-    private Role role;
+    private List<String> roleList = new ArrayList<>();
 
 }

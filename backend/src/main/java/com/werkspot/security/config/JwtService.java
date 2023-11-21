@@ -75,9 +75,9 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
-    }
+//    public String generateToken(UserDetails userDetails) {
+//        return generateToken(new HashMap<>(), userDetails);
+//    }
 
     public String generateToken(
             Map<String, Object> extraClaims,
@@ -94,14 +94,11 @@ public class JwtService {
 
     }
 
-    public String extractUsernameByToken(String token){
-        return decodeToken(token).getSubject();
-    }
-    public String generateRefreshToken(
-            UserDetails userDetails
-    ) {
-        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
-    }
+//    public String generateRefreshToken(
+//            UserDetails userDetails
+//    ) {
+//        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+//    }
 
     private String buildToken(
             Map<String, Object> extraClaims,
@@ -143,5 +140,44 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    // generate token for user
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", userDetails.getAuthorities());
+        return doGenerateToken(claims, userDetails.getUsername());
+    }
+
+    // generate token for user
+    public String generateRefreshToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", userDetails.getAuthorities());
+        return doGenerateRefreshToken(claims, userDetails.getUsername());
+    }
+
+    // while creating the token -
+    // 1. Define claims of the token, like Issuer, Expiration, Subject, and the ID
+    // 2. Sign the JWT using the HS512 algorithm and secret key.
+    // 3. According to JWS Compact
+    // Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
+    // compaction of the JWT to a URL-safe string
+    private String doGenerateToken(Map<String, Object> claims, String subject) {
+        Header header = Jwts.header();
+        header.setType("JWT");
+        return Jwts.builder().setHeader((Map<String, Object>) header).setClaims(claims).setSubject(subject)
+                .setIssuer("backend").setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration * 1000))
+                .signWith(SignatureAlgorithm.HS512, secretKey).compact();
+    }
+
+    // refresh token
+    private String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
+        Header header = Jwts.header();
+        header.setType("JWT");
+        return Jwts.builder().setHeader((Map<String, Object>) header).setClaims(claims).setSubject(subject)
+                .setIssuer("backend").setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration * 2 * 1000))
+                .signWith(SignatureAlgorithm.HS512, secretKey).compact();
     }
 }

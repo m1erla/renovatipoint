@@ -13,15 +13,15 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-@Data
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +56,9 @@ public class User implements UserDetails, Serializable {
     @OneToMany(mappedBy = "user")
     private List<Master> masters;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id", insertable = true, updatable = true)
+    private Role role;
     @OneToOne
     @JoinColumn(name = "consumer_id")
     private Consumer consumer;
@@ -63,16 +66,10 @@ public class User implements UserDetails, Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
     private List<JobTitle> jobTitles;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", insertable = true, updatable = true)
-    private Role role;
 
     @OneToMany(mappedBy = "user")
     private List<Token> token;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", insertable = true, updatable = true)
-    private User user;
 
 
     @Override

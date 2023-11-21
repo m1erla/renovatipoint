@@ -20,7 +20,6 @@ import static com.werkspot.entities.concretes.Permission.*;
 
 @Entity
 @Table(name = "Role")
-@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter

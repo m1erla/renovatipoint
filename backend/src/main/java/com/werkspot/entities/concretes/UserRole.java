@@ -3,13 +3,16 @@ package com.werkspot.entities.concretes;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
-
+@Getter
+@Setter
 @Entity
 @Table(name = "user_role")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Data
+
 public class UserRole implements Serializable {
      private static final long serialVersionUID = 5921348912324124L;
 

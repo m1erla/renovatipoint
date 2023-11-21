@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.werkspot.business.abstracts.UserService;
 import com.werkspot.business.requests.CreateUserRequest;
 import com.werkspot.business.rules.UserBusinessRules;
+import com.werkspot.entities.concretes.Role;
 import com.werkspot.security.config.JwtService;
 import com.werkspot.entities.concretes.User;
 import com.werkspot.dataAccess.abstracts.UserRepository;
@@ -39,7 +40,7 @@ public class AuthenticationService{
                  .password(passwordEncoder.encode(request.getPassword()))
                  .jobTitleName(request.getJobTitleName())
                  .postCode(request.getPostCode())
-                 .role(request.getRole())
+                 .role((Role) request.getRoleList())
                  .build();
          var savedUser = repository.save(user);
          var jwtToken = jwtService.generateToken(user);
