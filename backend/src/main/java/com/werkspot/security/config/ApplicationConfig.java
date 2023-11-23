@@ -1,5 +1,4 @@
 package com.werkspot.security.config;
-
 import com.werkspot.dataAccess.abstracts.UserRepository;
 import com.werkspot.security.service.CustomUserService;
 import lombok.RequiredArgsConstructor;
@@ -23,20 +22,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UserRepository repository;
 
     private final CustomUserService userDetailsService;
 
     private final PasswordEncoder passwordEncoder;
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder);
-
-        return authProvider;
-    }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         final List<GlobalAuthenticationConfigurerAdapter> configurers = new ArrayList<>();
@@ -52,6 +42,4 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-
 }
