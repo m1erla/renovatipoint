@@ -42,11 +42,11 @@ public class Ads {
     private Employment service;
 
 
-    @Column(name = "ad_release_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    @CreatedDate
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime adReleaseDate;
+//    @Column(name = "ad_release_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+//    @CreatedDate
+//    @CreationTimestamp
+//    @Temporal(TemporalType.TIMESTAMP)
+    private String adReleaseDate;
 
     private String descriptions;
 
