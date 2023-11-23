@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -39,60 +40,54 @@ public class SecurityConfiguration {
     private final LogoutHandler logoutHandler;
 
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//
-//        http
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .authorizeHttpRequests(req ->
-//                        req.requestMatchers("/api/v1/auth/**",
-//                                "/api/v1/users/**",
-//                                "/api/v1/categories/**",
-//                                "/api/v1/services/**",
-//                                "/api/v1/job_titles/**",
-//                                "/api/v1/ads/**",
-//                                "/api/v1/images",
-//                                "/ws",
-//                                "/app",
-//                                "/app/ws",
-//                                "/app/topic/public",
-//                                "/app/topic",
-//                                "/chat.sendMessage",
-//                                "/v3/api-docs/**",
-//                                "/v3/api-docs",
-//                                "/v2/api-docs",
-//                                "/swagger-resources",
-//                                "/swagger-resources/**",
-//                                "/configuration/ui",
-//                                "/configuration/security",
-//                                "/swagger-ui/**",
-//                                "/webjars/**",
-//                                "/swagger-ui.html"
-//                                )
-//                                .permitAll()
-//                                .anyRequest()
-//                                .authenticated()
-//                )
-//
-//                .authenticationProvider(authenticationProvider)
-//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-//                .logout(logout ->
-//                        logout.logoutUrl("/api/v1/auth/logout")
-//                                .addLogoutHandler(logoutHandler)
-//                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-//                ).formLogin(Customizer.withDefaults());
-//
-//        return http.build();
-//        }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-    private void sharedSecurityConfiguration(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(req ->
+                        req.requestMatchers("/api/v1/auth/**",
+                                "/api/v1/categories/**",
+                                "/api/v1/services/**",
+                                "/api/v1/job_titles/**",
+                                "/api/v1/ads/**",
+                                "/api/v1/images",
+                                "/ws",
+                                "/app",
+                                "/app/ws",
+                                "/app/topic/public",
+                                "/app/topic",
+                                "/chat.sendMessage",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs",
+                                "/v2/api-docs",
+                                "/swagger-resources",
+                                "/swagger-resources/**",
+                                "/configuration/ui",
+                                "/configuration/security",
+                                "/swagger-ui/**",
+                                "/webjars/**",
+                                "/swagger-ui.html"
+                                ).permitAll()
+                                .requestMatchers("/api/v1/users/**").hasRole("USER")
+                                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
-    }
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout ->
+                        logout.logoutUrl("/api/v1/auth/logout")
+                                .addLogoutHandler(logoutHandler)
+                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+                );
+
+        return http.build();
+        }
+
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
@@ -110,74 +105,7 @@ public class SecurityConfiguration {
         return source;
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChainGlobalAPI(HttpSecurity http) throws Exception{
-        sharedSecurityConfiguration(http);
-        http.securityMatcher("/api/v1/users/**",
-                "/api/v1/auth/**",
-                "/api/v1/categories/**",
-                "/api/v1/services/**",
-                "/api/v1/job_titles/**",
-                "/api/v1/ads/**",
-                "/api/v1/images",
-                                "/v3/api-docs/**",
-                                "/v3/api-docs",
-                                "/v2/api-docs",
-                                "/swagger-resources",
-                                "/swagger-resources/**",
-                                "/configuration/ui",
-                                "/configuration/security",
-                                "/swagger-ui/**",
-                                "/webjars/**",
-                                "/swagger-ui.html"
 
-        ).authorizeHttpRequests(auth -> {
-            auth.anyRequest().authenticated();
-        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChainGlobalAdminAPI(HttpSecurity http) throws Exception{
-        sharedSecurityConfiguration(http);
-        http.securityMatcher("/api/v1/admin/**").authorizeHttpRequests(auth ->{
-            auth.anyRequest()
-                    .hasRole("ADMIN");
-        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChainGlobalUserProfileAPI(HttpSecurity http) throws Exception{
-        sharedSecurityConfiguration(http);
-        http.securityMatcher("/api/v1/users/profile").authorizeHttpRequests(auth ->{
-            auth.anyRequest().hasRole("USER");
-
-        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChainLoginAPI(HttpSecurity httpSecurity) throws Exception {
-        sharedSecurityConfiguration(httpSecurity);
-        httpSecurity.securityMatcher("/api/v1/auth/**").authorizeHttpRequests(auth -> {
-            auth.anyRequest().permitAll();
-        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return httpSecurity.build();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChainRegisterAPI(HttpSecurity httpSecurity) throws Exception {
-        sharedSecurityConfiguration(httpSecurity);
-        httpSecurity.securityMatcher("/api/v1/auth/**").authorizeHttpRequests(auth -> {
-            auth.anyRequest().permitAll();
-        }).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return httpSecurity.build();
-    }
 
 
 
