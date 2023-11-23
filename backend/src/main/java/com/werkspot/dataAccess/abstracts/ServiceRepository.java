@@ -6,9 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ServiceRepository extends JpaRepository<Employment, Integer> {
-
-
-
     boolean existsByName(String serviceName);
 
 }

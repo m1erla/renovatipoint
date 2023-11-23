@@ -22,5 +22,5 @@ public class RegisterRequest {
     private String phoneNumber;
     private String jobTitleName;
     private String postCode;
-    private List<String> roleList = new ArrayList<>();
+    private Role role;
 }

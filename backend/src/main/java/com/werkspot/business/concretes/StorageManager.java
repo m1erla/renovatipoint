@@ -11,10 +11,13 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class StorageManager {
 
     private StorageRepository repository;
+
+    public StorageManager(StorageRepository repository) {
+        this.repository = repository;
+    }
 
     public String uploadImage(MultipartFile file) throws IOException {
         Image imageData = repository.save(Image.builder()

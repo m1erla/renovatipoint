@@ -16,12 +16,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class AdsManager implements AdsService {
 
     private ModelMapperService modelMapperService;
     private AdsRepository adsRepository;
     private AdsBusinessRules adsBusinessRules;
+
+    public AdsManager(ModelMapperService modelMapperService, AdsRepository adsRepository, AdsBusinessRules adsBusinessRules) {
+        this.modelMapperService = modelMapperService;
+        this.adsRepository = adsRepository;
+        this.adsBusinessRules = adsBusinessRules;
+    }
 
     @Override
     public List<GetAllAdsResponse> getAll() {

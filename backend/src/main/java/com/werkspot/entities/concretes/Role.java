@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -18,40 +19,27 @@ import java.util.stream.Collectors;
 import static com.werkspot.entities.concretes.Permission.*;
 
 
-@Entity
-@Table(name = "Role")
-@JsonIgnoreProperties(ignoreUnknown = true)
-@Getter
-@Setter
-public class Role implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 5123124124512414254L;
-    @Id
-            @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
-    @Column(name = "name", nullable = false)
-    private String name;
+@RequiredArgsConstructor
+public enum Role {
+    USER(Collections.emptySet()),
+    ADMIN(
+            Set.of(
+            ADMIN_READ,
+            ADMIN_UPDATE,
+            ADMIN_DELETE,
+            ADMIN_CREATE
+    ));
 
-    public int getId() {
-        return id;
+    @Getter
+    private final Set<Permission> permissions;
+
+    public List<SimpleGrantedAuthority> getAuthorities(){
+        var authorities = getPermissions()
+                .stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+                .collect(Collectors.toList());
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+        return authorities;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-
-
-
-
 }

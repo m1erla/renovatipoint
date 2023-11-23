@@ -22,13 +22,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 @Lazy
 public class JobTitleManager implements JobTitleService {
     public ModelMapperService modelMapperService;
     private JobTitleRepository jobTitleRepository;
     private JobTitleBusinessRules jobTitleBusinessRules;
-    private CategoryRepository categoryRepository;
+
+
+    public JobTitleManager(ModelMapperService modelMapperService, JobTitleRepository jobTitleRepository, JobTitleBusinessRules jobTitleBusinessRules) {
+        this.modelMapperService = modelMapperService;
+        this.jobTitleRepository = jobTitleRepository;
+        this.jobTitleBusinessRules = jobTitleBusinessRules;
+    }
 
     @Override
     public List<GetAllJobTitlesResponse> getAllJobTitlesResponseList() {

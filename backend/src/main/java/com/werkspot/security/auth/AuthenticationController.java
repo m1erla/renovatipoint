@@ -1,21 +1,15 @@
 package com.werkspot.security.auth;
 
 import com.werkspot.business.abstracts.UserService;
-import com.werkspot.business.requests.CreateUserRequest;
 import com.werkspot.business.responses.EntityResponse;
-import com.werkspot.business.responses.GetUserByTokenResponse;
 import com.werkspot.business.rules.UserBusinessRules;
-import com.werkspot.core.utilities.exceptions.BusinessException;
-import com.werkspot.entities.concretes.User;
 import com.werkspot.security.config.JwtService;
-import com.werkspot.security.service.CustomUserService;
+import com.werkspot.security.service.UserDetailsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -25,20 +19,30 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@RequiredArgsConstructor
 public class AuthenticationController {
+
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final AuthenticationService service;
     private final UserBusinessRules userBusinessRules;
     private final UserService userService;
-    CustomUserService customUserService;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtService jwtService, AuthenticationService service, UserBusinessRules userBusinessRules, UserService userService, UserDetailsServiceImpl userDetailsServiceImpl, PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.service = service;
+        this.userBusinessRules = userBusinessRules;
+        this.userService = userService;
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-    PasswordEncoder passwordEncoder;
+
 //    @PostMapping("/register")
 //    public ResponseEntity<RegisterResponse> register(
 //            @RequestBody CreateUserRequest request
@@ -63,7 +67,7 @@ public class AuthenticationController {
 //        return ResponseEntity.ok(service.authenticate(request));
 //    }
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    @PostMapping("/authenticate")
     public ResponseEntity<Object> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest)
             throws Exception {
 
@@ -73,7 +77,7 @@ public class AuthenticationController {
             return EntityResponse.generateResponse("Authentication", HttpStatus.UNAUTHORIZED,
                     "Invalid credentials, please check details and try again.");
         }
-        final UserDetails userDetails = customUserService.loadUserByUsername(authenticationRequest.getEmail());
+        final UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(authenticationRequest.getEmail());
 
         final String token = jwtService.generateToken(userDetails);
         final String refreshToken = jwtService.generateRefreshToken(userDetails);
@@ -99,15 +103,10 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody RegisterRequest request){
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        return EntityResponse.generateResponse("Register User", HttpStatus.OK, customUserService.createUser(request));
+        return EntityResponse.generateResponse("Register User", HttpStatus.OK, service.register(request));
     }
 
 
-//    @GetMapping("/login")
-//    @ResponseStatus(code = HttpStatus.ACCEPTED)
-//    public ResponseEntity<AuthenticationResponse> getUserByToken(@RequestHeader("Authorization") AuthenticationRequest request) {
-//        return ResponseEntity.ok(service.confirmLogin(request));
-//    }
     @PostMapping("/refresh-token")
     public void refreshToken(
             HttpServletRequest request,
@@ -115,8 +114,5 @@ public class AuthenticationController {
     )throws IOException {
                  service.refreshToken(request, response);
     }
-
-
-
 
 }

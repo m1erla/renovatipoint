@@ -1,7 +1,6 @@
 package com.werkspot.security.config;
+
 import com.werkspot.dataAccess.abstracts.UserRepository;
-import com.werkspot.security.service.CustomUserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,16 +18,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
-
-
-    private final CustomUserService userDetailsService;
+    private final UserRepository repository;
+    private final UserDetailsService userDetailsService;
 
     private final PasswordEncoder passwordEncoder;
+    public ApplicationConfig(UserRepository repository, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        this.repository = repository;
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+    public UserDetailsService userDetailsService(){
+        return username -> repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+    }
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
+    }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
         final List<GlobalAuthenticationConfigurerAdapter> configurers = new ArrayList<>();
         configurers.add(new GlobalAuthenticationConfigurerAdapter() {
             @Override
@@ -36,7 +51,8 @@ public class ApplicationConfig {
                 auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
             }
         });
-        return authConfig.getAuthenticationManager();
+
+        return config.getAuthenticationManager();
     }
     @Bean
     public PasswordEncoder passwordEncoder(){

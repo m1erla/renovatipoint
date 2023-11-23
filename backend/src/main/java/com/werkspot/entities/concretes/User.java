@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 
 @Builder
@@ -19,7 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 public class User implements UserDetails, Serializable {
@@ -54,9 +54,10 @@ public class User implements UserDetails, Serializable {
     private List<Ads> ads;
 
 
-
-    @ManyToOne
-    @JoinColumn(name = "role_id", insertable = true, updatable = true)
+   
+    @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
 
@@ -71,7 +72,7 @@ public class User implements UserDetails, Serializable {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return role.getAuthorities();
     }
 
     @Override

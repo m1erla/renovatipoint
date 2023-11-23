@@ -1,13 +1,13 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-ckhelscldqrs739pvdgg-a.oregon-postgres.render.com:5432/werkspot
-    username: werkspot_user
-    password: Rc001rY3JKXmFnvV7hglropMmn1aPzIr
+    url: jdbc:postgresql://localhost:5432/werkspot
+    username: postgres
+    password: mierla
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -18,6 +18,6 @@ application:
   security:
     jwt:
       secret-key: c8146b630205b8b3bc8c255b2eb2757f874e27ab40c478c0d2f93e8dbfb3418b
-      expiration: 8640000000 # 7 day
+      expiration: 86400000 # a day
       refresh-token:
-        expiration: 8640000000 # 7 day
+        expiration: 604800000 # 7 day

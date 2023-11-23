@@ -1,8 +1,8 @@
 package com.werkspot.security.config;
 
-import com.werkspot.business.abstracts.UserService;
+import com.werkspot.dataAccess.abstracts.UserRepository;
 import com.werkspot.entities.concretes.User;
-import com.werkspot.security.service.CustomUserService;
+import com.werkspot.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,14 +17,16 @@ public class SecurityPrincipal {
 
     private Authentication principal = SecurityContextHolder.getContext().getAuthentication();
 
-    private static CustomUserService userService;
+    private static UserDetailsServiceImpl userService;
+
+    private static UserRepository userRepository;
     @Autowired
-    private SecurityPrincipal(CustomUserService userService){
-        this.userService = userService;
+    private SecurityPrincipal(UserRepository userRepository){
+        this.userRepository = userRepository;
     }
 
     public static SecurityPrincipal getInstance(){
-        securityPrincipal = new SecurityPrincipal(userService);
+        securityPrincipal = new SecurityPrincipal(userRepository);
         return securityPrincipal;
     }
 
@@ -32,7 +34,7 @@ public class SecurityPrincipal {
         if (principal != null){
             User loggedInPrincipal = (User)
                     principal.getPrincipal();
-            return userService.findByName(loggedInPrincipal.getUsername());
+            return userRepository.findByName(loggedInPrincipal.getUsername());
         }
         return null;
     }

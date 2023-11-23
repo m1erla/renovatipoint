@@ -5,31 +5,30 @@ import com.werkspot.business.requests.*;
 import com.werkspot.business.responses.*;
 import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.entities.concretes.User;
-import com.werkspot.security.auth.AuthenticationRequest;
-import com.werkspot.security.config.JwtService;
-import com.werkspot.security.service.CustomUserService;
-import com.werkspot.security.token.Token;
-import io.swagger.v3.oas.annotations.Hidden;
+import com.werkspot.security.auth.AuthenticationResponse;
+import com.werkspot.security.auth.RegisterRequest;
+import com.werkspot.security.service.UserDetailsServiceImpl;
+import jdk.jshell.spi.ExecutionControl;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/users")
-@AllArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final CustomUserService customUserService;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
+
+    public UserController(UserService userService, UserDetailsServiceImpl userDetailsServiceImpl) {
+        this.userService = userService;
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
+    }
+
     @GetMapping
-    public List<GetAllUsersResponse> getAllUsers(){
+    public List<GetUsersResponse> getAllUsers(){
         return userService.getAll();
     }
 
@@ -41,13 +40,17 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<Object> getUsersByToken() throws BusinessException{
-        return EntityResponse.generateResponse("User Profile", HttpStatus.OK, customUserService.findCurrentUser());
+        return EntityResponse.generateResponse("User Profile", HttpStatus.OK, userDetailsServiceImpl.findCurrentUser());
     }
-
+    @GetMapping("/login")
+    public ResponseEntity<User> getUserByToken(@RequestHeader("Authorization") String jwt) throws ExecutionControl.UserException {
+        User user = userService.getUserByJwt(jwt);
+        return new ResponseEntity<User>(user, HttpStatus.ACCEPTED);
+    }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void addUser(@RequestBody CreateUserRequest createUserRequest){
+    public void addUser(@RequestBody RegisterRequest createUserRequest){
         this.userService.add(createUserRequest);
     }
 

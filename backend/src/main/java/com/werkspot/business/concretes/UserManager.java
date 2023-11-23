@@ -8,33 +8,38 @@ import com.werkspot.business.rules.UserBusinessRules;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
 import com.werkspot.dataAccess.abstracts.AdsRepository;
 import com.werkspot.dataAccess.abstracts.UserRepository;
-import com.werkspot.entities.concretes.Ads;
 import com.werkspot.entities.concretes.User;
-import com.werkspot.security.config.JwtService;
+import com.werkspot.security.auth.RegisterRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@Transactional
 public class UserManager implements UserService {
     private ModelMapperService modelMapperService;
     private UserRepository userRepository;
     private UserBusinessRules userBusinessRules;
-    private AdsRepository adsRepository;
+
+    public UserManager(ModelMapperService modelMapperService, UserRepository userRepository, UserBusinessRules userBusinessRules) {
+        this.modelMapperService = modelMapperService;
+        this.userRepository = userRepository;
+        this.userBusinessRules = userBusinessRules;
+    }
 
     @Override
-    public List<GetAllUsersResponse> getAll() {
+    public List<GetUsersResponse> getAll() {
         List<User> users = userRepository.findAll();
 
-        List<GetAllUsersResponse> usersResponses =
+        List<GetUsersResponse> usersResponses =
                 users.stream().map(user ->
                         this.modelMapperService
                                 .forResponse()
-                                .map(user, GetAllUsersResponse.class))
+                                .map(user, GetUsersResponse.class))
                         .collect(Collectors.toList());
         return usersResponses;
     }
@@ -42,20 +47,20 @@ public class UserManager implements UserService {
 
 
     @Override
-    public GetUserByTokenResponse getUserByJwt(String jwt) {
+    public User getUserByJwt(String jwt) {
         User user = this.userRepository.findByEmail(jwt).orElseThrow();
-        GetUserByTokenResponse response =
-                this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
+        User response =
+                this.modelMapperService.forResponse().map(user, User.class);
         return response;
     }
 
 
     @Override
-    public GetUsersByEmailResponse getByEmail(String email) {
+    public GetUsersResponse getByEmail(String email) {
         Optional<User> user = this.userRepository.findByEmail(email);
 
-        GetUsersByEmailResponse response =
-                this.modelMapperService.forResponse().map(user, GetUsersByEmailResponse.class);
+        GetUsersResponse response =
+                this.modelMapperService.forResponse().map(user, GetUsersResponse.class);
 
         return response;
     }
@@ -71,7 +76,7 @@ public class UserManager implements UserService {
 
 
     @Override
-    public void add(CreateUserRequest createUserRequest) {
+    public void add(RegisterRequest createUserRequest) {
        this.userBusinessRules.checkIfEmailExists(createUserRequest.getEmail());
        User user = this.modelMapperService
                .forRequest()

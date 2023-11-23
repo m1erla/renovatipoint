@@ -22,13 +22,19 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 @Lazy
 public class CategoryManager implements CategoryService {
 
     private ModelMapperService modelMapperService;
     private CategoryRepository categoryRepository;
     private CategoryBusinessRules categoryBusinessRules;
+
+    public CategoryManager(ModelMapperService modelMapperService, CategoryRepository categoryRepository, CategoryBusinessRules categoryBusinessRules) {
+        this.modelMapperService = modelMapperService;
+        this.categoryRepository = categoryRepository;
+        this.categoryBusinessRules = categoryBusinessRules;
+    }
+
     @Override
     public List<GetAllCategoriesResponse> getAll() {
         List<Category> categories = categoryRepository.findAll();

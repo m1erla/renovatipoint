@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@AllArgsConstructor
 @Service
 public class ServiceManager implements IService {
 
@@ -24,6 +23,12 @@ public class ServiceManager implements IService {
     public ModelMapperService modelMapperService;
     private ServiceRepository serviceRepository;
     private ServiceBusinessRules serviceBusinessRules;
+
+    public ServiceManager(ModelMapperService modelMapperService, ServiceRepository serviceRepository, ServiceBusinessRules serviceBusinessRules) {
+        this.modelMapperService = modelMapperService;
+        this.serviceRepository = serviceRepository;
+        this.serviceBusinessRules = serviceBusinessRules;
+    }
 
     @Override
     public List<GetAllServicesResponse> getAll() {
