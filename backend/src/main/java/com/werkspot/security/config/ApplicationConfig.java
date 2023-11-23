@@ -1,6 +1,7 @@
 package com.werkspot.security.config;
 
 import com.werkspot.dataAccess.abstracts.UserRepository;
+import com.werkspot.security.service.CustomUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,20 +25,15 @@ public class ApplicationConfig {
 
     private final UserRepository repository;
 
-    private UserDetailsService userDetailsService;
+    private final CustomUserService userDetailsService;
 
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        return username -> repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-    }
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
 
         return authProvider;
     }
