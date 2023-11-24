@@ -22,7 +22,7 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
-public class User implements UserDetails, Serializable {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -55,8 +55,7 @@ public class User implements UserDetails, Serializable {
 
 
    
-    @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "role", nullable = false)
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

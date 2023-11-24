@@ -20,4 +20,8 @@ public class EntityResponse {
         return new ResponseEntity<Object>(map, status);
 
     }
+
+    public static ResponseEntity<Object> generateErrorResponse(String s, HttpStatus httpStatus) {
+      return new ResponseEntity<Object>(s, httpStatus);
+    }
 }

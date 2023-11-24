@@ -1,6 +1,9 @@
 package com.werkspot.security.config;
 
+import com.werkspot.business.abstracts.UserService;
+import com.werkspot.business.concretes.UserManager;
 import com.werkspot.dataAccess.abstracts.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,21 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
+@RequiredArgsConstructor
 public class ApplicationConfig {
     private final UserRepository repository;
-    private final UserDetailsService userDetailsService;
-
-    private final PasswordEncoder passwordEncoder;
-    public ApplicationConfig(UserRepository repository, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        this.repository = repository;
-        this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final UserManager userService;
 
     @Bean
     public UserDetailsService userDetailsService(){
         return username -> repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
     }
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -44,14 +40,6 @@ public class ApplicationConfig {
     }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
-        final List<GlobalAuthenticationConfigurerAdapter> configurers = new ArrayList<>();
-        configurers.add(new GlobalAuthenticationConfigurerAdapter() {
-            @Override
-            public void configure(AuthenticationManagerBuilder auth) throws Exception {
-                auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-            }
-        });
-
         return config.getAuthenticationManager();
     }
     @Bean

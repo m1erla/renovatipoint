@@ -12,9 +12,13 @@ import com.werkspot.security.token.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,27 +59,19 @@ public class AuthenticationService{
 
     }
 
-    public AuthenticationResponse confirmLogin(AuthenticationRequest request){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var user = repository.findByEmail(request.getEmail()).orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
+    public AuthenticationResponse confirmLogin(String request){
+
+        var user = repository.findByEmail(request);
 
         return AuthenticationResponse.builder()
                 .message("User Successfully Login!")
-                .userId(user.getId())
-                .email(user.getEmail())
-                .name(user.getName())
-                .surname(user.getSurname())
-                .phoneNumber(user.getPhoneNumber())
-                .postCode(user.getPostCode())
-                .jobTitleName(user.getJobTitleName())
+                .userId(user.get().getId())
+                .email(user.get().getEmail())
+                .name(user.get().getName())
+                .surname(user.get().getSurname())
+                .phoneNumber(user.get().getPhoneNumber())
+                .postCode(user.get().getPostCode())
+                .jobTitleName(user.get().getJobTitleName())
                 .build();
     }
 
@@ -97,7 +93,6 @@ public class AuthenticationService{
             return jwtToken;
 
     }
-
 
     private void saveUserToken( User user, String jwtToken){
         var token = Token.builder()

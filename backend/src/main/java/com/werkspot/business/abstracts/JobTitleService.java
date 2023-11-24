@@ -3,10 +3,10 @@ package com.werkspot.business.abstracts;
 import com.werkspot.business.requests.CreateJobTitleRequest;
 import com.werkspot.business.requests.UpdateJobTitleRequest;
 import com.werkspot.business.responses.GetAllJobTitlesResponse;
-import org.springframework.stereotype.Service;
+
 
 import java.util.List;
-import java.util.Optional;
+
 
 public interface JobTitleService {
     List<GetAllJobTitlesResponse> getAllJobTitlesResponseList();

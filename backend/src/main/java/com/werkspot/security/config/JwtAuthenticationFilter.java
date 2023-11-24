@@ -1,17 +1,12 @@
 package com.werkspot.security.config;
 
-import com.werkspot.security.service.UserDetailsServiceImpl;
+import com.werkspot.business.concretes.UserManager;
 import com.werkspot.security.token.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,12 +21,12 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsService userService;
     private final TokenRepository tokenRepository;
 
-    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsServiceImpl userDetailsService, TokenRepository tokenRepository) {
+    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userService, TokenRepository tokenRepository) {
         this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
+        this.userService = userService;
         this.tokenRepository = tokenRepository;
     }
 
@@ -41,10 +36,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        if (request.getServletPath().contains("/api/v1/auth")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+//        if (request.getServletPath().contains("/api/v1/auth")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
@@ -55,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = authHeader.substring(7);
         userEmail = jwtService.extractUsername(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            UserDetails userDetails = this.userService.loadUserByUsername(userEmail);
             var isTokenValid = tokenRepository.findByToken(jwt)
                     .map(t -> !t.isExpired() && !t.isRevoked())
                     .orElse(false);
