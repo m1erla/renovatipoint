@@ -5,8 +5,6 @@ import lombok.*;
 @Data
 @Table(name = "image_data")
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Builder
@@ -16,6 +14,16 @@ public class Image {
     private int id;
 
     private String name;
+
+    public Image(int id, String name, String type, byte[] imageData, String url) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.imageData = imageData;
+        this.url = url;
+    }
+
+    public Image(){}
 
     private String type;
     @Lob

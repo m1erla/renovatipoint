@@ -4,7 +4,10 @@ import com.werkspot.core.utilities.images.ImageUtils;
 import com.werkspot.dataAccess.abstracts.StorageRepository;
 import com.werkspot.entities.concretes.Image;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,6 +18,8 @@ public class StorageManager {
 
     private StorageRepository repository;
 
+    public StorageManager(){}
+    @Autowired
     public StorageManager(StorageRepository repository) {
         this.repository = repository;
     }
@@ -31,7 +36,7 @@ public class StorageManager {
         }
         return null;
     }
-
+    @Transactional
     public byte[] downloadImage(String fileName){
         Optional<Image> dbImageData = repository.findByName(fileName);
         byte[] images =ImageUtils.decompressImage(dbImageData.get().getImageData());

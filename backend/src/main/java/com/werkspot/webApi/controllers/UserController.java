@@ -48,12 +48,8 @@ public class UserController {
         return userService.getById(id);
     }
 
-    @GetMapping("/profile")
-    public ResponseEntity<Object> retrieveUserProfile(@RequestParam String email){
-        return EntityResponse.generateResponse("User Profile", HttpStatus.OK, userService.getByEmail(email));
-    }
 
-    @GetMapping("/login")
+    @GetMapping("/profile")
     public ResponseEntity<Object> retrieveUserProfileWithJwt(@RequestHeader("Authorization") String authorizationHeader) {
         // Extract the token from the Authorization header (remove "Bearer " prefix)
         String jwt = authorizationHeader.substring(7).trim();

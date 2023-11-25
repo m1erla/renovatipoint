@@ -1,6 +1,5 @@
 package com.werkspot.security.config;
 
-import com.werkspot.business.concretes.UserManager;
 import com.werkspot.security.token.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

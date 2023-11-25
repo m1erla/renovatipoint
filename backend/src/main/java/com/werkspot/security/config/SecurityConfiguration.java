@@ -57,7 +57,7 @@ public class SecurityConfiguration {
                                 "/api/v1/services/**",
                                 "/api/v1/job_titles/**",
                                 "/api/v1/ads/**",
-                                "/api/v1/images/**",
+                                "/image/**",
                                 "/ws",
                                 "/app",
                                 "/app/ws",
