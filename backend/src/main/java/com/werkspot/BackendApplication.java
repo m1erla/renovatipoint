@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.crypto.SecretKey;
@@ -18,6 +19,7 @@ import java.util.Base64;
 @RestControllerAdvice
 @OpenAPIDefinition
 @SpringBootApplication
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class BackendApplication {
 
     public static void main(String[] args) {

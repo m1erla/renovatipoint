@@ -1,6 +1,7 @@
 package com.werkspot.business.concretes;
 
 import com.werkspot.business.abstracts.UserService;
+import com.werkspot.business.requests.ChangePasswordRequest;
 import com.werkspot.business.requests.UpdateUserRequest;
 import com.werkspot.business.responses.*;
 import com.werkspot.business.rules.UserBusinessRules;
@@ -11,11 +12,14 @@ import com.werkspot.entities.concretes.User;
 import com.werkspot.security.auth.RegisterRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,10 +32,13 @@ public class UserManager implements UserService {
     private UserRepository userRepository;
     private UserBusinessRules userBusinessRules;
 
-    public UserManager(ModelMapperService modelMapperService, UserRepository userRepository, UserBusinessRules userBusinessRules) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserManager(ModelMapperService modelMapperService, UserRepository userRepository, UserBusinessRules userBusinessRules, PasswordEncoder passwordEncoder) {
         this.modelMapperService = modelMapperService;
         this.userRepository = userRepository;
         this.userBusinessRules = userBusinessRules;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User findCurrentUser(String email) {
@@ -53,18 +60,6 @@ public class UserManager implements UserService {
 //        return new org.springframework.security.core.userdetails.User(findCurrentUser().getEmail(), findCurrentUser().getPassword(), findCurrentUser().getAuthorities());
 //
 //    }
-private Object dtoMapperRequestDtoToUser(RegisterRequest request){
-    User target = new User();
-    target.setName(request.getName());
-    target.setSurname(request.getSurname());
-    target.setEmail(request.getEmail());
-    target.setJobTitleName(request.getJobTitleName());
-    target.setPassword(request.getPassword());
-    target.setPostCode(request.getPostCode());
-    target.setPhoneNumber(request.getPhoneNumber());
-
-    return target;
-}
 
 
 
@@ -143,5 +138,24 @@ private Object dtoMapperRequestDtoToUser(RegisterRequest request){
     public void delete(int id) {
         this.userRepository.deleteById(id);
 
+    }
+
+    public void changePassword(ChangePasswordRequest request, Principal connectedUser){
+        var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+
+        // check if the current password is correct
+
+        if (!passwordEncoder.matches(request.getConfirmationPassword(), user.getPassword())){
+            throw new IllegalStateException("Wrong password");
+        }
+        // check if the two new passwords are the same
+        if (!request.getNewPassword().equals(request.getConfirmationPassword())){
+            throw new IllegalStateException("Password are not the same");
+        }
+        // update the password
+        user.setPassword(passwordEncoder.encode(request.getConfirmationPassword()));
+
+        // save the new password
+        userRepository.save(user);
     }
 }

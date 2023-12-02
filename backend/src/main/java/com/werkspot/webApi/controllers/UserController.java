@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -59,6 +60,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getByEmail(email));
     }
 
+
+    @PatchMapping
+    public ResponseEntity<?> changePassword(
+            @RequestBody ChangePasswordRequest request, Principal connectedUser
+    ){
+        userServiceManager.changePassword(request, connectedUser);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
