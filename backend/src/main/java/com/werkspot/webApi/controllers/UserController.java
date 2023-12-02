@@ -49,14 +49,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/profile")
-    public ResponseEntity<Object> retrieveUserProfileWithJwt(@RequestHeader("Authorization") String authorizationHeader) {
-        // Extract the token from the Authorization header (remove "Bearer " prefix)
-        String jwt = authorizationHeader.substring(7).trim();
 
-        String email = jwtService.extractUsername(jwt);
-        return EntityResponse.generateResponse("User Profile", HttpStatus.OK, userService.getByEmail(email));
-    }
     @GetMapping("/response")
     public ResponseEntity<GetUsersResponse> retrieveUserProfileWithResponse(@RequestHeader("Authorization") String authorizationHeader) {
         // Extract the token from the Authorization header (remove "Bearer " prefix)
@@ -65,7 +58,6 @@ public class UserController {
         String email = jwtService.extractUsername(jwt);
         return ResponseEntity.ok(userService.getByEmail(email));
     }
-
 
 
     @PostMapping
