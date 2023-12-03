@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
 @Service
 @Lazy
 public class JobTitleManager implements JobTitleService {
-    public ModelMapperService modelMapperService;
-    private JobTitleRepository jobTitleRepository;
-    private JobTitleBusinessRules jobTitleBusinessRules;
+    private final ModelMapperService modelMapperService;
+    private final JobTitleRepository jobTitleRepository;
+    private final JobTitleBusinessRules jobTitleBusinessRules;
 
 
     public JobTitleManager(ModelMapperService modelMapperService, JobTitleRepository jobTitleRepository, JobTitleBusinessRules jobTitleBusinessRules) {

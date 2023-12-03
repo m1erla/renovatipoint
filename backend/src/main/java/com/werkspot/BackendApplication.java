@@ -19,7 +19,6 @@ import java.util.Base64;
 @RestControllerAdvice
 @OpenAPIDefinition
 @SpringBootApplication
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class BackendApplication {
 
     public static void main(String[] args) {

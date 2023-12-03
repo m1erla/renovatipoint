@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 public class ServiceManager implements IService {
 
 
-    public ModelMapperService modelMapperService;
-    private ServiceRepository serviceRepository;
-    private ServiceBusinessRules serviceBusinessRules;
+    public final ModelMapperService modelMapperService;
+    private final ServiceRepository serviceRepository;
+    private final ServiceBusinessRules serviceBusinessRules;
 
     public ServiceManager(ModelMapperService modelMapperService, ServiceRepository serviceRepository, ServiceBusinessRules serviceBusinessRules) {
         this.modelMapperService = modelMapperService;

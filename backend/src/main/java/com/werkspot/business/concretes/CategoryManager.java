@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 @Lazy
 public class CategoryManager implements CategoryService {
 
-    private ModelMapperService modelMapperService;
-    private CategoryRepository categoryRepository;
-    private CategoryBusinessRules categoryBusinessRules;
+    private final ModelMapperService modelMapperService;
+    private final CategoryRepository categoryRepository;
+    private final CategoryBusinessRules categoryBusinessRules;
 
     public CategoryManager(ModelMapperService modelMapperService, CategoryRepository categoryRepository, CategoryBusinessRules categoryBusinessRules) {
         this.modelMapperService = modelMapperService;

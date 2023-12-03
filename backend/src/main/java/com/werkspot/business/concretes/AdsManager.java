@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 @Service
 public class AdsManager implements AdsService {
 
-    private ModelMapperService modelMapperService;
-    private AdsRepository adsRepository;
-    private AdsBusinessRules adsBusinessRules;
+    private final ModelMapperService modelMapperService;
+    private final AdsRepository adsRepository;
+    private final AdsBusinessRules adsBusinessRules;
 
     public AdsManager(ModelMapperService modelMapperService, AdsRepository adsRepository, AdsBusinessRules adsBusinessRules) {
         this.modelMapperService = modelMapperService;

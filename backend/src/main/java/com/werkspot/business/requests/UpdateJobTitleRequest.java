@@ -1,12 +1,12 @@
 package com.werkspot.business.requests;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class UpdateJobTitleRequest {
     private int id;
     private String name;

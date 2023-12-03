@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserManager implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserManager.class);
-    private ModelMapperService modelMapperService;
-    private UserRepository userRepository;
-    private UserBusinessRules userBusinessRules;
+    private final ModelMapperService modelMapperService;
+    private final UserRepository userRepository;
+    private final UserBusinessRules userBusinessRules;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -41,25 +41,6 @@ public class UserManager implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User findCurrentUser(String email) {
-        Optional<User> loggedInUser = userRepository.findByEmail(email);
-
-        // or throw an exception
-        return loggedInUser.flatMap(user -> userRepository.findById(user.getId())).orElse(null);
-
-    }
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        Optional<User> user = userRepository.findByEmail(username);
-//
-//        if (user.isEmpty()){
-//            throw new UsernameNotFoundException("User not found with this email - " + username);
-//        }
-//
-//
-//        return new org.springframework.security.core.userdetails.User(findCurrentUser().getEmail(), findCurrentUser().getPassword(), findCurrentUser().getAuthorities());
-//
-//    }
 
 
 
@@ -131,8 +112,14 @@ public class UserManager implements UserService {
     @Override
     public void update(UpdateUserRequest updateUserRequest) {
          User user = this.modelMapperService.forRequest().map(updateUserRequest, User.class);
-         this.userRepository.save(user);
+         updateUserRequest.getPassword().ifPresent(password -> {
+            String encodedPassword = passwordEncoder.encode(password);
+            user.setPassword(encodedPassword);
+        });
+
+        this.userRepository.save(user);
     }
+
 
     @Override
     public void delete(int id) {
@@ -145,7 +132,7 @@ public class UserManager implements UserService {
 
         // check if the current password is correct
 
-        if (!passwordEncoder.matches(request.getConfirmationPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())){
             throw new IllegalStateException("Wrong password");
         }
         // check if the two new passwords are the same
@@ -153,7 +140,7 @@ public class UserManager implements UserService {
             throw new IllegalStateException("Password are not the same");
         }
         // update the password
-        user.setPassword(passwordEncoder.encode(request.getConfirmationPassword()));
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         // save the new password
         userRepository.save(user);
