@@ -1,6 +1,9 @@
 package com.werkspot.business.responses;
 
+import com.werkspot.entities.concretes.Ads;
 import lombok.*;
+
+import java.util.List;
 
 @Data
 @Getter
@@ -16,7 +19,7 @@ public class GetUsersResponse {
     private String postCode;
     private String jobTitleName;
     private String role;
-    private String ads;
+    private List<GetAllAdsResponse> ads;
 
 
 }
