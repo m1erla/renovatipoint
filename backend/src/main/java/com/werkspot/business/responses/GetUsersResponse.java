@@ -16,6 +16,7 @@ public class GetUsersResponse {
     private String postCode;
     private String jobTitleName;
     private String role;
+    private String ads;
 
 
 }
