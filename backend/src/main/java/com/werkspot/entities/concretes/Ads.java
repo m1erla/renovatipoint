@@ -28,8 +28,8 @@ public class Ads {
     @Column(name = "name")
     private String name;
 
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @ManyToOne()
+    @JoinColumn(name = "category_id")
     private Category category;
 
 
