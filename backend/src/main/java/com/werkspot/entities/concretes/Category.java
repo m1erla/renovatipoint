@@ -25,7 +25,7 @@ public class Category {
 
     private boolean isActive;
 
-    @ManyToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private Set<Ads> ads;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)

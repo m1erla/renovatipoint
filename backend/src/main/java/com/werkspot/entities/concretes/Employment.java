@@ -29,7 +29,7 @@ public class Employment {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany(mappedBy = "service", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "services", fetch = FetchType.LAZY)
     private Set<Ads> ads;
 
     @ManyToOne
