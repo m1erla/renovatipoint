@@ -31,7 +31,7 @@ public class Ads {
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "ads", joinColumns = {
+    @JoinTable(name = "categories", joinColumns = {
             @JoinColumn(name = "ad_id", referencedColumnName = "id")
     },
     inverseJoinColumns = {
@@ -39,14 +39,8 @@ public class Ads {
     }
     )
     private Set<Category> categories;
-
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "ads", joinColumns = {
+    @JoinTable(name = "services", joinColumns = {
             @JoinColumn(name = "ad_id", referencedColumnName = "id")
     },
             inverseJoinColumns = {
@@ -54,6 +48,12 @@ public class Ads {
             }
     )
     private Set<Employment> services;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
 
 
 //    @Column(name = "ad_release_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
