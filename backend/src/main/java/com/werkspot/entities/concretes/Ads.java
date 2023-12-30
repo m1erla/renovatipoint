@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
 @Data
 @Table(name = "ads")
 @Getter
@@ -28,16 +30,30 @@ public class Ads {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "ad",cascade = CascadeType.ALL)
-    private List<Category> categories;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "ads", joinColumns = {
+            @JoinColumn(name = "ad_id", referencedColumnName = "id")
+    },
+    inverseJoinColumns = {
+            @JoinColumn(name = "category_id", referencedColumnName = "id")
+    }
+    )
+    private Set<Category> categories;
 
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "ad",cascade = CascadeType.ALL)
-    private List<Employment> services;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "ads", joinColumns = {
+            @JoinColumn(name = "ad_id", referencedColumnName = "id")
+    },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "service_id", referencedColumnName = "id")
+            }
+    )
+    private Set<Employment> services;
 
 
 //    @Column(name = "ad_release_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")

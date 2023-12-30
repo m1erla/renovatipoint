@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
+
 @Data
 @Table(name = "services")
 @Getter
@@ -27,9 +29,8 @@ public class Employment {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "ad_id")
-    private Ads ad;
+    @ManyToMany(mappedBy = "service", fetch = FetchType.LAZY)
+    private Set<Ads> ads;
 
     @ManyToOne
     @JoinColumn(name = "job_title_id")

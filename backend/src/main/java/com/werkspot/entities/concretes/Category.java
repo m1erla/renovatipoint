@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
+
 @Data
 @Table(name = "categories")
 @Getter
@@ -23,9 +25,8 @@ public class Category {
 
     private boolean isActive;
 
-    @ManyToOne
-    @JoinColumn(name = "ad_id")
-    private Ads ad;
+    @ManyToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private Set<Ads> ads;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Employment> services;
