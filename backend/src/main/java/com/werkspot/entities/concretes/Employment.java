@@ -27,8 +27,9 @@ public class Employment {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "service")
-    private List<Ads> ads;
+    @ManyToOne
+    @JoinColumn(name = "ad_id")
+    private Ads ad;
 
     @ManyToOne
     @JoinColumn(name = "job_title_id")

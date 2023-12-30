@@ -28,18 +28,16 @@ public class Ads {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne()
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @OneToMany(mappedBy = "ad",cascade = CascadeType.ALL)
+    private List<Category> categories;
 
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "service_id")
-    private Employment service;
+    @OneToMany(mappedBy = "ad",cascade = CascadeType.ALL)
+    private List<Employment> services;
 
 
 //    @Column(name = "ad_release_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
