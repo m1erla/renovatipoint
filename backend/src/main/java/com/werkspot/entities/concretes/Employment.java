@@ -29,8 +29,8 @@ public class Employment {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany(mappedBy = "services", fetch = FetchType.LAZY)
-    private Set<Ads> ads;
+    @OneToMany(mappedBy = "service")
+    private List<Ads> ads;
 
     @ManyToOne
     @JoinColumn(name = "job_title_id")

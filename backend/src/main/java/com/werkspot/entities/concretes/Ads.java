@@ -30,24 +30,13 @@ public class Ads {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "categories", joinColumns = {
-            @JoinColumn(name = "ad_id", referencedColumnName = "id")
-    },
-    inverseJoinColumns = {
-            @JoinColumn(name = "category_id", referencedColumnName = "id")
-    }
-    )
-    private Set<Category> categories;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "services", joinColumns = {
-            @JoinColumn(name = "ad_id", referencedColumnName = "id")
-    },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "service_id", referencedColumnName = "id")
-            }
-    )
-    private Set<Employment> services;
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "service_id", referencedColumnName = "id")
+    private Employment service;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

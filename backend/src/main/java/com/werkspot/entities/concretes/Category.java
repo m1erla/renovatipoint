@@ -25,13 +25,13 @@ public class Category {
 
     private boolean isActive;
 
-    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
-    private Set<Ads> ads;
+    @OneToMany(mappedBy = "category")
+    private List<Ads> ads;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Employment> services;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category")
     private List<JobTitle> jobTitles;
 
     public void addJobTitle(JobTitle jobTitle){

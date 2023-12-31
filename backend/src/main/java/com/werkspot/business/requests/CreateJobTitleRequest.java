@@ -10,5 +10,5 @@ import lombok.*;
 public class CreateJobTitleRequest {
     private String name;
     private String descriptions;
-    private String categoryName;
+    private int categoryId;
 }

@@ -30,7 +30,7 @@ public class JobTitle {
     private List<Employment> services;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
