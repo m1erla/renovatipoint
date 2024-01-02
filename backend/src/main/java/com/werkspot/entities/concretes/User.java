@@ -52,17 +52,14 @@ public class User implements UserDetails {
 
     private String postCode;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "user")
     private List<Ads> ads;
-
-
-   
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "user")
     private List<JobTitle> jobTitles;
 
 
