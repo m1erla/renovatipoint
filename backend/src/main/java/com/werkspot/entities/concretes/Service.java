@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Table(name = "services")
@@ -14,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Employment {
+public class Service {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,7 +28,7 @@ public class Employment {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "service")
+    @OneToMany(mappedBy = "service", cascade = CascadeType.PERSIST)
     private List<Ads> ads;
 
     @ManyToOne

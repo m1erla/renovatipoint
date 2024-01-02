@@ -1,16 +1,7 @@
 package com.werkspot.entities.concretes;
 
 import jakarta.persistence.*;
-import jdk.jfr.Timestamp;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @Data
 @Table(name = "ads")
@@ -20,7 +11,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-
 public class Ads {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +26,7 @@ public class Ads {
 
     @ManyToOne
     @JoinColumn(name = "service_id", referencedColumnName = "id")
-    private Employment service;
+    private Service service;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

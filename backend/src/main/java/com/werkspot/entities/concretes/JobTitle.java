@@ -27,7 +27,7 @@ public class JobTitle {
 
 
     @OneToMany(mappedBy = "jobTitle")
-    private List<Employment> services;
+    private List<Service> services;
 
 
     @ManyToOne
