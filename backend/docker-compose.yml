@@ -7,6 +7,6 @@ services:
     ports:
       - '5432:5432'
     environment:
-      - POSTGRES_PASSWORD=Rc001rY3JKXmFnvV7hglropMmn1aPzIr
-      - POSTGRES_USER=werkspot_user
-      - POSTGRES_DB=werkspot
+      - POSTGRES_PASSWORD=u0DVd60io9TEuqR3jaJ8wau6S8D6OsXG
+      - POSTGRES_USER=werkspot_1o7h_user
+      - POSTGRES_DB=werkspot_1o7h
