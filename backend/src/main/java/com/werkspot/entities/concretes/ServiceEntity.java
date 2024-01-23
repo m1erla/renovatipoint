@@ -13,25 +13,26 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Service {
+@EqualsAndHashCode
+public class ServiceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(unique = true)
+
     private String name;
 
     private boolean isActive;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.PERSIST)
     private List<Ads> ads;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "job_title_id")
     private JobTitle jobTitle;
 

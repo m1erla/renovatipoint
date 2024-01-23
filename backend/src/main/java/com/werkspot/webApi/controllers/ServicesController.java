@@ -17,7 +17,6 @@ import java.util.List;
 public class ServicesController {
     private IService iService;
 
-
     @GetMapping
     public List<GetAllServicesResponse> getAllServices(){
         return iService.getAll();

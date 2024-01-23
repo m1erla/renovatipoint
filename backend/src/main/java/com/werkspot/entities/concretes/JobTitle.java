@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Table(name = "job_title")
 @Getter
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @Entity
 @Builder
+@EqualsAndHashCode
 public class JobTitle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +28,16 @@ public class JobTitle {
     private String descriptions;
 
 
-    @OneToMany(mappedBy = "jobTitle")
-    private List<Service> services;
+    @OneToMany(mappedBy = "jobTitle", cascade = CascadeType.PERSIST)
+    private List<ServiceEntity> services;
 
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 }
