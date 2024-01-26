@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 public class UpdateServiceRequest {
     private int id;
-    private String serviceName;
+    private String name;
     private String categoryName;
     private int categoryId;
     private String jobTitleName;
