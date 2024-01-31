@@ -25,7 +25,7 @@ public class Category {
 
     private boolean isActive;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
     private List<Ads> ads;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)

@@ -52,7 +52,7 @@ public class User implements UserDetails {
 
     private String postCode;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     private List<Ads> ads;
 
     @Enumerated(EnumType.STRING)
