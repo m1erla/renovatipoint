@@ -24,7 +24,6 @@ import java.util.Collections;
 
 import static com.werkspot.entities.concretes.Permission.*;
 import static com.werkspot.entities.concretes.Role.*;
-import static com.werkspot.entities.concretes.Role.USER;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -71,11 +70,6 @@ public class SecurityConfiguration {
                                 "/swagger-ui.html"
                                 )
                                 .permitAll()
-                                .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
-                                .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
-                                .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
-                                .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
-                                .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
                                 .anyRequest()
                                 .authenticated()
                 )
@@ -91,17 +85,12 @@ public class SecurityConfiguration {
         return http.build();
         }
 
-    private void sharedSecurityConfiguration(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
-    }
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         final CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://myklus.onrender.com",
+                "mt-sonoma.guzelhosting.com",
                 "https://werkspot-development.netlify.app"
         ));
         configuration.setAllowedMethods(Collections.singletonList("*"));
