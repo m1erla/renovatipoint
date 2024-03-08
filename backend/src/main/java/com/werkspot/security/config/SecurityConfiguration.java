@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -22,9 +21,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import java.util.Arrays;
 import java.util.Collections;
 
-import static com.werkspot.entities.concretes.Permission.*;
-import static com.werkspot.entities.concretes.Role.*;
-import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -90,7 +86,7 @@ public class SecurityConfiguration {
         final CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://myklus.onrender.com",
-                "mt-sonoma.guzelhosting.com",
+                "https://mt-sonoma.guzelhosting.com",
                 "https://werkspot-development.netlify.app"
         ));
         configuration.setAllowedMethods(Collections.singletonList("*"));
