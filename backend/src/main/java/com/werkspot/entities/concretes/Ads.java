@@ -1,16 +1,9 @@
 package com.werkspot.entities.concretes;
 
 import jakarta.persistence.*;
-import jdk.jfr.Timestamp;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-
+@Data
 @Table(name = "ads")
 @Getter
 @Setter
@@ -18,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Data
 public class Ads {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,32 +20,26 @@ public class Ads {
     @Column(name = "name")
     private String name;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "service_id", referencedColumnName = "id")
+    private ServiceEntity service;
 
-    @ManyToOne
-    @JoinColumn(name = "master_id")
-    private Master master;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "service_id")
-    private Employment service;
 
-    @ManyToOne
-    @JoinColumn(name = "consumer_id")
-    private Consumer consumer;
 
-    @Column(name = "ad_release_date")
-    @CreatedDate
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    LocalDateTime adReleaseDate;
+
+    //    @Column(name = "ad_release_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+//    @CreatedDate
+//    @CreationTimestamp
+//    @Temporal(TemporalType.TIMESTAMP)
+    private String adReleaseDate;
 
     private String descriptions;
 

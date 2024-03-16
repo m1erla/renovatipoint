@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -42,28 +41,28 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("/api/v1/auth/**",
-                                "/api/v1/users/**",
-                                "/api/v1/categories/**",
-                                "/api/v1/services/**",
-                                "/api/v1/job_titles/**",
-                                "/api/v1/ads/**",
-                                "/api/v1/images",
-                                "/ws",
-                                "/app",
-                                "/app/ws",
-                                "/app/topic/public",
-                                "/app/topic",
-                                "/chat.sendMessage",
-                                "/v3/api-docs/**",
-                                "/v3/api-docs",
-                                "/v2/api-docs",
-                                "/swagger-resources",
-                                "/swagger-resources/**",
-                                "/configuration/ui",
-                                "/configuration/security",
-                                "/swagger-ui/**",
-                                "/webjars/**",
-                                "/swagger-ui.html"
+                                        "/api/v1/users/**",
+                                        "/api/v1/categories/**",
+                                        "/api/v1/services/**",
+                                        "/api/v1/job_titles/**",
+                                        "/api/v1/ads/**",
+                                        "/image/**",
+                                        "/ws",
+                                        "/app",
+                                        "/app/ws",
+                                        "/app/topic/public",
+                                        "/app/topic",
+                                        "/chat.sendMessage",
+                                        "/v3/api-docs/**",
+                                        "/v3/api-docs",
+                                        "/v2/api-docs",
+                                        "/swagger-resources",
+                                        "/swagger-resources/**",
+                                        "/configuration/ui",
+                                        "/configuration/security",
+                                        "/swagger-ui/**",
+                                        "/webjars/**",
+                                        "/swagger-ui.html"
                                 )
                                 .permitAll()
                                 .anyRequest()
@@ -79,14 +78,14 @@ public class SecurityConfiguration {
                 ).formLogin(Customizer.withDefaults());
 
         return http.build();
-        }
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         final CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://myklus.onrender.com",
-                "https://mt-sonoma.guzelhosting.com",
+                "mt-sonoma.guzelhosting.com",
                 "https://werkspot-development.netlify.app"
         ));
         configuration.setAllowedMethods(Collections.singletonList("*"));

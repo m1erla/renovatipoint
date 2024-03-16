@@ -1,15 +1,15 @@
 package com.werkspot.business.requests;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class CreateServiceRequest {
     private String name;
-    private int jobTitleId;
-    private int categoryId;
+    private String jobTitleName;
+    private String categoryName;
     private boolean isActive;
 }

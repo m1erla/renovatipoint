@@ -21,17 +21,11 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-
     private final UserRepository repository;
-
-    private UserDetailsService userDetailsService;
-
-    PasswordEncoder passwordEncoder;
 
     @Bean
     public UserDetailsService userDetailsService(){
         return username -> repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
     }
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -43,20 +37,11 @@ public class ApplicationConfig {
     }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
-        final List<GlobalAuthenticationConfigurerAdapter> configurers = new ArrayList<>();
-        configurers.add(new GlobalAuthenticationConfigurerAdapter() {
-            @Override
-            public void configure(AuthenticationManagerBuilder auth) throws Exception {
-                auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-            }
-        });
-
         return config.getAuthenticationManager();
     }
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-
 }
+

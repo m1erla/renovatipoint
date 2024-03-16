@@ -15,28 +15,14 @@ import static com.werkspot.entities.concretes.Permission.*;
 @RequiredArgsConstructor
 public enum Role {
     USER(Collections.emptySet()),
-
     ADMIN(
             Set.of(
                     ADMIN_READ,
                     ADMIN_UPDATE,
-                    ADMIN_CREATE,
                     ADMIN_DELETE,
-                    MANAGER_CREATE,
-                    MANAGER_READ,
-                    MANAGER_UPDATE,
-                    MANAGER_DELETE
-            )
-    ),
-    MANAGER(
-            Set.of(
-                    MANAGER_CREATE,
-                    MANAGER_DELETE,
-                    MANAGER_READ,
-                    MANAGER_UPDATE
-            )
-    )
-    ;
+                    ADMIN_CREATE
+            ));
+
     @Getter
     private final Set<Permission> permissions;
 

@@ -1,17 +1,21 @@
 package com.werkspot.entities.concretes;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.werkspot.security.token.Token;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
-@Data
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +23,7 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
-@ToString
+@EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,29 +52,25 @@ public class User implements UserDetails {
 
     private String postCode;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     private List<Ads> ads;
-
-    @OneToMany(mappedBy = "user")
-    private List<Master> masters;
-
-    @OneToOne
-    @JoinColumn(name = "consumer_id")
-    private Consumer consumer;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
-    private List<JobTitle> jobTitles;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+
+    @OneToMany(mappedBy = "user")
+    private List<JobTitle> jobTitles;
+
 
     @OneToMany(mappedBy = "user")
     private List<Token> token;
 
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return role.getAuthorities();
     }
 
     @Override

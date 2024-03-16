@@ -1,124 +1,111 @@
 package com.werkspot.business.concretes;
 
 import com.werkspot.business.abstracts.UserService;
-import com.werkspot.business.requests.CreateUserRequest;
+import com.werkspot.business.requests.ChangePasswordRequest;
 import com.werkspot.business.requests.UpdateUserRequest;
 import com.werkspot.business.responses.*;
 import com.werkspot.business.rules.UserBusinessRules;
 import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.core.utilities.mappers.ModelMapperService;
-import com.werkspot.dataAccess.abstracts.AdsRepository;
-import com.werkspot.dataAccess.abstracts.ConsumerRepository;
-import com.werkspot.dataAccess.abstracts.MasterRepository;
 import com.werkspot.dataAccess.abstracts.UserRepository;
-import com.werkspot.entities.concretes.Ads;
-import com.werkspot.entities.concretes.Consumer;
-import com.werkspot.entities.concretes.Master;
 import com.werkspot.entities.concretes.User;
-import com.werkspot.security.config.JwtService;
+import com.werkspot.security.auth.RegisterRequest;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class UserManager implements UserService {
+    private static final Logger LOG = LoggerFactory.getLogger(UserManager.class);
     private ModelMapperService modelMapperService;
     private UserRepository userRepository;
     private UserBusinessRules userBusinessRules;
-    private MasterRepository masterRepository;
-    private AdsRepository adsRepository;
-    private ConsumerRepository consumerRepository;
-    private JwtService jwtService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public UserManager(ModelMapperService modelMapperService, UserRepository userRepository, UserBusinessRules userBusinessRules, PasswordEncoder passwordEncoder) {
+        this.modelMapperService = modelMapperService;
+        this.userRepository = userRepository;
+        this.userBusinessRules = userBusinessRules;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public User findCurrentUser(String email) {
+        Optional<User> loggedInUser = userRepository.findByEmail(email);
+
+        // or throw an exception
+        return loggedInUser.flatMap(user -> userRepository.findById(user.getId())).orElse(null);
+
+    }
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        Optional<User> user = userRepository.findByEmail(username);
+//
+//        if (user.isEmpty()){
+//            throw new UsernameNotFoundException("User not found with this email - " + username);
+//        }
+//
+//
+//        return new org.springframework.security.core.userdetails.User(findCurrentUser().getEmail(), findCurrentUser().getPassword(), findCurrentUser().getAuthorities());
+//
+//    }
+
+
 
     @Override
-    public List<GetAllUsersResponse> getAll() {
+    public List<GetUsersResponse> getAll() {
         List<User> users = userRepository.findAll();
 
-        List<GetAllUsersResponse> usersResponses =
+        List<GetUsersResponse> usersResponses =
                 users.stream().map(user ->
-                        this.modelMapperService
-                                .forResponse()
-                                .map(user, GetAllUsersResponse.class))
+                                this.modelMapperService
+                                        .forResponse()
+                                        .map(user, GetUsersResponse.class))
                         .collect(Collectors.toList());
         return usersResponses;
     }
 
-    @Override
-    public GetAllByIdMastersResponse getMasterById(int id) {
-        Master master = this.masterRepository.findById(id).orElseThrow();
 
-        GetAllByIdMastersResponse response =
-                this.modelMapperService.forResponse().map(master, GetAllByIdMastersResponse.class);
-        return response;
-    }
 
     @Override
-    public Optional<User> getUserProfileByToken(String token) throws BusinessException {
-        var email = jwtService.decodeToken(token);
+    public User getUserByJwt(String jwt) {
+        Optional<User> userOptional = this.userRepository.findByEmail(jwt);
 
-        Optional<User> user = userRepository.findByEmail(String.valueOf(email));
-
-        if (user.isEmpty()){
-            throw new BusinessException("User not found with email " + email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            User response = this.modelMapperService.forResponse().map(user, User.class);
+            return response;
+        } else {
+            // Handle the case where no user is found with the provided email (jwt)
+            // You can throw a specific exception, return null, or handle it according to your needs.
+            throw new BusinessException("User not found with the provided JWT");
         }
-//        GetUserByTokenResponse response =
-//                this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
-
-
-        return user;
-    }
-
-    @Override
-    public GetUserByTokenResponse getUserByJwt(String jwt) {
-        User user = this.userRepository.findByEmail(jwt).orElseThrow();
-        GetUserByTokenResponse response =
-                this.modelMapperService.forResponse().map(user, GetUserByTokenResponse.class);
-        return response;
     }
 
 
     @Override
-    public GetAllByIdConsumersResponse getConsumerById(int id) {
-        Consumer consumer = this.consumerRepository.findById(id).orElseThrow();
-
-        GetAllByIdConsumersResponse response =
-                this.modelMapperService.forResponse().map(consumer, GetAllByIdConsumersResponse.class);
-
-        return response;
-    }
-
-    @Override
-    public GetUsersByEmailResponse getByEmail(String email) {
+    public GetUsersResponse getByEmail(String email) {
         Optional<User> user = this.userRepository.findByEmail(email);
 
-        GetUsersByEmailResponse response =
-                this.modelMapperService.forResponse().map(user, GetUsersByEmailResponse.class);
+        GetUsersResponse response =
+                this.modelMapperService.forResponse().map(user, GetUsersResponse.class);
 
         return response;
     }
 
     @Override
-    public GetAdsByIdResponse getAdById(int id) {
-        Ads ads = this.adsRepository.findById(id).orElseThrow();
-
-        GetAdsByIdResponse response =
-                this.modelMapperService.forResponse().map(ads, GetAdsByIdResponse.class);
-        return response;
-    }
-
-    @Override
-    public List<GetAllAdsResponse> getAllAds() {
-        List<Ads> ads = adsRepository.findAll();
-
-        List<GetAllAdsResponse> adsResponses =
-                ads.stream().map(ads1 -> this.modelMapperService.forResponse().map(ads1, GetAllAdsResponse.class)).collect(Collectors.toList());
-
-        return adsResponses;
+    public UserDetails getByDetails(String details) {
+        return userRepository.findByEmail(details).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Override
@@ -132,18 +119,18 @@ public class UserManager implements UserService {
 
 
     @Override
-    public void add(CreateUserRequest createUserRequest) {
-       this.userBusinessRules.checkIfEmailExists(createUserRequest.getEmail());
-       User user = this.modelMapperService
-               .forRequest()
-               .map(createUserRequest, User.class);
-       this.userRepository.save(user);
+    public void add(RegisterRequest createUserRequest) {
+        this.userBusinessRules.checkIfEmailExists(createUserRequest.getEmail());
+        User user = this.modelMapperService
+                .forRequest()
+                .map(createUserRequest, User.class);
+        this.userRepository.save(user);
     }
 
     @Override
     public void update(UpdateUserRequest updateUserRequest) {
-         User user = this.modelMapperService.forRequest().map(updateUserRequest, User.class);
-         this.userRepository.save(user);
+        User user = this.modelMapperService.forRequest().map(updateUserRequest, User.class);
+        this.userRepository.save(user);
     }
 
     @Override
@@ -151,4 +138,24 @@ public class UserManager implements UserService {
         this.userRepository.deleteById(id);
 
     }
+
+    public void changePassword(ChangePasswordRequest request, Principal connectedUser){
+        var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+
+        // check if the current password is correct
+
+        if (!passwordEncoder.matches(request.getConfirmationPassword(), user.getPassword())){
+            throw new IllegalStateException("Wrong password");
+        }
+        // check if the two new passwords are the same
+        if (!request.getNewPassword().equals(request.getConfirmationPassword())){
+            throw new IllegalStateException("Password are not the same");
+        }
+        // update the password
+        user.setPassword(passwordEncoder.encode(request.getConfirmationPassword()));
+
+        // save the new password
+        userRepository.save(user);
+    }
+
 }

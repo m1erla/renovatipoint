@@ -26,19 +26,17 @@ public class JobTitle {
     private String descriptions;
 
 
-    @OneToMany(mappedBy = "jobTitle")
-    private List<Employment> services;
+    @OneToMany(mappedBy = "jobTitle", cascade = CascadeType.PERSIST)
+    private List<ServiceEntity> services;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "master_id")
-    private Master master;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
 }

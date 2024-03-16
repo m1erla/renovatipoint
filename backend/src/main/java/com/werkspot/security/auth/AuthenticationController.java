@@ -2,18 +2,14 @@ package com.werkspot.security.auth;
 
 import com.werkspot.business.abstracts.UserService;
 import com.werkspot.business.requests.CreateUserRequest;
-import com.werkspot.business.responses.GetUserByTokenResponse;
 import com.werkspot.business.rules.UserBusinessRules;
-import com.werkspot.core.utilities.exceptions.BusinessException;
 import com.werkspot.entities.concretes.User;
 import com.werkspot.security.config.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,13 +25,14 @@ public class AuthenticationController {
     private final AuthenticationService service;
     private final UserBusinessRules userBusinessRules;
     private final UserService userService;
-    @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(
-            @RequestBody CreateUserRequest request
-    ){
-//        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    //        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 //        System.out.println("The secret key is : " + key);
 //        System.out.println(Base64.getEncoder().encodeToString(key.getEncoded()));
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponse> register(
+            @RequestBody RegisterRequest request
+    ){
+
         if (userBusinessRules.userExists(request.getEmail())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new RegisterResponse("User with this email already exists! ", 0, request.getEmail()));
@@ -53,28 +50,15 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    @GetMapping("/login")
-    @ResponseStatus(code = HttpStatus.ACCEPTED)
-    public ResponseEntity<AuthenticationResponse> getUserByToken(@RequestHeader("Authorization") AuthenticationRequest request) {
-        return ResponseEntity.ok(service.confirmLogin(request));
-    }
+
     @PostMapping("/refresh-token")
     public void refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
     )throws IOException {
-                 service.refreshToken(request, response);
+        service.refreshToken(request, response);
     }
 
-    @GetMapping( "/confirmLogin")
-    public ResponseEntity<AuthenticationResponse> confirmLogin(@RequestHeader("Authorization") AuthenticationRequest confirmLogin){
-        Optional<User> response = userService.getUserProfileByToken(String.valueOf(confirmLogin));
-        if (response.isPresent()){
-            return ResponseEntity.ok(service.confirmLogin(confirmLogin));
-        }else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
 
 
 

@@ -1,15 +1,15 @@
 package com.werkspot.business.requests;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class UpdateServiceRequest {
     private int id;
-    private String serviceName;
+    private String name;
     private String categoryName;
     private int categoryId;
     private String jobTitleName;

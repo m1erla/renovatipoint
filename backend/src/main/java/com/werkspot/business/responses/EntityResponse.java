@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class EntityResponse {
 
-    public static ResponseEntity<Object> generateResponse(String message, HttpStatus status, Object responseObj){
+    public static ResponseEntity<Object> generateResponse(String message, HttpStatus status, Object responseObj) {
 
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         map.put("TimeStamp", new Date());
@@ -19,5 +19,9 @@ public class EntityResponse {
 
         return new ResponseEntity<Object>(map, status);
 
+    }
+
+    public static ResponseEntity<Object> generateErrorResponse(String s, HttpStatus httpStatus) {
+        return new ResponseEntity<Object>(s, httpStatus);
     }
 }

@@ -30,7 +30,7 @@ public class AuthenticationService{
     private final UserService userService;
     private final UserBusinessRules userBusinessRules;
 
-    public RegisterResponse register(CreateUserRequest request){
+    public RegisterResponse register(RegisterRequest request){
          var user = User.builder()
                  .name(request.getName())
                  .surname(request.getSurname())
