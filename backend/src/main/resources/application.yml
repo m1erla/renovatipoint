@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-ckhelscldqrs739pvdgg-a.oregon-postgres.render.com:5432/werkspot
-    username: werkspot_user
-    password: Rc001rY3JKXmFnvV7hglropMmn1aPzIr
+    url: jdbc:postgresql://dpg-cmeplvacn0vc73bsgdrg-a.frankfurt-postgres.render.com:5432/werkspot_1o7h
+    username: werkspot_1o7h_user
+    password: u0DVd60io9TEuqR3jaJ8wau6S8D6OsXG
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
