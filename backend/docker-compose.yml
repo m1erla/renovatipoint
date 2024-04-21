@@ -1,12 +1,23 @@
 version: '3.8.5'
 
 services:
-  postgres:
-    image: postgres
+  backend-db:
+    image: mysql
     restart: always
     ports:
-      - '5432:5432'
+      - 3306:3306
     environment:
-      - POSTGRES_USER=renovatiepoint
-      - POSTGRES_PASSWORD=renovatipointAa*
-      - POSTGRES_DB=admin_renovatiepoint
+      - MYSQL_URL=jdbc:mysql://backend-db:3306/admin_renovatiepointMysql
+      - MYSQL_USER=mySqlRenovatiepoint
+      - MYSQL_PASSWORD=renovatipointAa*
+      - MYSQL_DB=admin_renovatiepointMysql
+      - MYSQL_ROOT_PASSWORD=renovatipointAa*
+      - MYSQL_ALLOW_EMPTY_PASSWORD=
+      - MYSQL_RANDOM_ROOT_PASSWORD=root
+    expose:
+      - 3306
+networks:
+  my_network:
+    driver: bridge
+    external: true
+

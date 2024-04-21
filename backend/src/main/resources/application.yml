@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://104.247.164.80:5432/admin_renovatiepoint
-    username: renovatiepoint
+    url: jdbc:mysql://104.247.164.80:3306/admin_renovatiepointMysql
+    username: mySqlRenovatiepoint
     password: renovatipointAa*
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,8 +11,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
 
 application:
   security:
