@@ -4,27 +4,16 @@ import com.werkspot.business.abstracts.*;
 import com.werkspot.business.concretes.UserManager;
 import com.werkspot.business.requests.*;
 import com.werkspot.business.responses.*;
-import com.werkspot.core.utilities.exceptions.BusinessException;
-import com.werkspot.entities.concretes.User;
-import com.werkspot.security.auth.AuthenticationRequest;
 import com.werkspot.security.auth.AuthenticationService;
 import com.werkspot.security.auth.RegisterRequest;
 import com.werkspot.security.config.JwtService;
-import com.werkspot.security.token.Token;
-import io.swagger.v3.oas.annotations.Hidden;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/users")

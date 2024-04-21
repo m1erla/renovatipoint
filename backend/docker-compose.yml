@@ -7,6 +7,6 @@ services:
     ports:
       - '5432:5432'
     environment:
-      - POSTGRES_PASSWORD=renovatiepoint
       - POSTGRES_USER=renovatiepoint
+      - POSTGRES_PASSWORD=renovatipointAa*
       - POSTGRES_DB=admin_renovatiepoint

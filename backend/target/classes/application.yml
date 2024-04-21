@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://104.247.164.80:5432/admin_renovatiepoint
     username: renovatiepoint
-    password: renovatiepoint
+    password: renovatipointAa*
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

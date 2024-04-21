@@ -85,7 +85,10 @@ public class SecurityConfiguration {
         final CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://myklus.onrender.com",
-                "https://server.renovatiepoint.com",
+                "https://server.renovatipoint.com",
+                "https://server.renovatipoint.com:8443",
+                "https://104.247.164.80:8443",
+                "https://104.247.164.80",
                 "https://werkspot-development.netlify.app"
         ));
         configuration.setAllowedMethods(Collections.singletonList("*"));
