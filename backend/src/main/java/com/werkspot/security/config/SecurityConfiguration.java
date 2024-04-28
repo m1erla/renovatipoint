@@ -86,9 +86,10 @@ public class SecurityConfiguration {
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://myklus.onrender.com",
                 "https://server.renovatipoint.com",
-                "https://server.renovatipoint.com:8443",
-                "https://104.247.164.80:8443",
-                "https://104.247.164.80",
+                "http://server.renovatipoint.com:32769",
+                "http://localhost:5173",
+                "https://renovatipoint.com",
+                "http://renovatipoint.com",
                 "https://werkspot-development.netlify.app"
         ));
         configuration.setAllowedMethods(Collections.singletonList("*"));
