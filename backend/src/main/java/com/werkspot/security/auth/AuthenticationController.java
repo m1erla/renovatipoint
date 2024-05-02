@@ -20,11 +20,9 @@ import java.util.Optional;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
+
     private final AuthenticationService service;
     private final UserBusinessRules userBusinessRules;
-    private final UserService userService;
     //        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 //        System.out.println("The secret key is : " + key);
 //        System.out.println(Base64.getEncoder().encodeToString(key.getEncoded()));

@@ -2,7 +2,6 @@ package com.werkspot.security.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.werkspot.business.abstracts.UserService;
-import com.werkspot.business.requests.CreateUserRequest;
 import com.werkspot.business.rules.UserBusinessRules;
 import com.werkspot.security.config.JwtService;
 import com.werkspot.entities.concretes.User;
@@ -27,8 +26,7 @@ public class AuthenticationService{
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
-    private final UserBusinessRules userBusinessRules;
+
 
     public RegisterResponse register(RegisterRequest request){
          var user = User.builder()
