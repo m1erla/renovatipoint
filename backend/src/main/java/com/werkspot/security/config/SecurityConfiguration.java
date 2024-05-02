@@ -84,9 +84,8 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource(){
         final CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
-                "https://myklus.onrender.com",
                 "https://server.renovatipoint.com",
-                "http://server.renovatipoint.com:32769",
+                "http://server.renovatipoint.com:32771",
                 "http://localhost:5173",
                 "https://renovatipoint.com",
                 "http://renovatipoint.com",
