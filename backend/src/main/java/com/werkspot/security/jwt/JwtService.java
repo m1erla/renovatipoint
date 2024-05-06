@@ -1,4 +1,4 @@
-package com.werkspot.security.config;
+package com.werkspot.security.jwt;
 
 import com.werkspot.dataAccess.abstracts.UserRepository;
 import com.werkspot.entities.concretes.User;
@@ -59,18 +59,18 @@ public class JwtService {
     ) {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
-    public Claims decodeToken(String token){
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-    }
-
-    public String extractUsernameByToken(String token){
-        return decodeToken(token).getSubject();
-    }
+//    public Claims decodeToken(String token){
+//        return Jwts.parserBuilder()
+//                .setSigningKey(secretKey)
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody();
+//
+//    }
+//
+//    public String extractUsernameByToken(String token){
+//        return decodeToken(token).getSubject();
+//    }
     public String generateRefreshToken(
             UserDetails userDetails
     ) {

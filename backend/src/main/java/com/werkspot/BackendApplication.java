@@ -1,7 +1,7 @@
 package com.werkspot;
 
 import com.werkspot.security.auth.AuthenticationService;
-import com.werkspot.security.auth.RegisterRequest;
+import com.werkspot.business.requests.RegisterRequest;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

@@ -1,4 +1,4 @@
-package com.werkspot.security.auth;
+package com.werkspot.business.requests;
 
 import com.werkspot.entities.concretes.Role;
 import lombok.AllArgsConstructor;

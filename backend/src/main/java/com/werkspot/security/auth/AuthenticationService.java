@@ -1,9 +1,9 @@
 package com.werkspot.security.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.werkspot.business.abstracts.UserService;
-import com.werkspot.business.rules.UserBusinessRules;
-import com.werkspot.security.config.JwtService;
+import com.werkspot.business.requests.RegisterRequest;
+import com.werkspot.business.responses.RegisterResponse;
+import com.werkspot.security.jwt.JwtService;
 import com.werkspot.entities.concretes.User;
 import com.werkspot.dataAccess.abstracts.UserRepository;
 import com.werkspot.security.token.*;

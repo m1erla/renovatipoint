@@ -1,4 +1,4 @@
-package com.werkspot.security.auth;
+package com.werkspot.business.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

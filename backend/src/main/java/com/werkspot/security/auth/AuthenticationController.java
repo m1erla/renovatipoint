@@ -1,20 +1,16 @@
 package com.werkspot.security.auth;
 
-import com.werkspot.business.abstracts.UserService;
-import com.werkspot.business.requests.CreateUserRequest;
+import com.werkspot.business.requests.RegisterRequest;
+import com.werkspot.business.responses.RegisterResponse;
 import com.werkspot.business.rules.UserBusinessRules;
-import com.werkspot.entities.concretes.User;
-import com.werkspot.security.config.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -26,6 +22,7 @@ public class AuthenticationController {
     //        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 //        System.out.println("The secret key is : " + key);
 //        System.out.println(Base64.getEncoder().encodeToString(key.getEncoded()));
+
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(
             @RequestBody RegisterRequest request
@@ -37,6 +34,7 @@ public class AuthenticationController {
         }
         return ResponseEntity.ok(service.register(request));
     }
+
     @PostMapping("/authenticate")
     public ResponseEntity<String> authenticate(
             @RequestBody AuthenticationRequest request

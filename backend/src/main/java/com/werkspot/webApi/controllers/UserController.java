@@ -5,8 +5,8 @@ import com.werkspot.business.concretes.UserManager;
 import com.werkspot.business.requests.*;
 import com.werkspot.business.responses.*;
 import com.werkspot.security.auth.AuthenticationService;
-import com.werkspot.security.auth.RegisterRequest;
-import com.werkspot.security.config.JwtService;
+import com.werkspot.business.requests.RegisterRequest;
+import com.werkspot.security.jwt.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-@CrossOrigin(origins = "", allowedHeaders = "", allowCredentials = "true")
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {

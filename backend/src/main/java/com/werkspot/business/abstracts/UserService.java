@@ -1,14 +1,12 @@
 package com.werkspot.business.abstracts;
 
-import com.werkspot.business.requests.CreateUserRequest;
 import com.werkspot.business.requests.UpdateUserRequest;
 import com.werkspot.business.responses.*;
 import com.werkspot.entities.concretes.User;
-import com.werkspot.security.auth.RegisterRequest;
+import com.werkspot.business.requests.RegisterRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
     List<GetUsersResponse> getAll();
