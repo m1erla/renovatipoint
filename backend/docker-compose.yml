@@ -7,7 +7,7 @@ services:
     ports:
       - 3306:3306
     environment:
-      - MYSQL_URL=jdbc:mysql://backend-db:3306/admin_renovatiepointMysql
+      - MYSQL_URL=jdbc:mysql://104.247.164.80:3306/admin_renovatiepointMysql
       - MYSQL_USER=mySqlRenovatiepoint
       - MYSQL_PASSWORD=renovatipointAa*
       - MYSQL_DB=admin_renovatiepointMysql
