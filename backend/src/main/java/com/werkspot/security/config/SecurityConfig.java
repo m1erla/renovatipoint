@@ -39,6 +39,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource(){
         final CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
+                "https://server.renovatipoint.com:32771",
                 "http://server.renovatipoint.com:32771",
                 "http://localhost:5173",
                 "https://renovatipoint.com",
