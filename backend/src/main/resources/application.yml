@@ -13,7 +13,17 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
-
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:certificate.pfx
+    key-store-password: password
+    key-store-type: pkcs12
+    key-alias: 1
+    key-password: password
+  port: 8443
+  http:
+    port: 8080
 application:
   security:
     jwt:
