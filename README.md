@@ -70,37 +70,37 @@
 
 
 //POST 
-https://myklus.onrender.com/api/v1/auth/authenticate
-https://myklus.onrender.com/api/v1/auth/register
-https://myklus.onrender.com/api/v1/ads/ad
-https://myklus.onrender.com/api/v1/job_titles
-https://myklus.onrender.com/api/v1/categories/category
-https://myklus.onrender.com/api/v1/services/service
+http://localhost:8080/api/v1/auth/authenticate
+http://localhost:8080/api/v1/auth/register
+http://localhost:8080/api/v1/ads/ad
+http://localhost:8080/api/v1/job_titles
+http://localhost:8080/api/v1/categories/category
+http://localhost:8080/api/v1/services/service
 
 
 //GET
-https://myklus.onrender.com/api/v1/users
-https://myklus.onrender.com/api/v1/ads
-https://myklus.onrender.com/api/v1/job_titles
-https://myklus.onrender.com/api/v1/categories
-https://myklus.onrender.com/api/v1/services
+http://localhost:8080/api/v1/users
+http://localhost:8080/api/v1/ads
+http://localhost:8080/api/v1/job_titles
+http://localhost:8080/api/v1/categories
+http://localhost:8080/api/v1/services
 
 
 //FIND
-https://myklus.onrender.com/api/v1/users/1
-https://myklus.onrender.com/api/v1/ads/ad/1
-https://myklus.onrender.com/api/v1/job_titles/1
-https://myklus.onrender.com/api/v1/categories/1
-https://myklus.onrender.com/api/v1/services/1
+http://localhost:8080/api/v1/users/1
+http://localhost:8080/api/v1/ads/ad/1
+http://localhost:8080/api/v1/job_titles/1
+http://localhost:8080/api/v1/categories/1
+http://localhost:8080/api/v1/services/1
 
 
 
 //DELETE
-https://myklus.onrender.com/api/v1/users/1
-https://myklus.onrender.com/api/v1/ads/ad/1
-https://myklus.onrender.com/api/v1/categories/1
-https://myklus.onrender.com/api/v1/services/1
-https://myklus.onrender.com/api/v1/job_titles/1
+http://localhost:8080/api/v1/users/1
+http://localhost:8080/api/v1/ads/ad/1
+http://localhost:8080/api/v1/categories/1
+http://localhost:8080/api/v1/services/1
+http://localhost:8080/api/v1/job_titles/1
 
 
 ```
