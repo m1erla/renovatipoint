@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.naming.AuthenticationException;
 import java.io.IOException;
 
 @Service
@@ -29,6 +30,12 @@ public class AuthenticationService{
 
 
     public RegisterResponse register(RegisterRequest request){
+        if (repository.findByEmail(request.getEmail()).isPresent()){
+            throw new IllegalStateException("User with this email already exists!");
+        }
+        if (repository.findByPhoneNumber(request.getPhoneNumber()).isPresent()){
+            throw new IllegalStateException("This phone number is already in use. Please try a different phone number!");
+        }
          var user = User.builder()
                  .name(request.getName())
                  .surname(request.getSurname())
@@ -77,21 +84,28 @@ public class AuthenticationService{
     }
 
     public String authenticate( AuthenticationRequest request){
+try {
+    authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+            )
+    );
 
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            );
-            var user = repository.findByEmail(request.getEmail()).orElseThrow()
-                   ;
-            var jwtToken = jwtService.generateToken(user);
-            var refreshToken = jwtService.generateRefreshToken(user);
-            revokeAllUserTokens(user);
-            saveUserToken(user, jwtToken);
+    var user = repository.findByEmail(request.getEmail()).orElseThrow(
+            () -> new IllegalArgumentException("Invalid email or password!")
+    )
+            ;
+    var jwtToken = jwtService.generateToken(user);
+    var refreshToken = jwtService.generateRefreshToken(user);
+    revokeAllUserTokens(user);
+    saveUserToken(user, jwtToken);
 
-            return jwtToken;
+    return jwtToken;
+}catch (Exception ex){
+    throw new IllegalArgumentException("Invalid email or password!");
+}
+
 
     }
 

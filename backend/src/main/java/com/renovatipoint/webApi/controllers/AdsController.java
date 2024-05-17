@@ -5,8 +5,10 @@ import com.renovatipoint.business.requests.CreateAdsRequest;
 import com.renovatipoint.business.requests.UpdateAdsRequest;
 import com.renovatipoint.business.responses.GetAdsByIdResponse;
 import com.renovatipoint.business.responses.GetAllAdsResponse;
+import com.renovatipoint.business.rules.AdsBusinessRules;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AdsController {
     private AdsService adsService;
+    private AdsBusinessRules adsBusinessRules;
 
     @GetMapping
     public List<GetAllAdsResponse> getAllAds(){
@@ -28,18 +31,16 @@ public class AdsController {
     }
 
     @PostMapping("/ad")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public void addAd(@RequestBody CreateAdsRequest createAdsRequest){
-        this.adsService.add(createAdsRequest);
+    public ResponseEntity<?> add(@RequestBody CreateAdsRequest createAdsRequest) {
+        return adsService.add(createAdsRequest);
     }
-
     @PutMapping("/ad_update/{id}")
-    public void updateAd(@RequestBody UpdateAdsRequest updateAdsRequest){
+    public void update(@RequestBody UpdateAdsRequest updateAdsRequest){
         this.adsService.update(updateAdsRequest);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAd(@PathVariable int id){
+    public void delete(@PathVariable int id){
         this.adsService.delete(id);
     }
 }

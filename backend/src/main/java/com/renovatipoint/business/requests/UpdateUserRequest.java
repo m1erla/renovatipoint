@@ -3,7 +3,7 @@ package com.renovatipoint.business.requests;
 import com.renovatipoint.entities.concretes.Role;
 import lombok.Data;
 
-import java.util.Optional;
+
 
 @Data
 public class UpdateUserRequest {
@@ -11,18 +11,16 @@ public class UpdateUserRequest {
     private String name;
     private String surname;
     private String email;
-    private Optional<String> password;
     private String phoneNumber;
     private String postCode;
     private String jobTitleName;
     private Role role;
 
-    public UpdateUserRequest(int id, String name, String surname, String email, Optional<String> password, String phoneNumber, String postCode, String jobTitleName, Role role) {
+    public UpdateUserRequest(int id, String name, String surname, String email, String phoneNumber, String postCode, String jobTitleName, Role role) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.password = password;
         this.phoneNumber = phoneNumber;
         this.postCode = postCode;
         this.jobTitleName = jobTitleName;
@@ -62,14 +60,6 @@ public class UpdateUserRequest {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Optional<String> getPassword() {
-        return password;
-    }
-
-    public void setPassword(Optional<String> password) {
-        this.password = password;
     }
 
     public String getPhoneNumber() {

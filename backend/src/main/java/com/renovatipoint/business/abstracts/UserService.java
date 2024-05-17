@@ -4,6 +4,7 @@ import com.renovatipoint.business.requests.UpdateUserRequest;
 import com.renovatipoint.business.responses.*;
 import com.renovatipoint.entities.concretes.User;
 import com.renovatipoint.business.requests.RegisterRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface UserService {
     GetUsersByIdResponse getById(int id);
 
     void add(RegisterRequest createUserRequest);
-    void update(UpdateUserRequest updateUserRequest);
+    ResponseEntity<?> update(UpdateUserRequest updateUserRequest);
 
     void delete(int id);
 }

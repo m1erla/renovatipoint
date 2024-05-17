@@ -30,19 +30,19 @@ public class CategoryController {
 
     @PostMapping("/category")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void addCategory(@RequestBody CreateCategoryRequest createCategoryRequest){
+    public void add(@RequestBody CreateCategoryRequest createCategoryRequest){
         this.categoryService.add(createCategoryRequest);
     }
 
 
 
     @PutMapping("/category_update/{id}")
-    public void updateCategory(@RequestBody UpdateCategoryRequest updateCategoryRequest){
+    public void update(@RequestBody UpdateCategoryRequest updateCategoryRequest){
         this.categoryService.update(updateCategoryRequest);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCategory(@PathVariable int id){
+    public void delete(@PathVariable int id){
         this.categoryService.delete(id);
     }
 }

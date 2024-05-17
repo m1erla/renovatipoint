@@ -12,11 +12,15 @@ import com.renovatipoint.entities.concretes.User;
 import com.renovatipoint.business.requests.RegisterRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.security.Principal;
 import java.util.List;
@@ -25,10 +29,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserManager implements UserService {
-    private static final Logger LOG = LoggerFactory.getLogger(UserManager.class);
-    private ModelMapperService modelMapperService;
-    private UserRepository userRepository;
-    private UserBusinessRules userBusinessRules;
+    private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
+    private final ModelMapperService modelMapperService;
+    private final UserRepository userRepository;
+    private final UserBusinessRules userBusinessRules;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -127,9 +131,21 @@ public class UserManager implements UserService {
     }
 
     @Override
-    public void update(UpdateUserRequest updateUserRequest) {
-        User user = this.modelMapperService.forRequest().map(updateUserRequest, User.class);
-        this.userRepository.save(user);
+    public ResponseEntity<?> update(UpdateUserRequest updateUserRequest) {
+        Optional<User> userUpt = userRepository.findById(updateUserRequest.getId());
+        if (!userUpt.isPresent()){
+            throw new ResourceNotFoundException("User not found with id : " + updateUserRequest.getId());
+        }
+
+        User existingUser = userUpt.get();
+
+
+        this.modelMapperService.forRequest().map(updateUserRequest, existingUser);
+
+        this.userRepository.save(existingUser);
+
+        return ResponseEntity.ok().body("User information has been changed successfully!");
+
     }
 
     @Override
@@ -138,23 +154,38 @@ public class UserManager implements UserService {
 
     }
 
-    public void changePassword(ChangePasswordRequest request, Principal connectedUser){
-        var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+
+    public ResponseEntity<?> changePassword(ChangePasswordRequest request, Principal connectedUser){
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) connectedUser;
+
+        User user = (User) authenticationToken.getPrincipal();
+
+        logger.info("Initiating password change for user: {}", user.getUsername());
 
         // check if the current password is correct
-
-        if (!passwordEncoder.matches(request.getConfirmationPassword(), user.getPassword())){
-            throw new IllegalStateException("Wrong password");
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())){
+            logger.warn("Wrong current password for user: {}", user.getUsername());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong password");
         }
-        // check if the two new passwords are the same
+
+        // check if the new password is the same as the current password
+        if (request.getPassword().equals(request.getNewPassword())){
+            logger.warn("New password is the same as the old password for user: {}", user.getUsername());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("New password cannot be the same as the old password. Please try a different password.");
+        }
+
+        // check if the two new passwords match
         if (!request.getNewPassword().equals(request.getConfirmationPassword())){
-            throw new IllegalStateException("Password are not the same");
+            logger.warn("New password and confirmation password do not match for user: {}", user.getUsername());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
         }
-        // update the password
-        user.setPassword(passwordEncoder.encode(request.getConfirmationPassword()));
 
-        // save the new password
+        // update the password
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+
+        logger.info("Password changed successfully for user: {}", user.getUsername());
+        return ResponseEntity.ok().body("Password changed successfully");
     }
 
 }

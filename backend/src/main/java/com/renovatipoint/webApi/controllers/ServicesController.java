@@ -30,17 +30,17 @@ public class ServicesController {
 
     @PostMapping("/service")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void addService(@RequestBody CreateServiceRequest createServiceRequest){
+    public void add(@RequestBody CreateServiceRequest createServiceRequest){
         this.iService.add(createServiceRequest);
     }
 
     @PutMapping("/service_update/{id}")
-    public void updateService(@RequestBody UpdateServiceRequest updateServiceRequest){
+    public void update(@RequestBody UpdateServiceRequest updateServiceRequest){
         this.iService.update(updateServiceRequest);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteService(@PathVariable int id){
+    public void delete(@PathVariable int id){
         this.iService.delete(id);
     }
 }

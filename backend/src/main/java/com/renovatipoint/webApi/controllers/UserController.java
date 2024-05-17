@@ -60,24 +60,24 @@ public class UserController {
     public ResponseEntity<?> changePassword(
             @RequestBody ChangePasswordRequest request, Principal connectedUser
     ){
-        userServiceManager.changePassword(request, connectedUser);
-        return ResponseEntity.ok().build();
+
+        return userServiceManager.changePassword(request, connectedUser);
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void addUser(@RequestBody RegisterRequest createUserRequest){
+    public void add(@RequestBody RegisterRequest createUserRequest){
         this.userService.add(createUserRequest);
     }
 
 
     @PutMapping("/{id}")
-    public void updateUser(@RequestBody UpdateUserRequest updateUserRequest){
-        this.userService.update(updateUserRequest);
+    public ResponseEntity<?> update(@RequestBody UpdateUserRequest updateUserRequest){
+       return this.userServiceManager.update(updateUserRequest);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable int id){
+    public void delete(@PathVariable int id){
         this.userService.delete(id);
     }
 }

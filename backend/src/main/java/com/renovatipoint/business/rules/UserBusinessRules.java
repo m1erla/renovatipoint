@@ -18,6 +18,10 @@ public class UserBusinessRules {
     }
 
     public boolean userExists(String email){
-        return userRepository.existsByEmail(email);
+        return userRepository.findByEmail(email).isPresent();
     }
+    public boolean userExistsByPhoneNumber(String phoneNumber){
+        return userRepository.findByPhoneNumber(phoneNumber).isPresent();
+    }
+
 }

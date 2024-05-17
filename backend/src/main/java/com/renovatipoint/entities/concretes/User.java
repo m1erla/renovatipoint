@@ -1,5 +1,6 @@
 package com.renovatipoint.entities.concretes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.renovatipoint.security.token.Token;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -49,6 +50,7 @@ public class User implements UserDetails {
     private String postCode;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    @JsonBackReference
     private List<Ads> ads;
 
     @Enumerated(EnumType.STRING)

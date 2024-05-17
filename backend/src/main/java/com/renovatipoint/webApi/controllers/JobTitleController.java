@@ -24,12 +24,12 @@ public class JobTitleController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void addJobTitle(@RequestBody CreateJobTitleRequest jobTitleRequest){
+    public void add(@RequestBody CreateJobTitleRequest jobTitleRequest){
         this.jobTitleService.add(jobTitleRequest);
     }
 
     @PutMapping("/job_titles_update")
-    public void updateJobTitle(@RequestBody UpdateJobTitleRequest jobTitleRequest){
+    public void update(@RequestBody UpdateJobTitleRequest jobTitleRequest){
         this.jobTitleService.update(jobTitleRequest);
     }
 
@@ -41,7 +41,7 @@ public class JobTitleController {
 //    }
 
     @DeleteMapping("/{id}")
-    public void deleteJobTitle(@PathVariable int id){
+    public void delete(@PathVariable int id){
         this.jobTitleService.delete(id);
     }
 }

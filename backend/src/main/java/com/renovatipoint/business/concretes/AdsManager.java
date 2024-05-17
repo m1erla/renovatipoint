@@ -16,9 +16,12 @@ import com.renovatipoint.entities.concretes.Category;
 import com.renovatipoint.entities.concretes.ServiceEntity;
 import com.renovatipoint.entities.concretes.User;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,8 +64,14 @@ public class AdsManager implements AdsService {
     }
 
     @Override
-
-    public void add(CreateAdsRequest createAdsRequest) {
+    public ResponseEntity<?> add(CreateAdsRequest createAdsRequest) {
+        System.out.println("Received create ad request: " + createAdsRequest); // Logging
+        if (adsBusinessRules.checkIfAdsNameExists(createAdsRequest.getName())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("This ad name already exists. Please try a different name to create a new ad!");
+        }
+        if (createAdsRequest.getDescriptions().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The description field cannot be empty!");
+        }
         this.adsBusinessRules.checkIfAdsNameExists(createAdsRequest.getName());
         Category category = categoryRepository.findById(createAdsRequest.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("Category not found!"));
 
@@ -74,10 +83,45 @@ public class AdsManager implements AdsService {
         ads.setUser(user);
         ads.setCategory(category);
         ads.setService(service);
-
         this.adsRepository.save(ads);
+        return ResponseEntity.ok().body("Ad successfully created!");
 
     }
+
+//    @Override
+//    public ResponseEntity<?> add(CreateAdsRequest createAdsRequest) {
+//        System.out.println("Received create ad request: " + createAdsRequest); // Logging
+//        if (adsBusinessRules.checkIfAdsNameExists(createAdsRequest.getName())) {
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body("This ad name already exists. Please try a different name to create a new ad!");
+//        }
+//        if (createAdsRequest.getDescriptions().isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The description field cannot be empty!");
+//        }
+//        Optional<Category> categoryOpt = categoryRepository.findById(createAdsRequest.getCategoryId());
+//        if (!categoryOpt.isPresent()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found!");
+//        }
+//
+//        Optional<ServiceEntity> serviceOpt = serviceRepository.findById(createAdsRequest.getServiceId());
+//        if (!serviceOpt.isPresent()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Service not found!");
+//        }
+//
+//        Optional<User> userOpt = userRepository.findById(createAdsRequest.getUserId());
+//        if (!userOpt.isPresent()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
+//        }
+//
+//        Ads ads = this.modelMapperService.forRequest().map(createAdsRequest, Ads.class);
+//        ads.setUser(userOpt.get());
+//        ads.setCategory(categoryOpt.get());
+//        ads.setService(serviceOpt.get());
+//
+//        Ads savedAds = adsRepository.save(ads);
+//        System.out.println("Saved ad: " + savedAds);
+//        return ResponseEntity.ok().body("Ad created successfully!");
+//
+//    }
 
     @Override
     public void update(UpdateAdsRequest updateAdsRequest) {
