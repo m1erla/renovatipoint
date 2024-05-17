@@ -1,4 +1,4 @@
-# werkspot-v2
+# renovatipoint
 
 # Structures
 - Java 17
@@ -67,40 +67,40 @@
 
 
 ######POSTMAN###########
-3.ADIM
-POSTMAN
-
-//ADDITION
-https://myklus.onrender.com/api/v1/users
-https://myklus.onrender.com/api/v1/users/ad
-https://myklus.onrender.com/api/v1/users/job_titles
-https://myklus.onrender.com/api/v1/users/category
-https://myklus.onrender.com/api/v1/users/service
 
 
-//TO LIST
-https://myklus.onrender.com/api/v1/users
-https://myklus.onrender.com/api/v1/users/ads
-https://myklus.onrender.com/api/v1/users/job_titles
-https://myklus.onrender.com/api/v1/users/categories
-https://myklus.onrender.com/api/v1/users/services
+//POST 
+http://localhost:8080/api/v1/auth/authenticate
+http://localhost:8080/api/v1/auth/register
+http://localhost:8080/api/v1/ads/ad
+http://localhost:8080/api/v1/job_titles
+http://localhost:8080/api/v1/categories/category
+http://localhost:8080/api/v1/services/service
+
+
+//GET
+http://localhost:8080/api/v1/users
+http://localhost:8080/api/v1/ads
+http://localhost:8080/api/v1/job_titles
+http://localhost:8080/api/v1/categories
+http://localhost:8080/api/v1/services
 
 
 //FIND
-https://myklus.onrender.com/api/v1/users/1
-https://myklus.onrender.com/api/v1/users/ad/1
-https://myklus.onrender.com/api/v1/users/job_titles/1
-https://myklus.onrender.com/api/v1/users/category/1
-https://myklus.onrender.com/api/v1/users/service/1
+http://localhost:8080/api/v1/users/1
+http://localhost:8080/api/v1/ads/ad/1
+http://localhost:8080/api/v1/job_titles/1
+http://localhost:8080/api/v1/categories/1
+http://localhost:8080/api/v1/services/1
 
 
 
 //DELETE
-https://myklus.onrender.com/api/v1/users/1
-https://myklus.onrender.com/api/v1/users/ad/1
-https://myklus.onrender.com/api/v1/users/category/1
-https://myklus.onrender.com/api/v1/users/service/1
-https://myklus.onrender.com/api/v1/users/job_titles/1
+http://localhost:8080/api/v1/users/1
+http://localhost:8080/api/v1/ads/ad/1
+http://localhost:8080/api/v1/categories/1
+http://localhost:8080/api/v1/services/1
+http://localhost:8080/api/v1/job_titles/1
 
 
 ```
