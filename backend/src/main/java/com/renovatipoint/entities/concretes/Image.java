@@ -6,31 +6,37 @@ import lombok.*;
 @Data
 @Table(name = "image_data")
 @Entity
+@Builder
 @Getter
 @Setter
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     private String name;
 
-    public Image(int id, String name, String type, byte[] imageData, String url) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.imageData = imageData;
-        this.url = url;
-    }
 
-    public Image(){}
 
     private String type;
+
     @Lob
-    @Column(name = "image_data", length = 1000)
+    @Column(name = "image_data", columnDefinition = "LONGBLOB")
     private byte[] imageData;
 
     private String url;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "ad_id", referencedColumnName = "id")
+    private Ads ads;
+
+
 }
 
