@@ -5,9 +5,7 @@ import com.renovatipoint.business.requests.CreateAdsRequest;
 import com.renovatipoint.business.requests.UpdateAdsRequest;
 import com.renovatipoint.business.responses.GetAdsByIdResponse;
 import com.renovatipoint.business.responses.GetAllAdsResponse;
-import com.renovatipoint.business.rules.AdsBusinessRules;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class AdsController {
     private AdsService adsService;
-    private AdsBusinessRules adsBusinessRules;
 
     @GetMapping
     public List<GetAllAdsResponse> getAllAds(){
