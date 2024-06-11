@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,4 +20,5 @@ public class GetAllAdsResponse {
     private String serviceName;
     private int userId;
     private String userName;
+    private List<GetAllImagesResponse> images;
 }

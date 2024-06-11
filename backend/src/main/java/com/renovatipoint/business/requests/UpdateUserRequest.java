@@ -1,5 +1,6 @@
 package com.renovatipoint.business.requests;
 
+import com.renovatipoint.entities.concretes.Image;
 import com.renovatipoint.entities.concretes.Role;
 import lombok.Data;
 
@@ -12,26 +13,45 @@ public class UpdateUserRequest {
     private String surname;
     private String email;
     private String phoneNumber;
+    private String profileImage;
     private String postCode;
     private String jobTitleName;
+    private Image image;
     private Role role;
 
-    public UpdateUserRequest(int id, String name, String surname, String email, String phoneNumber, String postCode, String jobTitleName, Role role) {
+    public UpdateUserRequest(int id, String name, String surname, String email, String phoneNumber, String profileImage, String postCode, String jobTitleName, Role role, Image image) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
+        this.profileImage = profileImage;
         this.phoneNumber = phoneNumber;
         this.postCode = postCode;
         this.jobTitleName = jobTitleName;
         this.role = role;
+        this.image = image;
     }
 
     public UpdateUserRequest() {
     }
 
+    public String getProfileImage(){
+        return profileImage;
+    }
+    public void setProfileImage(String profileIMage){
+        this.profileImage = profileIMage;
+    }
+
     public int getId() {
         return id;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public void setId(int id) {

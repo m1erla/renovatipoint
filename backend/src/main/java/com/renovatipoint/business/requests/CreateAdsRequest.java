@@ -12,6 +12,7 @@ public class CreateAdsRequest {
     private String name;
     private boolean isActive;
     private String descriptions;
+    private String imageUrl;
     private String adReleaseDate;
     private int categoryId;
     private int serviceId;
