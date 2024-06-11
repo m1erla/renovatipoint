@@ -35,6 +35,8 @@ public class User implements UserDetails {
     @Column(name = "surname")
     private String surname;
 
+    private String profileImage;
+
     @Email
     @Column(name = "email", unique = true)
     private String email;
@@ -63,6 +65,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Token> token;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Image image;
 
 
 

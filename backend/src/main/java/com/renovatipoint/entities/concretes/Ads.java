@@ -1,8 +1,12 @@
 package com.renovatipoint.entities.concretes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Table(name = "ads")
@@ -29,10 +33,15 @@ public class Ads {
     @JoinColumn(name = "service_id", referencedColumnName = "id")
     private ServiceEntity service;
 
+
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     @JsonManagedReference
     private User user;
+
+
+    @OneToMany(mappedBy = "ads", cascade = CascadeType.PERSIST)
+    private List<Image> images = new ArrayList<>();
 
 
 
@@ -44,6 +53,7 @@ public class Ads {
     private String adReleaseDate;
 
     private String descriptions;
+    private String imageUrl;
 
     private boolean isActive;
 }
