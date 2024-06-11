@@ -9,5 +9,11 @@ public interface StorageRepository extends JpaRepository<Image, Integer> {
 
     Optional<Image> findByName(String fileName);
 
+    Optional<Image> findById(int id);
+
+    void deleteByName(String fileName);
+
+
+
 
 }
