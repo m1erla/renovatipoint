@@ -6,6 +6,7 @@ import com.renovatipoint.business.requests.UpdateAdsRequest;
 import com.renovatipoint.business.responses.GetAdsByIdResponse;
 import com.renovatipoint.business.responses.GetAllAdsResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +28,8 @@ public class AdsController {
         return adsService.getById(id);
     }
 
-    @PostMapping("/ad")
-    public ResponseEntity<?> add(@RequestBody CreateAdsRequest createAdsRequest) {
+    @PostMapping(value = "/ad", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> add(@ModelAttribute CreateAdsRequest createAdsRequest) {
         return adsService.add(createAdsRequest);
     }
     @PutMapping("/ad_update/{id}")

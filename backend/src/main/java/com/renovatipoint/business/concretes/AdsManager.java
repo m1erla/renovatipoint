@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,14 +35,16 @@ public class AdsManager implements AdsService {
     private final CategoryRepository categoryRepository;
     private final ServiceRepository serviceRepository;
     private final UserRepository userRepository;
+    private final StorageManager storageManager;
 
-    public AdsManager(ModelMapperService modelMapperService, AdsRepository adsRepository, AdsBusinessRules adsBusinessRules, CategoryRepository categoryRepository, ServiceRepository serviceRepository, UserRepository userRepository) {
+    public AdsManager(ModelMapperService modelMapperService, AdsRepository adsRepository, AdsBusinessRules adsBusinessRules, CategoryRepository categoryRepository, ServiceRepository serviceRepository, UserRepository userRepository, StorageManager storageManager) {
         this.modelMapperService = modelMapperService;
         this.adsRepository = adsRepository;
         this.adsBusinessRules = adsBusinessRules;
         this.categoryRepository = categoryRepository;
         this.serviceRepository = serviceRepository;
         this.userRepository = userRepository;
+        this.storageManager = storageManager;
     }
 
     @Override
@@ -66,17 +69,23 @@ public class AdsManager implements AdsService {
     @Override
     public ResponseEntity<?> add(CreateAdsRequest createAdsRequest) {
         System.out.println("Received create ad request: " + createAdsRequest); // Logging
+
         if (adsBusinessRules.checkIfAdsNameExists(createAdsRequest.getName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("This ad name already exists. Please try a different name to create a new ad!");
         }
+
         if (createAdsRequest.getDescriptions().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The description field cannot be empty!");
         }
-        this.adsBusinessRules.checkIfAdsNameExists(createAdsRequest.getName());
-        Category category = categoryRepository.findById(createAdsRequest.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("Category not found!"));
 
-        ServiceEntity service = serviceRepository.findById(createAdsRequest.getServiceId()).orElseThrow(() -> new EntityNotFoundException("Service not found!"));
-        User user = userRepository.findById(createAdsRequest.getUserId()).orElseThrow(() -> new EntityNotFoundException("User not found!"));
+        Category category = categoryRepository.findById(createAdsRequest.getCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException("Category not found!"));
+
+        ServiceEntity service = serviceRepository.findById(createAdsRequest.getServiceId())
+                .orElseThrow(() -> new EntityNotFoundException("Service not found!"));
+
+        User user = userRepository.findById(createAdsRequest.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
 
         Ads ads = this.modelMapperService.forRequest().map(createAdsRequest, Ads.class);
 
@@ -84,8 +93,19 @@ public class AdsManager implements AdsService {
         ads.setCategory(category);
         ads.setService(service);
         this.adsRepository.save(ads);
-        return ResponseEntity.ok().body("Ad successfully created!");
 
+        // Handle image upload
+        try {
+            if (createAdsRequest.getImages() != null && !createAdsRequest.getImages().isEmpty()) {
+                List<String> fileNames = storageManager.uploadAdImage(ads.getId(), createAdsRequest.getImages());
+                ads.setImageUrl(fileNames.get(0)); // Assuming you want to set the first image URL
+                this.adsRepository.save(ads);
+            }
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload ad images.");
+        }
+
+        return ResponseEntity.ok().body("Ad successfully created!");
     }
 
 //    @Override
