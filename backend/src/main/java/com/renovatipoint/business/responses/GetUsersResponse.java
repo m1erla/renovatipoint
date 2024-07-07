@@ -15,6 +15,7 @@ public class GetUsersResponse {
     private String surname;
     private String email;
     private String phoneNumber;
+    private String profileImage;
     private String image;
     private String postCode;
     private String jobTitleName;

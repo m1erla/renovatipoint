@@ -60,7 +60,7 @@ public class ImagesController {
     @PostMapping("/ads/{id}/uploadAdImage")
     public ResponseEntity<?> uploadAdImage(@PathVariable int id, @RequestParam("file") List<MultipartFile> files){
         try{
-            String message = fileStorageService.uploadAdImage(id, files);
+            List<String> message = fileStorageService.uploadAdImage(id, files);
             return ResponseEntity.ok(message);
         }catch (IOException ex){
             return ResponseEntity.status(500).body("Failed to upload ad image");

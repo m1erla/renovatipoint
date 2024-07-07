@@ -139,12 +139,12 @@ public class StorageManager implements StorageService {
         return "Profile image uploaded successfully: " + fileName;
     }
 
-    public String uploadAdImage(int id, List<MultipartFile> files) throws IOException{
+    public List<String> uploadAdImage(int id, List<MultipartFile> files) throws IOException{
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Ad not found"));
         List<String> fileNames = uploadImages(files, null, ads);
         ads.setImageUrl(fileNames.get(0));
         adsRepository.save(ads);
-        return "Ad image uploaded successfully: " + String.join(", ", fileNames);
+        return fileNames;
     }
 
     public ResponseEntity<?> getUserProfileImage(int id) {
