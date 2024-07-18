@@ -5,23 +5,26 @@ import com.renovatipoint.business.requests.ChangePasswordRequest;
 import com.renovatipoint.business.requests.UpdateUserRequest;
 import com.renovatipoint.business.responses.*;
 import com.renovatipoint.business.rules.UserBusinessRules;
-import com.renovatipoint.core.utilities.exceptions.BusinessException;
+import com.renovatipoint.core.utilities.images.ImageUtils;
 import com.renovatipoint.core.utilities.mappers.ModelMapperService;
+import com.renovatipoint.dataAccess.abstracts.StorageRepository;
 import com.renovatipoint.dataAccess.abstracts.UserRepository;
+import com.renovatipoint.entities.concretes.Storage;
 import com.renovatipoint.entities.concretes.User;
-import com.renovatipoint.business.requests.RegisterRequest;
+import com.renovatipoint.security.token.Token;
+import com.renovatipoint.security.token.TokenRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -32,67 +35,32 @@ public class UserManager implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
     private final ModelMapperService modelMapperService;
     private final UserRepository userRepository;
-    private final UserBusinessRules userBusinessRules;
+    private final StorageRepository storageRepository;
 
     private final PasswordEncoder passwordEncoder;
+    private final StorageManager storageManager;
+    private final AdsManager adsManager;
+    private final TokenRepository tokenRepository;
 
-    public UserManager(ModelMapperService modelMapperService, UserRepository userRepository, UserBusinessRules userBusinessRules, PasswordEncoder passwordEncoder) {
+    public UserManager(ModelMapperService modelMapperService, UserRepository userRepository, UserBusinessRules userBusinessRules, StorageRepository storageRepository, PasswordEncoder passwordEncoder, StorageManager storageManager, AdsManager adsManager, TokenRepository tokenRepository) {
         this.modelMapperService = modelMapperService;
         this.userRepository = userRepository;
-        this.userBusinessRules = userBusinessRules;
+        this.storageRepository = storageRepository;
         this.passwordEncoder = passwordEncoder;
+        this.storageManager = storageManager;
+        this.adsManager = adsManager;
+        this.tokenRepository = tokenRepository;
     }
-
-    public User findCurrentUser(String email) {
-        Optional<User> loggedInUser = userRepository.findByEmail(email);
-
-        // or throw an exception
-        return loggedInUser.flatMap(user -> userRepository.findById(user.getId())).orElse(null);
-
-    }
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        Optional<User> user = userRepository.findByEmail(username);
-//
-//        if (user.isEmpty()){
-//            throw new UsernameNotFoundException("User not found with this email - " + username);
-//        }
-//
-//
-//        return new org.springframework.security.core.userdetails.User(findCurrentUser().getEmail(), findCurrentUser().getPassword(), findCurrentUser().getAuthorities());
-//
-//    }
-
-
 
     @Override
     public List<GetUsersResponse> getAll() {
         List<User> users = userRepository.findAll();
 
-        List<GetUsersResponse> usersResponses =
-                users.stream().map(user ->
-                                this.modelMapperService
-                                        .forResponse()
-                                        .map(user, GetUsersResponse.class))
-                        .collect(Collectors.toList());
-        return usersResponses;
-    }
-
-
-
-    @Override
-    public User getUserByJwt(String jwt) {
-        Optional<User> userOptional = this.userRepository.findByEmail(jwt);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            User response = this.modelMapperService.forResponse().map(user, User.class);
-            return response;
-        } else {
-            // Handle the case where no user is found with the provided email (jwt)
-            // You can throw a specific exception, return null, or handle it according to your needs.
-            throw new BusinessException("User not found with the provided JWT");
-        }
+        return users.stream().map(user ->
+                        this.modelMapperService
+                                .forResponse()
+                                .map(user, GetUsersResponse.class))
+                .collect(Collectors.toList());
     }
 
 
@@ -100,57 +68,47 @@ public class UserManager implements UserService {
     public GetUsersResponse getByEmail(String email) {
         Optional<User> user = this.userRepository.findByEmail(email);
 
-        GetUsersResponse response =
-                this.modelMapperService.forResponse().map(user, GetUsersResponse.class);
-
-        return response;
+        return this.modelMapperService.forResponse().map(user, GetUsersResponse.class);
     }
 
-    @Override
-    public UserDetails getByDetails(String details) {
-        return userRepository.findByEmail(details).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
 
     @Override
     public GetUsersByIdResponse getById(int id) {
         User user = this.userRepository.findById(id).orElseThrow();
 
-        GetUsersByIdResponse response =
-                this.modelMapperService.forResponse().map(user, GetUsersByIdResponse.class);
-        return response;
+        return this.modelMapperService.forResponse().map(user, GetUsersByIdResponse.class);
     }
 
 
-    @Override
-    public void add(RegisterRequest createUserRequest) {
-        this.userBusinessRules.checkIfEmailExists(createUserRequest.getEmail());
-        User user = this.modelMapperService
-                .forRequest()
-                .map(createUserRequest, User.class);
-        this.userRepository.save(user);
-    }
 
     @Override
+    @Transactional
     public ResponseEntity<?> update(UpdateUserRequest updateUserRequest) {
-        Optional<User> userUpt = userRepository.findById(updateUserRequest.getId());
-        if (!userUpt.isPresent()){
-            throw new ResourceNotFoundException("User not found with id : " + updateUserRequest.getId());
+        User user = userRepository.findById(updateUserRequest.getId()).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+
+        this.modelMapperService.forRequest().map(updateUserRequest, user);
+
+        if (updateUserRequest.getStorages() != null && !updateUserRequest.getStorages().isEmpty()){
+            try {
+                String oldFileName = user.getProfileImage();
+                List<Storage> oldStorage = user.getStorages();
+                if (oldFileName != null && !oldFileName.isEmpty() && oldStorage != null){
+                    storageManager.deleteImage(oldFileName);
+                    storageRepository.delete((Storage) oldStorage);
+                }
+                String newFileName = storageManager.uploadImage(updateUserRequest.getStorages(), user);
+                user.setProfileImage(newFileName);
+                user.setStorages(user.getStorages());
+                userRepository.save(user);
+
+            }catch (IOException ex){
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user profile image");
+            }
         }
 
-        User existingUser = userUpt.get();
-
-
-        this.modelMapperService.forRequest().map(updateUserRequest, existingUser);
-
-        this.userRepository.save(existingUser);
-
+        this.userRepository.save(user);
         return ResponseEntity.ok().body("User information has been changed successfully!");
-
-    }
-
-    @Override
-    public void delete(int id) {
-        this.userRepository.deleteById(id);
 
     }
 
@@ -187,5 +145,132 @@ public class UserManager implements UserService {
         logger.info("Password changed successfully for user: {}", user.getUsername());
         return ResponseEntity.ok().body("Password changed successfully");
     }
+    @Override
+    @Transactional
+    public ResponseEntity<?> uploadUserProfileImage(MultipartFile file, int id) throws IOException {
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        String oldProfileImage = user.getProfileImage();
+        List<Storage> oldProfileStorage = user.getStorages();
 
-}
+        if (oldProfileStorage != null && !oldProfileStorage.isEmpty() && oldProfileImage != null) {
+            storageManager.deleteImage(oldProfileImage);
+            for (Storage storage : oldProfileStorage) {
+                storageRepository.delete(storage);
+            }
+            oldProfileStorage.clear(); // Clear the existing collection after deletion
+        }
+
+        String newFileName = storageManager.uploadImage(file, user);
+//        Storage newStorage = Storage.builder()
+//                .name(newFileName)
+//                .type(file.getContentType())
+//                .imageData(ImageUtils.compressImage(file.getBytes()))
+//                .url(newFileName)
+//                .user(user)
+//                .build();
+//
+//        storageRepository.save(newStorage);
+//        oldProfileStorage.add(newStorage);
+
+        user.setProfileImage(newFileName);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Profile image uploaded successfully: " + newFileName);
+    }
+    @Override
+    @Transactional
+    public ResponseEntity<?> getUserProfileImage(int id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        String fileName = user.getProfileImage();
+        return storageManager.serveImage(fileName);
+    }
+    @Override
+    @Transactional
+    public ResponseEntity<?> updateProfileImage(int id, MultipartFile file) throws IOException {
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        List<Storage> oldProfileStorage = user.getStorages();
+
+        if (oldProfileStorage != null){
+            storageManager.deleteImage(oldProfileStorage.toString());
+            storageRepository.delete((Storage) oldProfileStorage);
+        }
+        String newFileName = storageManager.uploadImage(file, user);
+
+        user.setProfileImage(newFileName);
+        userRepository.save(user);
+
+
+        return ResponseEntity.ok("Profile image updated successfully: " + newFileName);
+    }
+    @Override
+    @Transactional
+    public ResponseEntity<?> deleteUserProfileImage(int id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        try {
+            if (user.getProfileImage() != null) {
+                storageManager.deleteImage(user.getProfileImage());
+            }
+
+            List<Storage> storages = user.getStorages();
+            if (storages != null) {
+                for (Storage storage : storages) {
+                    storageRepository.delete(storage);
+                }
+                storages.clear();
+            }
+
+            List<Token> tokens = user.getToken();
+            if (tokens != null) {
+                for (Token token : tokens) {
+                    tokenRepository.delete(token);
+                }
+                tokens.clear();
+            }
+
+            userRepository.delete(user);
+
+            return ResponseEntity.ok("User profile image and related entities deleted successfully.");
+        } catch (IOException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete user profile image.");
+        }
+    }
+    }
+
+//    public User findCurrentUser(String email) {
+//        Optional<User> loggedInUser = userRepository.findByEmail(email);
+//
+//        // or throw an exception
+//        return loggedInUser.flatMap(user -> userRepository.findById(user.getId())).orElse(null);
+//
+//    }
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        Optional<User> user = userRepository.findByEmail(username);
+//
+//        if (user.isEmpty()){
+//            throw new UsernameNotFoundException("User not found with this email - " + username);
+//        }
+//
+//
+//        return new org.springframework.security.core.userdetails.User(findCurrentUser().getEmail(), findCurrentUser().getPassword(), findCurrentUser().getAuthorities());
+//
+//    }
+
+
+//    @Override
+//    public User getUserByJwt(String jwt) {
+//        Optional<User> userOptional = this.userRepository.findByEmail(jwt);
+//
+//        if (userOptional.isPresent()) {
+//            User user = userOptional.get();
+//            User response = this.modelMapperService.forResponse().map(user, User.class);
+//            return response;
+//        } else {
+//            // Handle the case where no user is found with the provided email (jwt)
+//            // You can throw a specific exception, return null, or handle it according to your needs.
+//            throw new BusinessException("User not found with the provided JWT");
+//        }
+//    }
+
+

@@ -1,6 +1,5 @@
 package com.renovatipoint.entities.concretes;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,14 +33,13 @@ public class Ads {
     private ServiceEntity service;
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "user_id")
-    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
 
-    @OneToMany(mappedBy = "ads", cascade = CascadeType.PERSIST)
-    private List<Image> images = new ArrayList<>();
+    @OneToMany(mappedBy = "ads", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Storage> storages = new ArrayList<>();
 
 
 

@@ -1,17 +1,19 @@
 package com.renovatipoint.dataAccess.abstracts;
 
-import com.renovatipoint.entities.concretes.Image;
+import com.renovatipoint.entities.concretes.Storage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface StorageRepository extends JpaRepository<Image, Integer> {
+public interface StorageRepository extends JpaRepository<Storage, Integer> {
 
-    Optional<Image> findByName(String fileName);
+    Optional<Storage> findByName(String fileName);
 
-    Optional<Image> findById(int id);
+    Optional<Storage> findById(int id);
 
     void deleteByName(String fileName);
+
+
 
 
 

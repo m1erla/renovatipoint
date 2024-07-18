@@ -21,5 +21,5 @@ public class GetAllAdsResponse {
     private String serviceName;
     private int userId;
     private String userName;
-    private List<GetAllImagesResponse> images;
+    private List<GetAllImagesResponse> storages;
 }

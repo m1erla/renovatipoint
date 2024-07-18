@@ -16,7 +16,7 @@ public class GetUsersResponse {
     private String email;
     private String phoneNumber;
     private String profileImage;
-    private String image;
+    private List<GetAllImagesResponse> storages;
     private String postCode;
     private String jobTitleName;
     private String role;

@@ -9,8 +9,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 
 @Builder
@@ -51,8 +53,7 @@ public class User implements UserDetails {
 
     private String postCode;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
-    @JsonBackReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ads> ads;
 
     @Enumerated(EnumType.STRING)
@@ -63,11 +64,11 @@ public class User implements UserDetails {
     private List<JobTitle> jobTitles;
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> token;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Image image;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Storage> storages = new ArrayList<>();
 
 
 

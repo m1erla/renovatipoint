@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.HashMap;
 @Component
 @RequiredArgsConstructor
-public class ModelMapperConfig {
+public class ExceptionHandlerConfig {
 
     @ExceptionHandler
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)

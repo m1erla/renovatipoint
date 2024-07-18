@@ -36,7 +36,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
-@EnableWebSocketMessageBroker
 public class SecurityConfig implements WebMvcConfigurer {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -56,6 +55,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                 "https://server.renovatipoint.com:32771",
                 "http://server.renovatipoint.com:32771",
                 "http://localhost:5173",
+                "http://localhost:8080",
+                "https://localhost:8443",
                 "https://renovatipoint.com",
                 "https://werkspot-development.netlify.app"
         ));
@@ -111,12 +112,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                                         "/api/v1/job_titles/**",
                                         "/api/v1/ads/**",
                                         "/image/**",
-                                        "/ws",
-                                        "/app",
-                                        "/app/ws",
-                                        "/app/topic/public",
-                                        "/app/topic",
-                                        "/chat.sendMessage",
                                         "/v3/api-docs/**",
                                         "/v3/api-docs",
                                         "/v2/api-docs",

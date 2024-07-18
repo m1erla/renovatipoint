@@ -2,26 +2,32 @@ package com.renovatipoint.business.abstracts;
 
 import com.renovatipoint.business.requests.UpdateUserRequest;
 import com.renovatipoint.business.responses.*;
-import com.renovatipoint.entities.concretes.User;
-import com.renovatipoint.business.requests.RegisterRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
     List<GetUsersResponse> getAll();
 
-
-    User getUserByJwt(String jwt);
+    //User getUserByJwt(String jwt);
 
     GetUsersResponse getByEmail(String email);
-    UserDetails getByDetails(String details);
+  //  UserDetails getByDetails(String details);
 
     GetUsersByIdResponse getById(int id);
 
-    void add(RegisterRequest createUserRequest);
     ResponseEntity<?> update(UpdateUserRequest updateUserRequest);
 
-    void delete(int id);
+    ResponseEntity<?> uploadUserProfileImage(MultipartFile file, int id) throws IOException;
+
+    ResponseEntity<?> getUserProfileImage(int id);
+
+    ResponseEntity<?> updateProfileImage(int id, MultipartFile file) throws IOException;
+
+    ResponseEntity<?> deleteUserProfileImage(int id);;
+
+
 }

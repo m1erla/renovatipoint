@@ -5,7 +5,9 @@ import com.renovatipoint.business.requests.UpdateAdsRequest;
 import com.renovatipoint.business.responses.GetAdsByIdResponse;
 import com.renovatipoint.business.responses.GetAllAdsResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface AdsService {
@@ -15,7 +17,16 @@ public interface AdsService {
     GetAdsByIdResponse getById(int id);
     ResponseEntity<?> add(CreateAdsRequest createAdsRequest);
 
-    void update(UpdateAdsRequest updateAdsRequest);
+    ResponseEntity<?> update(UpdateAdsRequest updateAdsRequest);
+    ResponseEntity<?> getAdImagesForUser(int userId);
+
+    List<String> uploadAdImage(int id, List<MultipartFile> files) throws IOException;
+
+    ResponseEntity<?> getAdImage(int id);
+
+    ResponseEntity<?> deleteAdImage(int id);
+
+    String updateAdImage(int id, List<MultipartFile> files) throws IOException;
 
     void delete(int id);
 }

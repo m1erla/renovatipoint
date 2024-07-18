@@ -15,7 +15,7 @@ public class CreateAdsRequest {
     private String name;
     private boolean isActive;
     private String descriptions;
-    private List<MultipartFile> images;
+    private List<MultipartFile> storages;
     private String adReleaseDate;
     private int categoryId;
     private int serviceId;
