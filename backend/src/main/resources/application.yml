@@ -21,7 +21,7 @@ spring:
 server:
   ssl:
     enabled: true
-    key-store: classpath:./renovatipoint.p12
+    key-store: classpath:renovatipoint.p12
     key-store-password: password
     key-store-type: pkcs12
     key-alias: renovatipoint
