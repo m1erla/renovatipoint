@@ -135,20 +135,32 @@ public class AdsManager implements AdsService {
     public ResponseEntity<?> update(UpdateAdsRequest updateAdsRequest) {
         this.adsBusinessRules.checkIfAdsExists(updateAdsRequest.getId(), updateAdsRequest.getName());
         Ads ads = this.modelMapperService.forRequest().map(updateAdsRequest, Ads.class);
+        if (updateAdsRequest.getStorages() != null && !updateAdsRequest.getStorages().isEmpty()){
+            try {
+               List<Storage> oldStorages = ads.getStorages();
+               if (oldStorages != null && !oldStorages.isEmpty()){
+                   for (Storage storage : oldStorages){
+                       storageManager.deleteImage(storage.getName());
+                       storageRepository.delete(storage);
+                   }
+                   ads.getStorages().clear();
+               }
 
+               List<String> fileNames = storageManager.uploadImages(updateAdsRequest.getStorages(), ads.getUser(), ads);
+               ads.setImageUrl(fileNames.get(0));
+            }catch (IOException ex){
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update ad images.");
+            }
+        }
         this.adsRepository.save(ads);
 
         return ResponseEntity.ok().body("Ad successfully updated!");
     }
     @Transactional
     public List<String> uploadAdImage(int id, List<MultipartFile> files) throws IOException{
-        assert adsRepository != null;
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Ad not found"));
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        assert storageManager != null;
-        List<String> fileNames = storageManager.uploadImages(files, user, ads);
+        List<String> fileNames = storageManager.uploadImages(files, ads.getUser(), ads);
         ads.setImageUrl(fileNames.get(0));
-        user.setId(user.getId());
         adsRepository.save(ads);
         return fileNames;
     }
@@ -166,11 +178,13 @@ public class AdsManager implements AdsService {
     }
     @Transactional
     public ResponseEntity<?> deleteAdImage(int id){
-        Storage storage = storageRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Image not found"));
+        Storage storage = storageRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Image not found"));
         Ads ads = storage.getAds();
-        if (ads != null && !ads.getImageUrl().isEmpty()){
+        if (ads != null) {
             ads.getStorages().remove(storage);
-            ads.setImageUrl(null);
+            if (ads.getStorages().isEmpty()) {
+                ads.setImageUrl(null);
+            }
             adsRepository.save(ads);
         }
         storageRepository.deleteByName(storage.getName());
@@ -179,16 +193,19 @@ public class AdsManager implements AdsService {
     }
     @Transactional
     public String updateAdImage(int id, List<MultipartFile> files) throws IOException{
-        Storage storage = storageRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Image not found!"));
-        Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Ads not found!"));
+        Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Ad not found"));
+        User user = userRepository.findById(ads.getUser().getId()).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
         // Delete old images if needed
-        String oldStorages = storage.getName();
-        if (oldStorages != null && !oldStorages.isEmpty()){
+        List<Storage> oldStorages = ads.getStorages();
+        if (oldStorages != null && !oldStorages.isEmpty()) {
+            for (Storage storage : oldStorages) {
                 storageManager.deleteImage(storage.getName());
                 storageRepository.delete(storage);
             }
-
-        List<String> fileNames = uploadAdImage(id, files);
+            ads.getStorages().clear();
+        }
+        List<String> fileNames = storageManager.uploadImages(files, user, ads);
         ads.setImageUrl(fileNames.get(0));
         adsRepository.save(ads);
         return "Ad images updated successfully: " + String.join(",", fileNames);

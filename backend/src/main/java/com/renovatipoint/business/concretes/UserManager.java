@@ -161,17 +161,6 @@ public class UserManager implements UserService {
         }
 
         String newFileName = storageManager.uploadImage(file, user);
-//        Storage newStorage = Storage.builder()
-//                .name(newFileName)
-//                .type(file.getContentType())
-//                .imageData(ImageUtils.compressImage(file.getBytes()))
-//                .url(newFileName)
-//                .user(user)
-//                .build();
-//
-//        storageRepository.save(newStorage);
-//        oldProfileStorage.add(newStorage);
-
         user.setProfileImage(newFileName);
         userRepository.save(user);
 
