@@ -21,10 +21,10 @@ spring:
 server:
   ssl:
     enabled: true
-    key-store: classpath:certificate.pfx
+    key-store: classpath:./cert/renovatipoint.p12
     key-store-password: password
     key-store-type: pkcs12
-    key-alias: 1
+    key-alias: renovatipoint
     key-password: password
   port: 8443
   http:
