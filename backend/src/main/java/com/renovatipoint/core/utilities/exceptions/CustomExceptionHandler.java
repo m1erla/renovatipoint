@@ -2,6 +2,7 @@ package com.renovatipoint.core.utilities.exceptions;
 
 import io.jsonwebtoken.io.IOException;
 import jakarta.persistence.EntityNotFoundException;
+import org.mariadb.jdbc.export.MaxAllowedPacketException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,7 +12,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(MaxAllowedPacketException.class)
+    public ResponseEntity<?> handleMaxAllowedPacketException(MaxAllowedPacketException exc){
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("Packet for query is too large than the maximum allowed packet limit of 5MB");
+    }
 
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<?> handleMaxSizeException(MaxUploadSizeExceededException exc) {
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("File size exceeds the maximum limit of 10 MB.");
+    }
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<String> handleIllegalStateException(IllegalStateException illegalStateException){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(illegalStateException.getMessage());
@@ -34,10 +43,5 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleIOException(IOException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File processing error");
     }
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<BusinessException> handleMaxSizeException(MaxUploadSizeExceededException exc) {
-        return ResponseEntity
-                .status(HttpStatus.EXPECTATION_FAILED)
-                .body(new BusinessException("One or more files are too large!"));
-    }
+
 }

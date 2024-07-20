@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 @Service
 public class StorageManager implements StorageService {
     private static final String UPLOAD_DIR = "src/main/webapp/uploads/";
-    private static final int MAX_AD_IMAGES = 5;
 
     private final StorageRepository storageRepository;
 
@@ -60,7 +59,6 @@ public class StorageManager implements StorageService {
 //        String randomID = UUID.randomUUID().toString();
 //        String randomName = randomID.concat(fileName.substring(fileName.lastIndexOf(".")));
         Path filePath = uploadPath.resolve(fileName);
-
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         return fileName;

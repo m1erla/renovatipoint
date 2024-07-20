@@ -112,20 +112,21 @@ public class AdsManager implements AdsService {
         ads.setUser(user);
         ads.setCategory(category);
         ads.setService(service);
-        this.adsRepository.save(ads);
+
 
         // Handle image upload
         try {
             if (createAdsRequest.getStorages() != null && !createAdsRequest.getStorages().isEmpty()) {
-                List<String> fileNames = storageManager.uploadImages(createAdsRequest.getStorages(), user, ads);
+                List<String> fileNames = storageManager.uploadImages(createAdsRequest.getStorages(), ads.getUser(), ads);
                 ads.setImageUrl(fileNames.get(0));
                 ads.setStorages(ads.getStorages());
-                this.adsRepository.save(ads);
+
             }
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload ad images.");
         }
 
+        this.adsRepository.save(ads);
         return ResponseEntity.ok().body("Ad successfully created!");
     }
 
