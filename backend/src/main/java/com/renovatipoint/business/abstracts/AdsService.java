@@ -22,7 +22,7 @@ public interface AdsService {
 
     List<String> uploadAdImage(int id, List<MultipartFile> files) throws IOException;
 
-    ResponseEntity<?> getAdImage(int id);
+    ResponseEntity<?> getAdImages(int id);
 
     ResponseEntity<?> deleteAdImage(int id);
 
