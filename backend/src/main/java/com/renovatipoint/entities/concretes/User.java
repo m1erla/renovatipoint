@@ -68,7 +68,7 @@ public class User implements UserDetails {
     private List<Token> token;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Storage> storages = new ArrayList<>();
+    private List<Storage> storages;
 
 
 

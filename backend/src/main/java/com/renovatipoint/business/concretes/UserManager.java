@@ -78,8 +78,27 @@ public class UserManager implements UserService {
 
         return this.modelMapperService.forResponse().map(user, GetUsersByIdResponse.class);
     }
+    @Override
+    @Transactional
+    public ResponseEntity<?> getUserProfileImage(int id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        String fileName = user.getProfileImage();
+        if (fileName == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profile image not found");
+        }
 
-
+        return storageManager.serveImage(fileName);
+    }
+    @Override
+    @Transactional
+    public ResponseEntity<?> getImageWithFileName(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        String fileName = user.getProfileImage();
+        if (fileName == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profile image not found");
+        }
+        return ResponseEntity.ok(new GetAllImagesResponse());
+    }
 
     @Override
     @Transactional
@@ -150,47 +169,21 @@ public class UserManager implements UserService {
     public ResponseEntity<?> uploadUserProfileImage(MultipartFile file, int id) throws IOException {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
         String oldProfileImage = user.getProfileImage();
-        List<Storage> oldProfileStorage = user.getStorages();
+        List<Storage> oldProfileStorages = storageRepository.findByUserAndName(user, oldProfileImage);
 
-        if (oldProfileStorage != null && !oldProfileStorage.isEmpty() && oldProfileImage != null) {
-            storageManager.deleteImage(oldProfileImage);
-            for (Storage storage : oldProfileStorage) {
+        // Delete old images from the file system and database
+        if (!oldProfileStorages.isEmpty() && oldProfileImage != null) {
+            for (Storage storage : oldProfileStorages) {
+                storageManager.deleteImage(storage.getName());
                 storageRepository.delete(storage);
             }
-            oldProfileStorage.clear(); // Clear the existing collection after deletion
         }
 
         String newFileName = storageManager.uploadImage(file, user);
         user.setProfileImage(newFileName);
         userRepository.save(user);
 
-        return ResponseEntity.ok("Profile image uploaded successfully: " + newFileName);
-    }
-    @Override
-    @Transactional
-    public ResponseEntity<?> getUserProfileImage(int id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        String fileName = user.getProfileImage();
-        return storageManager.serveImage(fileName);
-    }
-    @Override
-    @Transactional
-    public ResponseEntity<?> updateProfileImage(int id, MultipartFile file) throws IOException {
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        List<Storage> oldProfileStorage = user.getStorages();
-
-        if (oldProfileStorage != null){
-            storageManager.deleteImage(oldProfileStorage.toString());
-            storageRepository.delete((Storage) oldProfileStorage);
-        }
-        String newFileName = storageManager.uploadImage(file, user);
-
-        user.setProfileImage(newFileName);
-        userRepository.save(user);
-
-
-        return ResponseEntity.ok("Profile image updated successfully: " + newFileName);
-    }
+        return ResponseEntity.ok("Profile image uploaded successfully: " + newFileName);   }
     @Override
     @Transactional
     public ResponseEntity<?> deleteUserProfileImage(int id) {

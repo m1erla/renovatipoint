@@ -44,8 +44,8 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("src/main/webapp/uploads/**")
-                .addResourceLocations("file:src/main/webapp/uploads/");
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:src/main/resources/static/uploads/");
     }
 
     @Bean

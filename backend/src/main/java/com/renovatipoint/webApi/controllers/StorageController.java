@@ -6,25 +6,28 @@ import com.renovatipoint.business.concretes.UserManager;
 import com.renovatipoint.business.responses.GetAllImagesResponse;
 import com.renovatipoint.entities.concretes.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
 @RequestMapping("/image")
 public class StorageController {
-
+    private final Path uploadPath = Paths.get("src/main/resources/static/uploads");
     private final StorageManager fileStorageService;
-    private final UserManager userManager;
-    private final AdsManager adsManager;
     @Autowired
     public StorageController(StorageManager fileStorageService, UserManager userManager, AdsManager adsManager) {
         this.fileStorageService = fileStorageService;
-        this.userManager = userManager;
-        this.adsManager = adsManager;
     }
 
     @GetMapping("/all")
@@ -33,38 +36,26 @@ public class StorageController {
         return ResponseEntity.ok(images);
     }
 
-
-
-    @PostMapping("/ads/{id}/uploadAdImage")
-    public ResponseEntity<?> uploadAdImage(@PathVariable int id, @RequestParam("file") List<MultipartFile> files){
-        try{
-            List<String> message = adsManager.uploadAdImage(id, files);
-            return ResponseEntity.ok(message);
-        }catch (IOException ex){
-            return ResponseEntity.status(500).body("Failed to upload ad image");
-        }
-    }
-
-
-
-    @GetMapping("/ads/adImage/{id}")
-    public ResponseEntity<?> getAdImage(@PathVariable int id){
-        return adsManager.getAdImage(id);
-    }
-
-    @PostMapping("/ads/{id}/updateAdImages")
-    public ResponseEntity<?> updateAdImages(@PathVariable int id, @RequestParam("file") List<MultipartFile> files){
+    @GetMapping(value = "/{fileName:.+}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<Resource> getImage(@PathVariable String fileName){
         try {
-            String message = adsManager.updateAdImage(id, files);
-            return ResponseEntity.ok(message);
-        }catch (IOException ex){
-            return ResponseEntity.status(500).body("Failed to update ad images");
+            Path file = uploadPath.resolve(fileName);
+            Resource resource = new UrlResource(file.toUri());
+
+            if (resource.exists() || resource.isReadable()){
+                return  ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileName=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            }else {
+                return ResponseEntity.notFound().build();
+            }
+        }catch (MalformedURLException e){
+            return ResponseEntity.notFound().build();
         }
     }
-    @DeleteMapping("/ads/image/{id}")
-    public ResponseEntity<?> deleteAdImage(@PathVariable int id){
-        return adsManager.deleteAdImage(id);
-    }
+
+
+
 
 
 

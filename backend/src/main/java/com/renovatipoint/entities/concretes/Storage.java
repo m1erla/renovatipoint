@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@Table(name = "image_data")
+@Table(name = "image_data", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "name"})})
 @Entity
 @Builder
 @Getter
@@ -19,8 +19,6 @@ public class Storage {
 
     private String name;
 
-
-
     private String type;
 
     @Lob
@@ -29,7 +27,7 @@ public class Storage {
 
     private String url;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 

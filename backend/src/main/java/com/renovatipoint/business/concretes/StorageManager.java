@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class StorageManager implements StorageService {
-    private static final String UPLOAD_DIR = "src/main/webapp/uploads/";
+    private static final String UPLOAD_DIR = "src/main/resources/static/uploads";
 
     private final StorageRepository storageRepository;
 
@@ -55,7 +55,7 @@ public class StorageManager implements StorageService {
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
-        String fileName = file.getOriginalFilename();
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 //        String randomID = UUID.randomUUID().toString();
 //        String randomName = randomID.concat(fileName.substring(fileName.lastIndexOf(".")));
         Path filePath = uploadPath.resolve(fileName);
@@ -67,11 +67,11 @@ public class StorageManager implements StorageService {
     @Transactional
     public String uploadImage(MultipartFile file, User user) throws IOException{
         String fileName = storeFile(file);
-        Storage storageData = Storage.builder()
+                Storage storageData = Storage.builder()
                 .name(fileName)
                 .type(file.getContentType())
                 .imageData(ImageUtils.compressImage(file.getBytes()))
-                .url(UPLOAD_DIR + fileName)
+                .url(UPLOAD_DIR)
                 .user(user)
                 .build();
 
@@ -84,11 +84,6 @@ public class StorageManager implements StorageService {
     public List<String> uploadImages(List<MultipartFile> files, User user, Ads ad) throws IOException {
         List<String> fileNames = new ArrayList<>();
 
-
-//        if (files.size() > MAX_AD_IMAGES) {
-//            throw new IllegalArgumentException("Cannot upload more than " + MAX_AD_IMAGES + " images for an ad.");
-//        }
-
         for (MultipartFile file : files) {
             String fileName = storeFile(file);
 
@@ -96,7 +91,7 @@ public class StorageManager implements StorageService {
                     .name(fileName)
                     .type(file.getContentType())
                     .imageData(ImageUtils.compressImage(file.getBytes()))
-                    .url(UPLOAD_DIR + fileName)
+                    .url(UPLOAD_DIR)
                     .user(user)
                     .ads(ad)
                     .build();
@@ -109,8 +104,8 @@ public class StorageManager implements StorageService {
     @Override
     @Transactional
     public byte[] downloadImage(String fileName) throws IOException{
-        Optional<Storage> dbImageData = storageRepository.findByName(fileName);
-        if (dbImageData.isPresent()) {
+       Optional<Storage> dbImageData = storageRepository.findByName(fileName);
+        if (dbImageData != null) {
             return ImageUtils.decompressImage(dbImageData.get().getImageData());
         } else {
             throw new FileNotFoundException("File not found with name: " + fileName);

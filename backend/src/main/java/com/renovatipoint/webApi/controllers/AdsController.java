@@ -3,10 +3,10 @@ package com.renovatipoint.webApi.controllers;
 
 import com.renovatipoint.business.abstracts.AdsService;
 import com.renovatipoint.business.concretes.AdsManager;
+import com.renovatipoint.business.concretes.StorageManager;
 import com.renovatipoint.business.requests.CreateAdsRequest;
 import com.renovatipoint.business.requests.UpdateAdsRequest;
 import com.renovatipoint.business.responses.GetAllAdsResponse;
-import com.renovatipoint.dataAccess.abstracts.AdsRepository;
 import com.renovatipoint.dataAccess.abstracts.UserRepository;
 import com.renovatipoint.entities.concretes.User;
 import com.renovatipoint.security.jwt.JwtService;
@@ -28,6 +28,7 @@ public class AdsController {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AdsService adsService;
+    private final StorageManager storageManager;
     @GetMapping
     public List<GetAllAdsResponse> getAllAds(){
         return adsManager.getAll();
@@ -41,9 +42,30 @@ public class AdsController {
         return adsManager.getAdImagesForUser(user.getId());
     }
     @GetMapping("/{id}/image")
-    public ResponseEntity<?> getAdImage(@PathVariable int id) {
-        return adsManager.getAdImage(id);
+    public ResponseEntity<?> getAdImages(@PathVariable int id) {
+        return adsManager.getAdImages(id);
     }
+
+    @PostMapping("/ads/{id}/uploadAdImage")
+    public ResponseEntity<?> uploadAdImage(@PathVariable int id, @RequestParam("file") List<MultipartFile> files){
+        try{
+            List<String> message = adsManager.uploadAdImage(id, files);
+            return ResponseEntity.ok(message);
+        }catch (IOException ex){
+            return ResponseEntity.status(500).body("Failed to upload ad image");
+        }
+    }
+
+    @PostMapping("/ads/{id}/updateAdImages")
+    public ResponseEntity<?> updateAdImages(@PathVariable int id, @RequestParam("file") List<MultipartFile> files){
+        try {
+            String message = adsManager.updateAdImage(id, files);
+            return ResponseEntity.ok(message);
+        }catch (IOException ex){
+            return ResponseEntity.status(500).body("Failed to update ad images");
+        }
+    }
+
     @PostMapping(value = "/ad", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> add(@ModelAttribute CreateAdsRequest createAdsRequest) {
         return adsManager.add(createAdsRequest);

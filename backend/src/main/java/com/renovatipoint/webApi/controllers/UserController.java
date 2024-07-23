@@ -9,6 +9,7 @@ import com.renovatipoint.entities.concretes.User;
 import com.renovatipoint.security.auth.AuthenticationService;
 import com.renovatipoint.security.jwt.JwtService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +43,15 @@ public class UserController {
     public GetUsersByIdResponse getUsersById(@PathVariable int id){
         return userService.getById(id);
     }
+    @GetMapping(value = "/{id}/profile-image")
+    public ResponseEntity<?> getUserProfileImage(@PathVariable int id) {
+        return userManager.getUserProfileImage(id);
+    }
 
-
+    @GetMapping(value = "/{fileName}")
+    public ResponseEntity<?> getImage(@PathVariable String fileName){
+        return userManager.getImageWithFileName(fileName);
+    }
 
     @GetMapping("/response")
     public ResponseEntity<GetUsersResponse> retrieveUserProfileWithResponse(@RequestHeader("Authorization") String authorizationHeader) {
@@ -78,31 +86,11 @@ public class UserController {
     public ResponseEntity<?> update(@ModelAttribute UpdateUserRequest updateUserRequest) throws IOException {
        return this.userManager.update(updateUserRequest);
     }
-    @GetMapping("/{id}/profile-image")
-    public ResponseEntity<?> getUserProfileImage(@PathVariable int id) {
-        return userManager.getUserProfileImage(id);
-    }
-
-    @PutMapping("/{id}/profile-image")
-    public ResponseEntity<?> updateProfileImage(@PathVariable int id, @RequestParam("file") MultipartFile file) throws IOException {
-        return userManager.updateProfileImage(id, file);
-    }
     @DeleteMapping("/{fileName}/profile-image")
     public void deleteUserProfileImage(@PathVariable String fileName) throws IOException {
         storageManager.deleteImage(fileName);
     }
-    @PostMapping("{id}/updateProfileImage")
-    public ResponseEntity<?> updateImage(@PathVariable int id, @RequestParam("file") MultipartFile file){
-        try {
-            return userManager.updateProfileImage(id, file);
-        }catch (IOException ex){
-            return ResponseEntity.status(500).body("Failed to update profile images");
-        }
-    }
-    @GetMapping("profileImage/{id}")
-    public ResponseEntity<?> getUserImage(@PathVariable int id) throws IOException{
-        return userManager.getUserProfileImage(id);
-    }
+
 
 }
 

@@ -25,7 +25,7 @@ public interface UserService {
 
     ResponseEntity<?> getUserProfileImage(int id);
 
-    ResponseEntity<?> updateProfileImage(int id, MultipartFile file) throws IOException;
+    ResponseEntity<?> getImageWithFileName(String email);
 
     ResponseEntity<?> deleteUserProfileImage(int id);;
 

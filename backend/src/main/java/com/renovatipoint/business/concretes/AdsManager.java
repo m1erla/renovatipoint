@@ -105,7 +105,6 @@ public class AdsManager implements AdsService {
 
         User user = userRepository.findById(createAdsRequest.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found!"));
-        user = userRepository.findById(user.getId()).orElseThrow(() -> new EntityNotFoundException("User not found!"));
 
         Ads ads = this.modelMapperService.forRequest().map(createAdsRequest, Ads.class);
 
@@ -113,20 +112,21 @@ public class AdsManager implements AdsService {
         ads.setCategory(category);
         ads.setService(service);
 
+        this.adsRepository.save(ads);
 
         // Handle image upload
         try {
             if (createAdsRequest.getStorages() != null && !createAdsRequest.getStorages().isEmpty()) {
-                List<String> fileNames = storageManager.uploadImages(createAdsRequest.getStorages(), ads.getUser(), ads);
-                ads.setImageUrl(fileNames.get(0));
+                List<String> fileNames = storageManager.uploadImages(createAdsRequest.getStorages(), user, ads);
+                ads.setImageUrl(fileNames.get(0)); // Assuming you want to set the first image URL
                 ads.setStorages(ads.getStorages());
+                adsRepository.save(ads);
 
             }
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload ad images.");
         }
 
-        this.adsRepository.save(ads);
         return ResponseEntity.ok().body("Ad successfully created!");
     }
 
@@ -166,16 +166,21 @@ public class AdsManager implements AdsService {
         return fileNames;
     }
 
-
+    @Override
     @Transactional
-    public ResponseEntity<?> getAdImage(int id){
+    public ResponseEntity<?> getAdImages(int id){
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Ad not found"));
         List<Storage> storages = ads.getStorages();
-        if (storages.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No images found");
+
+        if (storages.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No images found for this ad");
         }
-        String fileName = ads.getImageUrl();
-        return storageManager.serveImage(fileName);
+
+        List<GetAllImagesResponse> imageResponses = storages.stream()
+                .map(storage -> new GetAllImagesResponse(storage.getId(), storage.getName(), storage.getType(), storage.getUrl()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(imageResponses);
     }
     @Transactional
     public ResponseEntity<?> deleteAdImage(int id){
