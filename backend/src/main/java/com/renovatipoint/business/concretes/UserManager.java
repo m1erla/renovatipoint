@@ -73,10 +73,10 @@ public class UserManager implements UserService {
 
 
     @Override
-    public GetUsersByIdResponse getById(int id) {
+    public GetUsersResponse getById(int id) {
         User user = this.userRepository.findById(id).orElseThrow();
 
-        return this.modelMapperService.forResponse().map(user, GetUsersByIdResponse.class);
+        return this.modelMapperService.forResponse().map(user, GetUsersResponse.class);
     }
     @Override
     @Transactional

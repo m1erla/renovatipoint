@@ -3,7 +3,6 @@ package com.renovatipoint.business.concretes;
 import com.renovatipoint.business.abstracts.AdsService;
 import com.renovatipoint.business.requests.CreateAdsRequest;
 import com.renovatipoint.business.requests.UpdateAdsRequest;
-import com.renovatipoint.business.responses.GetAdsByIdResponse;
 import com.renovatipoint.business.responses.GetAllAdsResponse;
 import com.renovatipoint.business.responses.GetAllImagesResponse;
 import com.renovatipoint.business.rules.AdsBusinessRules;
@@ -53,10 +52,10 @@ public class AdsManager implements AdsService {
     }
 
     @Override
-    public GetAdsByIdResponse getById(int id) {
+    public GetAllAdsResponse getById(int id) {
         Ads ads = this.adsRepository.findById(id).orElseThrow();
 
-        return this.modelMapperService.forResponse().map(ads, GetAdsByIdResponse.class);
+        return this.modelMapperService.forResponse().map(ads, GetAllAdsResponse.class);
     }
 
     public ResponseEntity<?> getAdImagesForUser(int userId){

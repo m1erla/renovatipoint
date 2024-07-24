@@ -17,7 +17,7 @@ public interface UserService {
     GetUsersResponse getByEmail(String email);
   //  UserDetails getByDetails(String details);
 
-    GetUsersByIdResponse getById(int id);
+    GetUsersResponse getById(int id);
 
     ResponseEntity<?> update(UpdateUserRequest updateUserRequest);
 

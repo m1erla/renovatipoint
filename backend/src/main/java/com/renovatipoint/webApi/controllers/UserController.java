@@ -35,22 +35,17 @@ public class UserController {
 
     @GetMapping
     public List<GetUsersResponse> getAllUsers(){
-        return userService.getAll();
+        return userManager.getAll();
     }
 
 
     @GetMapping("/{id}")
-    public GetUsersByIdResponse getUsersById(@PathVariable int id){
-        return userService.getById(id);
+    public GetUsersResponse getUsersById(@PathVariable int id){
+        return userManager.getById(id);
     }
     @GetMapping(value = "/{id}/profile-image")
     public ResponseEntity<?> getUserProfileImage(@PathVariable int id) {
         return userManager.getUserProfileImage(id);
-    }
-
-    @GetMapping(value = "/{fileName}")
-    public ResponseEntity<?> getImage(@PathVariable String fileName){
-        return userManager.getImageWithFileName(fileName);
     }
 
     @GetMapping("/response")

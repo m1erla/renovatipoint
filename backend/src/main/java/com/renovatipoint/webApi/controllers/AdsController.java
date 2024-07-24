@@ -34,6 +34,12 @@ public class AdsController {
         return adsManager.getAll();
     }
 
+
+    @GetMapping("/{id}")
+    public GetAllAdsResponse getAdById(@PathVariable int id){
+        return adsManager.getById(id);
+    }
+
     @GetMapping("/user-images")
     public ResponseEntity<?> getUserAdImages(@RequestHeader("Authorization") String authorizationHeader){
         String jwt = authorizationHeader.substring(7).trim();
