@@ -18,6 +18,7 @@ public class GetUsersResponse {
     private String profileImage;
     private List<GetAllImagesResponse> storages;
     private String postCode;
+    private int jobTitleId;
     private String jobTitleName;
     private String role;
     private List<GetAllAdsResponse> ads;
