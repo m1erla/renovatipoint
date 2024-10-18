@@ -14,7 +14,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -23,10 +23,10 @@ spring:
 server:
   ssl:
     enabled: true
-    key-store: classpath:renovatipoint.p12
+    key-store: classpath:renovatipoint_cert.p12
     key-store-password: password
     key-store-type: pkcs12
-    key-alias: renovatipoint
+    key-alias: renovatipoint_cert
     key-password: password
   port: 8443
   http:
@@ -38,3 +38,6 @@ application:
       expiration: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 day
+stripe:
+  api-key: sk_test_51PsSQ4IUuPTlpq50bwNCIfV0XIMk4CupeUeg03qh7rxkLUcqX9rDgZqrUAKfDslyHQ17TMbpt3X704rT0ewlh03400uZxXnDlb
+  webhook-secret: whsec_9b8e21ff582c60992878874aa9ccb4a88ad33d9a50f3cae2842b1e37bcfa6322
