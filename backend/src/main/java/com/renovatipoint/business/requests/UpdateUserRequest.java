@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class UpdateUserRequest {
-    private int id;
+    private String id;
     private String name;
     private String surname;
     private String email;
@@ -17,7 +17,7 @@ public class UpdateUserRequest {
     private String jobTitleName;
     private Role role;
 
-    public UpdateUserRequest(int id, String name, String surname, String email, String phoneNumber, MultipartFile storages, String postCode, String jobTitleName, Role role) {
+    public UpdateUserRequest(String id, String name, String surname, String email, String phoneNumber, MultipartFile storages, String postCode, String jobTitleName, Role role) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -31,7 +31,7 @@ public class UpdateUserRequest {
 
     public UpdateUserRequest(){}
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -67,7 +67,7 @@ public class UpdateUserRequest {
         this.role = role;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

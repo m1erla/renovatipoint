@@ -52,7 +52,7 @@ public class ServiceManager implements IService {
     }
 
     @Override
-    public GetServiceByIdResponse getById(int id) {
+    public GetServiceByIdResponse getById(String id) {
         ServiceEntity service = this.serviceRepository.findById(id).orElseThrow();
 
         GetServiceByIdResponse response =
@@ -83,7 +83,7 @@ public class ServiceManager implements IService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         this.serviceRepository.deleteById(id);
 
     }

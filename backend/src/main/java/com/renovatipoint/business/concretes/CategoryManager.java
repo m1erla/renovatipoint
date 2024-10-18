@@ -40,7 +40,7 @@ public class CategoryManager implements CategoryService {
     }
 
     @Override
-    public GetCategoriesByIdResponse getById(int id) {
+    public GetCategoriesByIdResponse getById(String id) {
         Category category = this.categoryRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -66,7 +66,7 @@ public class CategoryManager implements CategoryService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         this.categoryRepository.deleteById(id);
 
     }

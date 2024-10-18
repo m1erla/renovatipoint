@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 public class UpdateCategoryRequest {
-    private int id;
+    private String id;
     private String name;
     private boolean isActive;
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetCategoriesByIdResponse {
-    private int id;
+    private String id;
     private String name;
     private String jobTitleName;
     private boolean isActive;

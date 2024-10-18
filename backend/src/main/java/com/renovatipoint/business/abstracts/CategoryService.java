@@ -11,12 +11,12 @@ import java.util.List;
 public interface CategoryService {
     List<GetAllCategoriesResponse> getAll();
 
-    GetCategoriesByIdResponse getById(int id);
+    GetCategoriesByIdResponse getById(String id);
 
     void add(CreateCategoryRequest createCategoryRequest);
     void update(UpdateCategoryRequest updateCategoryRequest);
 
-    void delete(int id);
+    void delete(String id);
 
     List<GetAllJobTitlesResponse> getJobTitlesByCategory(String categoryName);
 }

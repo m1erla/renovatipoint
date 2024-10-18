@@ -24,7 +24,7 @@ public class ServicesController {
     }
 
     @GetMapping("/{id}")
-    public GetServiceByIdResponse getServiceById(@PathVariable int id){
+    public GetServiceByIdResponse getServiceById(@PathVariable String id){
         return iService.getById(id);
     }
 
@@ -40,7 +40,7 @@ public class ServicesController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id){
+    public void delete(@PathVariable String id){
         this.iService.delete(id);
     }
 }

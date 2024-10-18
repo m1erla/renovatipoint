@@ -10,16 +10,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAllAdsResponse {
-    private int id;
+    private String id;
     private String name;
     private String descriptions;
     private String imageUrl;
     private String adReleaseDate;
-    private int categoryId;
+    private String categoryId;
     private String categoryName;
-    private int serviceId;
+    private String serviceId;
     private String serviceName;
-    private int userId;
+    private String userId;
     private String userName;
     private List<GetAllImagesResponse> storages;
 }

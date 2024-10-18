@@ -9,8 +9,10 @@ import com.renovatipoint.core.utilities.images.ImageUtils;
 import com.renovatipoint.core.utilities.mappers.ModelMapperService;
 import com.renovatipoint.dataAccess.abstracts.StorageRepository;
 import com.renovatipoint.dataAccess.abstracts.UserRepository;
+import com.renovatipoint.entities.concretes.Invoice;
 import com.renovatipoint.entities.concretes.Storage;
 import com.renovatipoint.entities.concretes.User;
+import com.renovatipoint.enums.Status;
 import com.renovatipoint.security.token.Token;
 import com.renovatipoint.security.token.TokenRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,8 @@ public class UserManager implements UserService {
     private final AdsManager adsManager;
     private final TokenRepository tokenRepository;
 
+    private JavaMailSender mailSender;
+
     public UserManager(ModelMapperService modelMapperService, UserRepository userRepository, UserBusinessRules userBusinessRules, StorageRepository storageRepository, PasswordEncoder passwordEncoder, StorageManager storageManager, AdsManager adsManager, TokenRepository tokenRepository) {
         this.modelMapperService = modelMapperService;
         this.userRepository = userRepository;
@@ -65,22 +71,34 @@ public class UserManager implements UserService {
 
 
     @Override
-    public GetUsersResponse getByEmail(String email) {
+    public GetUsersResponse getUserByEmail(String email) {
         Optional<User> user = this.userRepository.findByEmail(email);
 
         return this.modelMapperService.forResponse().map(user, GetUsersResponse.class);
     }
 
+    @Override
+    public GetExpertResponse getExpertByEmail(String email) {
+        Optional<User> user = this.userRepository.findByEmail(email);
+
+        return this.modelMapperService.forResponse().map(user, GetExpertResponse.class);
+    }
+    @Override
+    public User getByEmail(String email) {
+        User user = this.userRepository.getByEmail(email);
+        return this.modelMapperService.forResponse().map(user, User.class);
+    }
+
 
     @Override
-    public GetUsersResponse getById(int id) {
-        User user = this.userRepository.findById(id).orElseThrow();
+    public GetUsersResponse getById(String userId) {
+        User user = this.userRepository.findById(userId).orElseThrow();
 
         return this.modelMapperService.forResponse().map(user, GetUsersResponse.class);
     }
     @Override
     @Transactional
-    public ResponseEntity<?> getUserProfileImage(int id) {
+    public ResponseEntity<?> getUserProfileImage(String id) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
         String fileName = user.getProfileImage();
         if (fileName == null) {
@@ -166,7 +184,7 @@ public class UserManager implements UserService {
     }
     @Override
     @Transactional
-    public ResponseEntity<?> uploadUserProfileImage(MultipartFile file, int id) throws IOException {
+    public ResponseEntity<?> uploadUserProfileImage(MultipartFile file, String id) throws IOException {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
         String oldProfileImage = user.getProfileImage();
         List<Storage> oldProfileStorages = storageRepository.findByUserAndName(user, oldProfileImage);
@@ -186,7 +204,7 @@ public class UserManager implements UserService {
         return ResponseEntity.ok("Profile image uploaded successfully: " + newFileName);   }
     @Override
     @Transactional
-    public ResponseEntity<?> deleteUserProfileImage(int id) {
+    public ResponseEntity<?> deleteUserProfileImage(String id) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         try {
@@ -217,7 +235,50 @@ public class UserManager implements UserService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete user profile image.");
         }
     }
+
+    @Override
+    public void sendPaymentConfirmationEmail(String userEmail, Invoice invoice) {
+        String subject = "Payment Confirmation";
+        String message = "Dear user your payment for invoice " + invoice.getInvoiceNumber() + " was successful. Thank you!";
+        sendEmail(userEmail, subject, message);
     }
+
+    @Override
+    public void sendPaymentFailureEmail(String userEmail, Invoice invoice) {
+        String subject = "Payment Failure Notification";
+        String message = "Dear user, your payment for invoice " + invoice.getInvoiceNumber() + " has failed. Please try again or contact support.";
+        sendEmail(userEmail, subject, message);
+    }
+
+    @Override
+    public void saveUser(User user) {
+        user.setStatus(Status.ONLINE);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void disconnect(User user) {
+        var storedUser = userRepository.findById(user.getId()).orElse(null);
+         if (storedUser != null){
+             storedUser.setStatus(Status.OFFLINE);
+             userRepository.save(storedUser);
+         }
+    }
+
+    @Override
+    public List<User> findConnectedUsers() {
+        return userRepository.findAllByStatus(Status.ONLINE);
+    }
+
+
+    private void sendEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+    }
+}
 
 //    public User findCurrentUser(String email) {
 //        Optional<User> loggedInUser = userRepository.findByEmail(email);

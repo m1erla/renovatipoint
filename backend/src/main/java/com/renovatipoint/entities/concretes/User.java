@@ -1,49 +1,60 @@
 package com.renovatipoint.entities.concretes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.renovatipoint.enums.Status;
 import com.renovatipoint.security.token.Token;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "users")
-@Getter
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
 @Setter
-@EntityListeners(AuditingEntityListener.class)
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    @Getter
-    @Column(name = "name")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "user-requests")
+    private List<Request> userRequests = new ArrayList<>();
+
+    @NotBlank(message = "Name is required")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Getter
+    @NotBlank(message = "Password is required")
+    @Column(nullable = false)
+    private String password;
+
+
     @Column(name = "surname")
     private String surname;
 
     private String profileImage;
 
-    @Email
-    @Column(name = "email", unique = true)
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
-
-    private String password;
 
     @Column(name = "job_title_name")
     private String jobTitleName;
@@ -60,26 +71,32 @@ public class User implements UserDetails {
     private Role role;
 
 
+    private Status status;
+    @Column(name = "account_blocked")
+    private boolean accountBlocked = false;
+
+    @Column(name = "balance")
+    private BigDecimal balance = BigDecimal.ZERO;
+
+    @Column(name = "payment_issues_count")
+    private int paymentIssuesCount = 0;
+
     @OneToMany(mappedBy = "user")
-    private List<JobTitle> jobTitles;
+    private List<JobTitle> jobTitles = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Token> token;
+    private List<Token> token = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Storage> storages;
-
+    private List<Storage> storages = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Invoice> invoices = new ArrayList<>();
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
     }
 
     @Override

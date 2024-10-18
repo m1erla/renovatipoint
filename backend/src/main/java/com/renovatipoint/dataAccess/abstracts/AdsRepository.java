@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.Optional;
 
-public interface AdsRepository extends JpaRepository<Ads, Integer> {
-    List<Ads> findByUserId(int userId);
+public interface AdsRepository extends JpaRepository<Ads, String> {
+    List<Ads> findByUserId(String userId);
     boolean existsByName(String name);
     boolean isActive(boolean isActive);
 

@@ -11,12 +11,15 @@ import java.util.List;
 @Getter
 @Setter
 public class UpdateAdsRequest {
-    private int id;
+    private String id;
+    private String userId;
     private String name;
     private boolean isActive;
     private String descriptions;
     private List<MultipartFile> storages;
     private String adReleaseDate;
-    private int categoryId;
-    private int serviceId;
+    private String categoryName;
+    private String serviceName;
+    private String categoryId;
+    private String serviceId;
 }

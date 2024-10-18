@@ -13,19 +13,19 @@ public interface AdsService {
 
     List<GetAllAdsResponse> getAll();
 
-    GetAllAdsResponse getById(int id);
+    List<GetAllAdsResponse> getUserAdById(String userId);
     ResponseEntity<?> add(CreateAdsRequest createAdsRequest);
 
     ResponseEntity<?> update(UpdateAdsRequest updateAdsRequest);
-    ResponseEntity<?> getAdImagesForUser(int userId);
+    ResponseEntity<?> getAdImagesForUser(String userId);
 
-    List<String> uploadAdImage(int id, List<MultipartFile> files) throws IOException;
+    List<String> uploadAdImage(String id, List<MultipartFile> files) throws IOException;
 
-    ResponseEntity<?> getAdImages(int id);
+    ResponseEntity<?> getAdImages(String id);
 
-    ResponseEntity<?> deleteAdImage(int id);
+    ResponseEntity<?> deleteAdImage(String id);
 
-    String updateAdImage(int id, List<MultipartFile> files) throws IOException;
+    String updateAdImage(String id, List<MultipartFile> files) throws IOException;
 
-    void delete(int id);
+    void delete(String id);
 }

@@ -10,6 +10,6 @@ import lombok.*;
 public class RegisterResponse {
 
     String message;
-    int userId;
+    String userId;
     String email;
 }

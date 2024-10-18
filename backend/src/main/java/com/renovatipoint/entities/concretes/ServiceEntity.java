@@ -15,9 +15,9 @@ import java.util.List;
 @Data
 public class ServiceEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     private String name;
 

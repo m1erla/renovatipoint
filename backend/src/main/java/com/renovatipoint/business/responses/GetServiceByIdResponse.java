@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetServiceByIdResponse {
-    private int id;
+    private String id;
     private String name;
     private String jobTitleName;
-    private int categoryId;
+    private String categoryId;
     private String categoryName;
     private boolean isActive;
 }

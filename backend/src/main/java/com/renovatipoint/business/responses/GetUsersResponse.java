@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class GetUsersResponse {
-    private int id;
+    private String id;
     private String name;
     private String surname;
     private String email;
@@ -18,7 +18,7 @@ public class GetUsersResponse {
     private String profileImage;
     private List<GetAllImagesResponse> storages;
     private String postCode;
-    private int jobTitleId;
+    private String jobTitleId;
     private String jobTitleName;
     private String role;
     private List<GetAllAdsResponse> ads;

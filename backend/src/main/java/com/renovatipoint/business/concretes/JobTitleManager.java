@@ -53,7 +53,7 @@ public class JobTitleManager implements JobTitleService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         this.jobTitleRepository.deleteById(id);
     }
 //    @Override

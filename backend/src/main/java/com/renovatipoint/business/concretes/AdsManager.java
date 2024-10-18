@@ -10,6 +10,8 @@ import com.renovatipoint.core.utilities.mappers.ModelMapperService;
 import com.renovatipoint.dataAccess.abstracts.*;
 import com.renovatipoint.entities.concretes.*;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +39,8 @@ public class AdsManager implements AdsService {
     private final UserRepository userRepository;
     private final StorageManager storageManager;
     private final StorageRepository storageRepository;
+
+    private final static Logger logger = LoggerFactory.getLogger(AdsManager.class);
 
     public AdsManager(ModelMapperService modelMapperService, AdsRepository adsRepository, AdsBusinessRules adsBusinessRules, CategoryRepository categoryRepository, ServiceRepository serviceRepository, UserRepository userRepository, StorageManager storageManager, StorageRepository storageRepository) {
         this.modelMapperService = modelMapperService;
@@ -52,13 +61,23 @@ public class AdsManager implements AdsService {
     }
 
     @Override
-    public GetAllAdsResponse getById(int id) {
-        Ads ads = this.adsRepository.findById(id).orElseThrow();
+    public List<GetAllAdsResponse> getUserAdById(String userId) {
+        List<Ads> ads = this.adsRepository.findByUserId(userId);
+        logger.info("Found {} ads for user {}", ads.size(), userId);
 
-        return this.modelMapperService.forResponse().map(ads, GetAllAdsResponse.class);
+        return ads.stream().filter(ad -> ad != null)
+                .map(ad -> {
+                    GetAllAdsResponse dto = modelMapperService.forResponse().map(ad , GetAllAdsResponse.class);
+                    if (dto.getName() == null){
+                        logger.warn("Ad with id {} has no title", ad.getId());
+                        dto.setName("Untitled Ad");
+                    }
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> getAdImagesForUser(int userId){
+    public ResponseEntity<?> getAdImagesForUser(String userId){
         List<Ads> adsList = adsRepository.findByUserId(userId);
 
         if (adsList.isEmpty()) {
@@ -87,6 +106,9 @@ public class AdsManager implements AdsService {
     @Transactional
     public ResponseEntity<?> add(CreateAdsRequest createAdsRequest) {
         System.out.println("Received create ad request: " + createAdsRequest); // Logging
+        System.out.println("UserId: " + createAdsRequest.getUserId());
+        System.out.println("CategoryId: " + createAdsRequest.getCategoryId());
+        System.out.println("ServiceId: " + createAdsRequest.getServiceId());
 
         if (adsBusinessRules.checkIfAdsNameExists(createAdsRequest.getName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("This ad name already exists. Please try a different name to create a new ad!");
@@ -105,6 +127,12 @@ public class AdsManager implements AdsService {
         User user = userRepository.findById(createAdsRequest.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found!"));
 
+//        if (user instanceof Expert){
+//            Expert expert = (Expert) user;
+//            if (expert.getPaymentInfo() == null){
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Expert must set up a payment method before posting ads");
+//            }
+//        }
         Ads ads = this.modelMapperService.forRequest().map(createAdsRequest, Ads.class);
 
         ads.setUser(user);
@@ -134,30 +162,52 @@ public class AdsManager implements AdsService {
     @Transactional
     public ResponseEntity<?> update(UpdateAdsRequest updateAdsRequest) {
         this.adsBusinessRules.checkIfAdsExists(updateAdsRequest.getId(), updateAdsRequest.getName());
-        Ads ads = this.modelMapperService.forRequest().map(updateAdsRequest, Ads.class);
+        Ads existingAd = this.adsRepository.findById(updateAdsRequest.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Ad not found"));
+
+        existingAd.setId(updateAdsRequest.getId());
+        existingAd.setName(updateAdsRequest.getName());
+        existingAd.setDescriptions(updateAdsRequest.getDescriptions());
+        existingAd.setActive(updateAdsRequest.isActive());
+        existingAd.setUpdatedAt(LocalDateTime.now());
+        // Update category if provided
+        if (updateAdsRequest.getCategoryId() != null) {
+            Category category = categoryRepository.findById(updateAdsRequest.getCategoryId())
+                    .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+            existingAd.setCategory(category);
+        }
+
+        // Update service if provided
+        if (updateAdsRequest.getServiceId() != null) {
+            ServiceEntity service = serviceRepository.findById(updateAdsRequest.getServiceId())
+                    .orElseThrow(() -> new EntityNotFoundException("Service not found"));
+            existingAd.setService(service);
+        }
+
         if (updateAdsRequest.getStorages() != null && !updateAdsRequest.getStorages().isEmpty()){
             try {
-               List<Storage> oldStorages = ads.getStorages();
+               List<Storage> oldStorages = existingAd.getStorages();
                if (oldStorages != null && !oldStorages.isEmpty()){
                    for (Storage storage : oldStorages){
                        storageManager.deleteImage(storage.getName());
                        storageRepository.delete(storage);
                    }
-                   ads.getStorages().clear();
+                   existingAd.getStorages().clear();
                }
 
-               List<String> fileNames = storageManager.uploadImages(updateAdsRequest.getStorages(), ads.getUser(), ads);
-               ads.setImageUrl(fileNames.get(0));
+               List<String> fileNames = storageManager.uploadImages(updateAdsRequest.getStorages(), existingAd.getUser(), existingAd);
+               existingAd.setImageUrl(fileNames.get(0));
             }catch (IOException ex){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update ad images.");
             }
         }
-        this.adsRepository.save(ads);
+
+        this.adsRepository.save(existingAd);
 
         return ResponseEntity.ok().body("Ad successfully updated!");
     }
     @Transactional
-    public List<String> uploadAdImage(int id, List<MultipartFile> files) throws IOException{
+    public List<String> uploadAdImage(String id, List<MultipartFile> files) throws IOException{
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Ad not found"));
         List<String> fileNames = storageManager.uploadImages(files, ads.getUser(), ads);
         ads.setImageUrl(fileNames.get(0));
@@ -167,7 +217,7 @@ public class AdsManager implements AdsService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> getAdImages(int id){
+    public ResponseEntity<?> getAdImages(String id){
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Ad not found"));
         List<Storage> storages = ads.getStorages();
 
@@ -182,7 +232,7 @@ public class AdsManager implements AdsService {
         return ResponseEntity.ok(imageResponses);
     }
     @Transactional
-    public ResponseEntity<?> deleteAdImage(int id){
+    public ResponseEntity<?> deleteAdImage(String id){
         Storage storage = storageRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Image not found"));
         Ads ads = storage.getAds();
         if (ads != null) {
@@ -197,7 +247,7 @@ public class AdsManager implements AdsService {
         return ResponseEntity.ok("Image deleted successfully");
     }
     @Transactional
-    public String updateAdImage(int id, List<MultipartFile> files) throws IOException{
+    public String updateAdImage(String id, List<MultipartFile> files) throws IOException{
         Ads ads = adsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Ad not found"));
         User user = userRepository.findById(ads.getUser().getId()).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
@@ -217,7 +267,7 @@ public class AdsManager implements AdsService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
         this.adsRepository.deleteById(id);
     }
 }

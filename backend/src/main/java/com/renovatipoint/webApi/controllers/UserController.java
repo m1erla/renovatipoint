@@ -9,11 +9,14 @@ import com.renovatipoint.entities.concretes.User;
 import com.renovatipoint.security.auth.AuthenticationService;
 import com.renovatipoint.security.jwt.JwtService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import spark.Response;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -24,7 +27,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserDetailsService userDetailsServiceImpl;
 
     private final UserManager userManager;
 
@@ -40,11 +42,11 @@ public class UserController {
 
 
     @GetMapping("/{id}")
-    public GetUsersResponse getUsersById(@PathVariable int id){
+    public GetUsersResponse getUsersById(@PathVariable String id){
         return userManager.getById(id);
     }
     @GetMapping(value = "/{id}/profile-image")
-    public ResponseEntity<?> getUserProfileImage(@PathVariable int id) {
+    public ResponseEntity<?> getUserProfileImage(@PathVariable String id) {
         return userManager.getUserProfileImage(id);
     }
 
@@ -54,7 +56,7 @@ public class UserController {
         String jwt = authorizationHeader.substring(7).trim();
 
         String email = jwtService.extractUsername(jwt);
-        return ResponseEntity.ok(userService.getByEmail(email));
+        return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
 
@@ -69,7 +71,7 @@ public class UserController {
         return userManager.uploadUserProfileImage(file, id.getId());
     }
     @PostMapping("{id}/uploadProfileImage")
-    public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable int id){
+    public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable String id){
         try {
             ResponseEntity<?> message = userManager.uploadUserProfileImage(file, id);
             return ResponseEntity.ok(message);
@@ -86,6 +88,24 @@ public class UserController {
         storageManager.deleteImage(fileName);
     }
 
+    @MessageMapping("/user.addUser")
+    @SendTo("/user/public")
+    public User addUser(@Payload User user){
+        userManager.saveUser(user);
+        return user;
+    }
+
+    @MessageMapping("/user.disconnectUser")
+    @SendTo("/user/public")
+    public User disconnectUser(@Payload User user){
+        userManager.disconnect(user);
+        return user;
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> findConnectedUsers(){
+        return ResponseEntity.ok(userManager.findConnectedUsers());
+    }
 
 }
 

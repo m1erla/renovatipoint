@@ -8,9 +8,9 @@ import lombok.*;
 @Getter
 @Setter
 public class UpdateJobTitleRequest {
-    private int id;
+    private String id;
     private String name;
     private String descriptions;
     private String categoryName;
-    private int categoryId;
+    private String categoryId;
 }

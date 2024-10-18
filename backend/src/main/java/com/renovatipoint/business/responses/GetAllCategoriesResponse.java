@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAllCategoriesResponse {
-    private int id;
+    private String id;
     private String name;
     //    private List<GetAllJobTitlesResponse> jobTitleName;
     private boolean isActive;

@@ -1,25 +1,27 @@
 package com.renovatipoint.entities.concretes;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.renovatipoint.enums.JobStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Entity
 @Table(name = "ads")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
+@Data
 public class Ads {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(name = "name")
     private String name;
@@ -41,17 +43,29 @@ public class Ads {
     @OneToMany(mappedBy = "ads", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Storage> storages = new ArrayList<>();
 
-
-
-
-    //    @Column(name = "ad_release_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
-//    @CreatedDate
-//    @CreationTimestamp
-//    @Temporal(TemporalType.TIMESTAMP)
-    private String adReleaseDate;
-
+    @Column(name = "ad_release_date")
+    private LocalDateTime adReleaseDate;
+    @Column(length = 1000)
     private String descriptions;
     private String imageUrl;
 
     private boolean isActive;
+
+    @Enumerated(EnumType.STRING)
+    private JobStatus status = null;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+    @Column(name = "completion_date")
+    private LocalDateTime completionDate;
+
+    @PrePersist
+    protected void onCreate(){
+        adReleaseDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+       updatedAt = LocalDateTime.now();
+    }
 }

@@ -22,7 +22,7 @@ public class AdsBusinessRules {
         }
     }
 
-    public void checkIfAdsExists(int id, String adsName){
+    public void checkIfAdsExists(String id, String adsName){
         if (adsRepository.existsById(id) && adsRepository.existsByName(adsName)){
             throw new BusinessException("This ad is already exists! Please try to create another ad.");
         }

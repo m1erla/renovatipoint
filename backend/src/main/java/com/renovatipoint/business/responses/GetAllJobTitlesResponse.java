@@ -11,11 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAllJobTitlesResponse {
-    private int id;
+    private String id;
     private String name;
     private String descriptions;
     private String categoryName;
-    private int categoryId;
+    private String categoryId;
 
 
     public GetAllJobTitlesResponse(JobTitle entity, List<GetAllCategoriesResponse> categories){

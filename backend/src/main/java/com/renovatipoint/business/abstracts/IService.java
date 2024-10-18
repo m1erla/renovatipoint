@@ -11,12 +11,12 @@ public interface IService {
 
     List<GetAllServicesResponse> getAll();
 
-    GetServiceByIdResponse getById(int id);
+    GetServiceByIdResponse getById(String id);
 
     void add(CreateServiceRequest createServiceRequest);
 
     void update(UpdateServiceRequest updateServiceRequest);
 
-    void delete(int id);
+    void delete(String id);
 
 }

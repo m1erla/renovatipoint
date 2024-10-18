@@ -41,7 +41,7 @@ public class JobTitleController {
 //    }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id){
+    public void delete(@PathVariable String id){
         this.jobTitleService.delete(id);
     }
 }

@@ -12,12 +12,14 @@ import com.renovatipoint.entities.concretes.User;
 import com.renovatipoint.security.jwt.JwtService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -29,15 +31,22 @@ public class AdsController {
     private final JwtService jwtService;
     private final AdsService adsService;
     private final StorageManager storageManager;
+
     @GetMapping
     public List<GetAllAdsResponse> getAllAds(){
         return adsManager.getAll();
     }
 
 
-    @GetMapping("/{id}")
-    public GetAllAdsResponse getAdById(@PathVariable int id){
-        return adsManager.getById(id);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<GetAllAdsResponse>> getUserAds(@PathVariable String userId) {
+        try {
+            List<GetAllAdsResponse> userAds = adsManager.getUserAdById(userId);
+
+            return ResponseEntity.ok(userAds);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @GetMapping("/user-images")
@@ -48,12 +57,12 @@ public class AdsController {
         return adsManager.getAdImagesForUser(user.getId());
     }
     @GetMapping("/{id}/image")
-    public ResponseEntity<?> getAdImages(@PathVariable int id) {
+    public ResponseEntity<?> getAdImages(@PathVariable String id) {
         return adsManager.getAdImages(id);
     }
 
     @PostMapping("/ads/{id}/uploadAdImage")
-    public ResponseEntity<?> uploadAdImage(@PathVariable int id, @RequestParam("file") List<MultipartFile> files){
+    public ResponseEntity<?> uploadAdImage(@PathVariable String id, @RequestParam("file") List<MultipartFile> files){
         try{
             List<String> message = adsManager.uploadAdImage(id, files);
             return ResponseEntity.ok(message);
@@ -63,7 +72,7 @@ public class AdsController {
     }
 
     @PostMapping("/ads/{id}/updateAdImages")
-    public ResponseEntity<?> updateAdImages(@PathVariable int id, @RequestParam("file") List<MultipartFile> files){
+    public ResponseEntity<?> updateAdImages(@PathVariable String id, @RequestParam("file") List<MultipartFile> files){
         try {
             String message = adsManager.updateAdImage(id, files);
             return ResponseEntity.ok(message);
@@ -77,21 +86,22 @@ public class AdsController {
         return adsManager.add(createAdsRequest);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable int id, @ModelAttribute UpdateAdsRequest updateAdsRequest){
+    public ResponseEntity<?> update(@PathVariable String id, @ModelAttribute UpdateAdsRequest updateAdsRequest){
         updateAdsRequest.setId(id);
+        updateAdsRequest.setUserId(updateAdsRequest.getUserId());
         return adsManager.update(updateAdsRequest);
     }
 
-    public ResponseEntity<?> updateAdImage(@PathVariable int id, @RequestParam("files") List<MultipartFile> files) throws IOException {
+    public ResponseEntity<?> updateAdImage(@PathVariable String id, @RequestParam("files") List<MultipartFile> files) throws IOException {
         return ResponseEntity.ok(adsManager.updateAdImage(id, files));
     }
     @DeleteMapping("/{id}/ad-image")
-    public ResponseEntity<?> deleteAdImage(@PathVariable int id){
+    public ResponseEntity<?> deleteAdImage(@PathVariable String id){
         return adsManager.deleteAdImage(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAd(@PathVariable int id){
+    public void deleteAd(@PathVariable String id){
         this.adsManager.delete(id);
     }
 }

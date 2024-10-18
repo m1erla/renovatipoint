@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 public class GetAllImagesResponse {
 
-    private int id;
+    private String id;
     private String name;
     private String type;
     private String url;
