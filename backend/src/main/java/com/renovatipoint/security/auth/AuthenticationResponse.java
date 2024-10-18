@@ -1,27 +1,25 @@
 package com.renovatipoint.security.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class AuthenticationResponse {
-     @JsonProperty("access-token")
+     @JsonProperty("accessToken")
      private String accessToken;
+     @JsonProperty("role")
+     private String role;
+     @JsonProperty("userId")
+     private String userId;
 
-     @JsonProperty("refresh-token")
-     private String refreshToken;
-     String name;
-     String surname;
-     String postCode;
-     String phoneNumber;
-     String jobTitleName;
-     String message;
-     int userId;
-     String email;
+     @JsonProperty("userEmail")
+     private String userEmail;
+
+//     @JsonProperty("refreshToken")
+//     private String refreshToken;
+
 }

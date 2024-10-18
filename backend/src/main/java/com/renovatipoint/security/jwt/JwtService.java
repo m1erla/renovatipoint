@@ -5,6 +5,8 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -26,11 +28,28 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
+    private final static Logger logger = LoggerFactory.getLogger(JwtService.class);
+
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String getUserIdFromToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            String userId = claims.getSubject();
+            logger.info("Extracted identifier from token: {}", userId);
+            return userId;
+        } catch (Exception e) {
+            logger.error("Failed to extract identifier from token", e);
+            return null;
+        }
+    }
 
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -82,8 +101,14 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        try {
+            final String username = extractUsername(token);
+            return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+
+        }catch (Exception e){
+            logger.error("Token validation failed: {}", e.getMessage());
+            return false;
+        }
     }
 
     private boolean isTokenExpired(String token) {

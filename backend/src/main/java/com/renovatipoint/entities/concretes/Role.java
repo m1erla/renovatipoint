@@ -15,6 +15,7 @@ import static com.renovatipoint.entities.concretes.Permission.*;
 @RequiredArgsConstructor
 public enum Role {
     USER(Collections.emptySet()),
+    EXPERT(Collections.emptySet()),
     ADMIN(
             Set.of(
                     ADMIN_READ,
