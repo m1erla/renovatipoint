@@ -22,11 +22,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 
 import java.util.Arrays;
@@ -42,6 +44,59 @@ public class SecurityConfig implements WebMvcConfigurer {
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
 
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
+        http
+                .exceptionHandling(c -> c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .cors(Customizer.withDefaults())
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(req ->
+                        req.requestMatchers(mvcMatcherBuilder.pattern("/api/v1/auth/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/payments/webhook/**"),
+                                        mvcMatcherBuilder.pattern("/ws/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/payments/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/invoices/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/transactions/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/requests/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/experts/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/users/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/categories/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/services/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/job_titles/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/ads/**"),
+                                        mvcMatcherBuilder.pattern("/api/v1/chat/**"),
+                                        mvcMatcherBuilder.pattern("/image/**"),
+                                        mvcMatcherBuilder.pattern("/v3/api-docs/"),
+                                        mvcMatcherBuilder.pattern("/v3/api-docs"),
+                                        mvcMatcherBuilder.pattern("/v2/api-docs"),
+                                        mvcMatcherBuilder.pattern("/swagger-resources"),
+                                        mvcMatcherBuilder.pattern("/swagger-resources/"),
+                                        mvcMatcherBuilder.pattern("/configuration/ui"),
+                                        mvcMatcherBuilder.pattern("/configuration/security"),
+                                        mvcMatcherBuilder.pattern("/swagger-ui/"),
+                                        mvcMatcherBuilder.pattern("/webjars/**"),
+                                        mvcMatcherBuilder.pattern("/swagger-ui.html")
+                                ).permitAll()
+                                .anyRequest()
+                                .authenticated()
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout ->
+                        logout.logoutUrl("/api/v1/auth/logout")
+                                .addLogoutHandler(logoutHandler)
+                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+                )
+                .formLogin(Customizer.withDefaults());
+
+        return http.build();
+    }
+
+
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploads/**")
@@ -55,13 +110,14 @@ public class SecurityConfig implements WebMvcConfigurer {
                 "https://server.renovatipoint.com:32771",
                 "http://server.renovatipoint.com:32771",
                 "http://localhost:5173",
+                "http://localhost:3000",
                 "http://localhost:8080",
                 "https://localhost:8443",
                 "https://renovatipoint.com",
                 "https://werkspot-development.netlify.app"
         ));
-        configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
@@ -96,50 +152,15 @@ public class SecurityConfig implements WebMvcConfigurer {
         connector.setRedirectPort(8443);
         return connector;
     }
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-                .exceptionHandling(c -> c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .cors(Customizer.withDefaults())
-                .cors(c -> c.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers("/api/v1/auth/**",
-                                        "/api/v1/users/**",
-                                        "/api/v1/categories/**",
-                                        "/api/v1/services/**",
-                                        "/api/v1/job_titles/**",
-                                        "/api/v1/ads/**",
-                                        "/image/**",
-                                        "/v3/api-docs/**",
-                                        "/v3/api-docs",
-                                        "/v2/api-docs",
-                                        "/swagger-resources",
-                                        "/swagger-resources/**",
-                                        "/configuration/ui",
-                                        "/configuration/security",
-                                        "/swagger-ui/**",
-                                        "/webjars/**",
-                                        "/swagger-ui.html"
-                                )
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(logout ->
-                        logout.logoutUrl("/api/v1/auth/logout")
-                                .addLogoutHandler(logoutHandler)
-                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-                ).formLogin(Customizer.withDefaults());
-
-        return http
-                .build();
-    }
-
+//    private Connector getHttpConnector(){
+//        var connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
+//        connector.setScheme("http");
+//        connector.setPort(8081);
+//        connector.setSecure(true);
+//        connector.setRedirectPort(8443);
+//        return connector;
+//    }
 
 
 //    @Bean
