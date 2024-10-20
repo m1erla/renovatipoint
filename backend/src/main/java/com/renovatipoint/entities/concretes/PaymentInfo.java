@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Builder
 public class PaymentInfo {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @OneToOne(mappedBy = "paymentInfo")

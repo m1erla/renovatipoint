@@ -13,7 +13,6 @@ import lombok.*;
 @NoArgsConstructor
 public class Storage {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 

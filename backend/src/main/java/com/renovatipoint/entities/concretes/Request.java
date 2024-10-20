@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 @Builder
 public class Request {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
