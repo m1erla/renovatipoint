@@ -15,7 +15,6 @@ import java.util.List;
 @Data
 public class ServiceEntity {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 

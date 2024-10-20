@@ -29,7 +29,6 @@ import java.util.List;
 @Builder
 public class User implements UserDetails {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 

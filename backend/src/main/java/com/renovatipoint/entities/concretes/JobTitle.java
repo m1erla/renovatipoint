@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 public class JobTitle {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 

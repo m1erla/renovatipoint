@@ -5,7 +5,6 @@ import com.renovatipoint.business.requests.ChangePasswordRequest;
 import com.renovatipoint.business.requests.UpdateUserRequest;
 import com.renovatipoint.business.responses.*;
 import com.renovatipoint.business.rules.UserBusinessRules;
-import com.renovatipoint.core.utilities.images.ImageUtils;
 import com.renovatipoint.core.utilities.mappers.ModelMapperService;
 import com.renovatipoint.dataAccess.abstracts.StorageRepository;
 import com.renovatipoint.dataAccess.abstracts.UserRepository;

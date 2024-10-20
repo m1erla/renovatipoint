@@ -16,7 +16,6 @@ import java.util.List;
 @EqualsAndHashCode
 public class Category {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @Column(unique = true)

@@ -19,7 +19,6 @@ import java.util.List;
 @Data
 public class Ads {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
