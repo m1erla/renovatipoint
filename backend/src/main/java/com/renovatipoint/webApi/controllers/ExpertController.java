@@ -2,8 +2,10 @@ package com.renovatipoint.webApi.controllers;
 
 import com.renovatipoint.business.abstracts.ExpertService;
 import com.renovatipoint.business.abstracts.UserService;
+import com.renovatipoint.business.concretes.ExpertManager;
 import com.renovatipoint.business.concretes.StripeManager;
 import com.renovatipoint.business.requests.SepaPaymentRequest;
+import com.renovatipoint.business.requests.UpdateExpertRequest;
 import com.renovatipoint.business.responses.GetExpertResponse;
 import com.renovatipoint.dataAccess.abstracts.ExpertRepository;
 import com.renovatipoint.dataAccess.abstracts.PaymentInfoRepository;
@@ -18,6 +20,7 @@ import com.stripe.param.PaymentMethodCreateParams;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +33,7 @@ public class ExpertController {
 
     private final ExpertRepository expertRepository;
     private final UserRepository userRepository;
+    private final ExpertManager expertManager;
     private final UserService userService;
 
     private final JwtService jwtService;
@@ -38,10 +42,11 @@ public class ExpertController {
 
     private final PaymentInfoRepository paymentInfoRepository;
 
-    public ExpertController(ExpertService expertService, ExpertRepository expertRepository, UserRepository userRepository, UserService userService, JwtService jwtService, StripeManager stripeManager, PaymentInfoRepository paymentInfoRepository) {
+    public ExpertController(ExpertService expertService, ExpertRepository expertRepository, UserRepository userRepository, ExpertManager expertManager, UserService userService, JwtService jwtService, StripeManager stripeManager, PaymentInfoRepository paymentInfoRepository) {
         this.expertService = expertService;
         this.expertRepository = expertRepository;
         this.userRepository = userRepository;
+        this.expertManager = expertManager;
         this.userService = userService;
         this.jwtService = jwtService;
         this.stripeManager = stripeManager;
@@ -68,6 +73,11 @@ public class ExpertController {
         String email = principal.getName();  // Extract email from the authenticated user
         GetExpertResponse expert = expertService.getByEmail(email);
         return ResponseEntity.ok(expert);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@ModelAttribute UpdateExpertRequest updateExpertRequest) throws IOException {
+        return this.expertManager.update(updateExpertRequest);
     }
 
     @PostMapping("/setup-sepa")
