@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class GetAllCategoriesResponse {
     private String id;
     private String name;
-    //    private List<GetAllJobTitlesResponse> jobTitleName;
     private boolean isActive;
 
 

@@ -34,8 +34,11 @@ public class JobTitle {
     private Category category;
 
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+//    @ManyToOne(cascade = CascadeType.PERSIST)
+//    @JoinColumn(name = "user_id", referencedColumnName = "id")
+//    private User user;
+
+    @OneToMany(mappedBy = "jobTitle", cascade = CascadeType.PERSIST)
+    private List<User> users;
 
 }

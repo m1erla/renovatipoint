@@ -9,8 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 public class CreateChatDTO {
 
-    private int userId;
-    private int expertId;
+    private String userId;
+    private String expertId;
     private String expertName;
     private String expertEmail;
 }

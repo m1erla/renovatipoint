@@ -8,11 +8,11 @@ import lombok.*;
 @Getter
 @Setter
 public class UpdateServiceRequest {
-    private int id;
+    private String id;
     private String name;
     private String categoryName;
-    private int categoryId;
+    private String categoryId;
     private String jobTitleName;
-    private int jobTitleId;
+    private String jobTitleId;
     private boolean isActive;
 }

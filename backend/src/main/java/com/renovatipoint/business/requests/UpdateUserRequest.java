@@ -12,24 +12,32 @@ public class UpdateUserRequest {
     private String surname;
     private String email;
     private String phoneNumber;
+    private String address;
     private MultipartFile storages;
     private String postCode;
-    private String jobTitleName;
     private Role role;
 
-    public UpdateUserRequest(String id, String name, String surname, String email, String phoneNumber, MultipartFile storages, String postCode, String jobTitleName, Role role) {
+    public UpdateUserRequest(String id, String name, String surname, String email, String phoneNumber, String address, MultipartFile storages, String postCode, Role role) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.address = address;
         this.storages = storages;
         this.postCode = postCode;
-        this.jobTitleName = jobTitleName;
         this.role = role;
     }
 
     public UpdateUserRequest(){}
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -57,10 +65,6 @@ public class UpdateUserRequest {
 
     public void setPostCode(String postCode) {
         this.postCode = postCode;
-    }
-
-    public void setJobTitleName(String jobTitleName) {
-        this.jobTitleName = jobTitleName;
     }
 
     public void setRole(Role role) {
@@ -95,9 +99,6 @@ public class UpdateUserRequest {
         return postCode;
     }
 
-    public String getJobTitleName() {
-        return jobTitleName;
-    }
 
     public Role getRole() {
         return role;

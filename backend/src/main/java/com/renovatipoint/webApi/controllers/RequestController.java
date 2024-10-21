@@ -129,6 +129,51 @@ public class RequestController {
         }
     }
 
+    @PutMapping("/{requestId}/complete")
+    public ResponseEntity<Request> completeRequest(@PathVariable String requestId, @PathVariable String expertId) {
+        try {
+            Request request = requestManager.completeRequest(requestId, expertId);
+            return ResponseEntity.ok(request);
+        } catch (StripeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<GetRequestsResponse>> getRequestsByUser(@PathVariable String userId) {
+        List<GetRequestsResponse> requests = requestManager.getRequestsByUser(userId);
+        return ResponseEntity.ok(requests);
+    }
+
+    @GetMapping("/expert/{expertId}")
+    public ResponseEntity<List<GetRequestsResponse>> getRequestsByExpert(@PathVariable String expertId) {
+        List<GetRequestsResponse> requests = requestManager.getRequestsByExpert(expertId);
+        return ResponseEntity.ok(requests);
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<Request>> getRequestsByStatus(@PathVariable RequestStatus status) {
+        List<Request> requests = requestManager.getRequestsByStatus(status);
+        return ResponseEntity.ok(requests);
+    }
+    @PutMapping("/{requestId}/cancel")
+    public ResponseEntity<Request> cancelRequest(@PathVariable String requestId, @RequestParam String userId) {
+        Request request = requestManager.cancelRequest(requestId, userId);
+        return ResponseEntity.ok(request);
+    }
+
+    @GetMapping("/ad/{adId}/pending")
+    public ResponseEntity<List<Request>> getPendingRequestsForAd(@PathVariable String adId) {
+        List<Request> requests = requestManager.getPendingRequestsForAd(adId);
+        return ResponseEntity.ok(requests);
+    }
+}
+//    @PutMapping("/{requestId}/reject")
+//    public ResponseEntity<Request> rejectRequest(@PathVariable String requestId, @RequestParam String expertId) {
+//        Request request = requestManager.rejectRequest(requestId, expertId);
+//        return ResponseEntity.ok(request);
+//    }
+
 //    @PostMapping
 //    public ResponseEntity<?> createRequest(@RequestBody CreateRequestDTO requestDTO) {
 //        try {
@@ -174,48 +219,4 @@ public class RequestController {
 //                    .body("An error occurred while processing the payment");
 //        }
 //    }
-    @PutMapping("/{requestId}/complete")
-    public ResponseEntity<Request> completeRequest(@PathVariable String requestId, @PathVariable String expertId) {
-        try {
-            Request request = requestManager.completeRequest(requestId, expertId);
-            return ResponseEntity.ok(request);
-        } catch (StripeException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<GetRequestsResponse>> getRequestsByUser(@PathVariable String userId) {
-        List<GetRequestsResponse> requests = requestManager.getRequestsByUser(userId);
-        return ResponseEntity.ok(requests);
-    }
-
-    @GetMapping("/expert/{expertId}")
-    public ResponseEntity<List<GetRequestsResponse>> getRequestsByExpert(@PathVariable String expertId) {
-        List<GetRequestsResponse> requests = requestManager.getRequestsByExpert(expertId);
-        return ResponseEntity.ok(requests);
-    }
-
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<Request>> getRequestsByStatus(@PathVariable RequestStatus status) {
-        List<Request> requests = requestManager.getRequestsByStatus(status);
-        return ResponseEntity.ok(requests);
-    }
-    @PutMapping("/{requestId}/cancel")
-    public ResponseEntity<Request> cancelRequest(@PathVariable String requestId, @RequestParam String userId) {
-        Request request = requestManager.cancelRequest(requestId, userId);
-        return ResponseEntity.ok(request);
-    }
-
-    @GetMapping("/ad/{adId}/pending")
-    public ResponseEntity<List<Request>> getPendingRequestsForAd(@PathVariable String adId) {
-        List<Request> requests = requestManager.getPendingRequestsForAd(adId);
-        return ResponseEntity.ok(requests);
-    }
-
-//    @PutMapping("/{requestId}/reject")
-//    public ResponseEntity<Request> rejectRequest(@PathVariable String requestId, @RequestParam String expertId) {
-//        Request request = requestManager.rejectRequest(requestId, expertId);
-//        return ResponseEntity.ok(request);
-//    }
-}

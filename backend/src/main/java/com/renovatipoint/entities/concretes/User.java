@@ -79,9 +79,13 @@ public class User implements UserDetails {
 
     @Column(name = "payment_issues_count")
     private int paymentIssuesCount = 0;
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<JobTitle> jobTitles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<JobTitle> jobTitles = new ArrayList<>();
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "job_title_id", referencedColumnName = "id")
+    private JobTitle jobTitle;
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

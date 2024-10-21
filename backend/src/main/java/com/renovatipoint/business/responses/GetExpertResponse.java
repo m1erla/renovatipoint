@@ -16,7 +16,10 @@ public class GetExpertResponse {
     private String address;
     private String email;
     private String postCode;
+    private String profileImage;
     private String jobTitleName;
+    private String jobTitleId;
+    private List<GetAllImagesResponse> storages;
     private String role;
     private GetPaymentInfoResponse paymentInfo;
 }

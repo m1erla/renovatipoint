@@ -15,7 +15,6 @@ public class CreateUserRequest {
     private String password;
     private String phoneNumber;
     private String postCode;
-    private String jobTitleName;
     private Role role;
 
 }

@@ -27,6 +27,8 @@ public class ExpertRegisterRequest {
     private String password;
     @NotBlank(message = "Job title is required")
     private String jobTitleName;
+
+    private String jobTitleId;
     @NotBlank(message = "Post code is required")
     private String postCode;
     private String phoneNumber;
