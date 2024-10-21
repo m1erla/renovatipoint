@@ -39,6 +39,10 @@ public class Expert extends User
     @JoinColumn(name = "payment_info_id", referencedColumnName = "id")
     private PaymentInfo paymentInfo;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "job_title_id", referencedColumnName = "id")
+    private JobTitle jobTitle;
+
     @Column(name = "payment_issues_count")
     private int paymentIssuesCount = 0;
 

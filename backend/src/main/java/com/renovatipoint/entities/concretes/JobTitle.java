@@ -21,24 +21,18 @@ public class JobTitle {
     @Column(unique = true)
     private String name;
 
-
     private String descriptions;
-
 
     @OneToMany(mappedBy = "jobTitle", cascade = CascadeType.PERSIST)
     private List<ServiceEntity> services;
-
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-
+    @OneToMany(mappedBy = "jobTitle", cascade = CascadeType.PERSIST)
+    private List<Expert> experts;
+}
 //    @ManyToOne(cascade = CascadeType.PERSIST)
 //    @JoinColumn(name = "user_id", referencedColumnName = "id")
 //    private User user;
-
-    @OneToMany(mappedBy = "jobTitle", cascade = CascadeType.PERSIST)
-    private List<User> users;
-
-}

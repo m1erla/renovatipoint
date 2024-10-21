@@ -1,5 +1,6 @@
 package com.renovatipoint.business.requests;
 
+import com.renovatipoint.entities.concretes.JobTitle;
 import com.renovatipoint.entities.concretes.PaymentInfo;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,8 @@ public class UpdateExpertRequest {
     private String companyName;
     private String chamberOfCommerceNumber;
     private String address;
+    private String jobTitleId;
+    private String jobTitleName;
     private String phoneNumber;
     private String postCode;
     private PaymentInfo paymentInfo;

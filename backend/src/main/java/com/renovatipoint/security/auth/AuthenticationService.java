@@ -6,14 +6,17 @@ import com.renovatipoint.business.requests.ExpertRegisterRequest;
 import com.renovatipoint.business.requests.RegisterRequest;
 import com.renovatipoint.business.responses.ExpertRegisterResponse;
 import com.renovatipoint.business.responses.RegisterResponse;
+import com.renovatipoint.core.utilities.mappers.ModelMapperService;
 import com.renovatipoint.dataAccess.abstracts.ExpertRepository;
 import com.renovatipoint.dataAccess.abstracts.JobTitleRepository;
 import com.renovatipoint.entities.concretes.*;
+import com.renovatipoint.enums.Status;
 import com.renovatipoint.security.jwt.JwtService;
 import com.renovatipoint.dataAccess.abstracts.UserRepository;
 import com.renovatipoint.security.token.*;
 import com.stripe.exception.StripeException;
 import com.stripe.model.SetupIntent;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
@@ -37,7 +40,9 @@ public class AuthenticationService{
     private final UserRepository repository;
     private final ExpertRepository expertRepository;
     private final TokenRepository tokenRepository;
+    private final JobTitleRepository jobTitleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapperService modelMapperService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final StripeManager stripeManager;
@@ -49,29 +54,43 @@ public class AuthenticationService{
             if (repository.findByEmail(request.getEmail()).isPresent()) {
                 throw new IllegalStateException("Expert with this email already exists!");
             }
+            JobTitle jobTitle = jobTitleRepository.findById(request.getJobTitleId())
+                    .orElseThrow(() -> new EntityNotFoundException("Job title not found!"));
 
             // Create a Stripe customer for the expert
             String stripeCustomerId = stripeManager.createStripeCustomer(request.getEmail(), request.getName());
 
-            // Create and populate the Expert entity
-            Expert expert = new Expert();
-            expert.setName(request.getName());
-            expert.setSurname(request.getSurname());
-            expert.setJobTitleName(request.getJobTitleName());
-            expert.setPhoneNumber(request.getPhoneNumber());
-            expert.setPostCode(request.getPostCode());
-            expert.setPassword(passwordEncoder.encode(request.getPassword()));
-            expert.setEmail(request.getEmail());
-            expert.setBalance(BigDecimal.ZERO);
-            expert.setRole(Role.EXPERT);
-            expert.setAccountBlocked(false);
-            expert.setPaymentIssuesCount(0);
-            expert.setAddress(request.getAddress());
-            expert.setStripeCustomerId(stripeCustomerId);  // Make sure this is set
 
-            logger.info("Attempting to save expert: {}", expert);
-            // Save the expert and ensure it is persisted correctly
-            Expert savedExpert = expertRepository.save(expert);
+//            Expert expert = this.modelMapperService.forRequest().map(request, Expert.class);
+//
+//            expert.setJobTitle(jobTitle);
+//            expert.setStatus(Status.ONLINE);
+//            expert.setBalance(BigDecimal.ZERO);
+//            expert.setRole(Role.EXPERT);
+//            expert.setAccountBlocked(false);
+//            expert.setStripeCustomerId(stripeCustomerId);
+//            expert.setPaymentIssuesCount(0);
+
+            Expert experts = new Expert();
+
+            experts.setName(request.getName());
+            experts.setSurname(request.getSurname());
+            experts.setPhoneNumber(request.getPhoneNumber());
+            experts.setPostCode(request.getPostCode());
+            experts.setJobTitle(jobTitle);
+            experts.setPassword(passwordEncoder.encode(request.getPassword()));
+            experts.setEmail(request.getEmail());
+            experts.setStatus(Status.ONLINE);
+            experts.setBalance(BigDecimal.ZERO);
+            experts.setRole(Role.EXPERT);
+            experts.setAccountBlocked(false);
+            experts.setPaymentIssuesCount(0);
+            experts.setAddress(request.getAddress());
+            experts.setStripeCustomerId(stripeCustomerId);
+
+            logger.info("Attempting to save expert: {}", experts);
+
+            Expert savedExpert = expertRepository.save(experts);
             logger.info("Expert saved successfully: {}", savedExpert);
 
             // Validate if the expert ID is set after saving
@@ -118,11 +137,11 @@ public class AuthenticationService{
                  .email(request.getEmail())
                  .phoneNumber(request.getPhoneNumber())
                  .password(passwordEncoder.encode(request.getPassword()))
-                 .jobTitleName(request.getJobTitleName())
                  .postCode(request.getPostCode())
                  .role(Role.USER)
                  .accountBlocked(false)
                  .balance(BigDecimal.ZERO)
+                 .status(Status.ONLINE)
                  .paymentIssuesCount(0)
                  .build();
          var savedUser = repository.save(user);

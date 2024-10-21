@@ -44,7 +44,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-
     @Column(name = "surname")
     private String surname;
 
@@ -54,9 +53,6 @@ public class User implements UserDetails {
     @Email(message = "Email should be valid")
     @Column(name = "email", unique = true, nullable = false)
     private String email;
-
-    @Column(name = "job_title_name")
-    private String jobTitleName;
 
     @Column(name = "phone_number", unique = true)
     private String phoneNumber;
@@ -69,7 +65,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-
     private Status status;
     @Column(name = "account_blocked")
     private boolean accountBlocked = false;
@@ -79,14 +74,6 @@ public class User implements UserDetails {
 
     @Column(name = "payment_issues_count")
     private int paymentIssuesCount = 0;
-//
-//    @OneToMany(mappedBy = "user")
-//    private List<JobTitle> jobTitles = new ArrayList<>();
-
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "job_title_id", referencedColumnName = "id")
-    private JobTitle jobTitle;
-
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> token = new ArrayList<>();
@@ -127,3 +114,11 @@ public class User implements UserDetails {
         return true;
     }
 }
+
+
+//    @OneToMany(mappedBy = "user")
+//    private List<JobTitle> jobTitles = new ArrayList<>();
+
+//    @ManyToOne(cascade = CascadeType.PERSIST)
+//    @JoinColumn(name = "job_title_id", referencedColumnName = "id")
+//    private JobTitle jobTitle;
