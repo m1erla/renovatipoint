@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 public class AdsBusinessRules {
     private AdsRepository adsRepository;
 
-    public boolean checkIfAdsNameExists(String adName) {
-        boolean exists = adsRepository.existsByName(adName);
-        System.out.println("Checking if ad name exists: " + adName + " - Exists: " + exists); // Logging
+    public boolean checkIfAdsNameExists(String adTitle) {
+        boolean exists = adsRepository.existsByTitle(adTitle);
+        System.out.println("Checking if ad name exists: " + adTitle + " - Exists: " + exists); // Logging
         return exists;
     }
 
@@ -22,8 +22,8 @@ public class AdsBusinessRules {
         }
     }
 
-    public void checkIfAdsExists(String id, String adsName){
-        if (adsRepository.existsById(id) && adsRepository.existsByName(adsName)){
+    public void checkIfAdsExists(String id, String adTitle){
+        if (adsRepository.existsById(id) && adsRepository.existsByTitle(adTitle)){
             throw new BusinessException("This ad is already exists! Please try to create another ad.");
         }
     }

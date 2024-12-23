@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface AdsRepository extends JpaRepository<Ads, String> {
     List<Ads> findByUserId(String userId);
-    boolean existsByName(String name);
+    boolean existsByTitle(String title);
     boolean isActive(boolean isActive);
 
 

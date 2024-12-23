@@ -22,8 +22,8 @@ public class Ads {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "title")
+    private String title;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id", referencedColumnName = "id")

@@ -68,9 +68,9 @@ public class AdsManager implements AdsService {
         return ads.stream().filter(ad -> ad != null)
                 .map(ad -> {
                     GetAllAdsResponse dto = modelMapperService.forResponse().map(ad , GetAllAdsResponse.class);
-                    if (dto.getName() == null){
+                    if (dto.getTitle() == null){
                         logger.warn("Ad with id {} has no title", ad.getId());
-                        dto.setName("Untitled Ad");
+                        dto.setTitle("Untitled Ad");
                     }
                     return dto;
                 })
@@ -110,7 +110,7 @@ public class AdsManager implements AdsService {
         System.out.println("CategoryId: " + createAdsRequest.getCategoryId());
         System.out.println("ServiceId: " + createAdsRequest.getServiceId());
 
-        if (adsBusinessRules.checkIfAdsNameExists(createAdsRequest.getName())) {
+        if (adsBusinessRules.checkIfAdsNameExists(createAdsRequest.getTitle())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("This ad name already exists. Please try a different name to create a new ad!");
         }
 
@@ -161,12 +161,12 @@ public class AdsManager implements AdsService {
     @Override
     @Transactional
     public ResponseEntity<?> update(UpdateAdsRequest updateAdsRequest) {
-        this.adsBusinessRules.checkIfAdsExists(updateAdsRequest.getId(), updateAdsRequest.getName());
+        this.adsBusinessRules.checkIfAdsExists(updateAdsRequest.getId(), updateAdsRequest.getTitle());
         Ads existingAd = this.adsRepository.findById(updateAdsRequest.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Ad not found"));
 
         existingAd.setId(updateAdsRequest.getId());
-        existingAd.setName(updateAdsRequest.getName());
+        existingAd.setTitle(updateAdsRequest.getTitle());
         existingAd.setDescriptions(updateAdsRequest.getDescriptions());
         existingAd.setActive(updateAdsRequest.isActive());
         existingAd.setUpdatedAt(LocalDateTime.now());
