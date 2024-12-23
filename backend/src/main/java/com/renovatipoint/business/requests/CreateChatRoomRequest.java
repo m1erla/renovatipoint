@@ -3,14 +3,13 @@ package com.renovatipoint.business.requests;
 import lombok.*;
 
 @Data
-@Getter
-@Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateChatDTO {
+public class CreateChatRoomRequest {
 
     private String userId;
     private String expertId;
-    private String expertName;
-    private String expertEmail;
+    private String adId;
+    private String requestId;
 }
