@@ -7,13 +7,13 @@ services:
     ports:
       - 3306:3306
     environment:
-      - MYSQL_URL=jdbc:mysql://104.247.164.80:3306/admin_renovatiepointMysql
-      - MYSQL_USER=mySqlRenovatiepoint
-      - MYSQL_PASSWORD=renovatipointAa*
-      - MYSQL_DB=admin_renovatiepointMysql
-      - MYSQL_ROOT_PASSWORD=renovatipointAa*
+      - MYSQL_URL=jdbc:mysql://localhost:3306/admin_renovatiepointMysql
+      - MYSQL_USER=mySQL
+      - MYSQL_PASSWORD=root
+      - MYSQL_DB=admin
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_ALLOW_EMPTY_PASSWORD=
-      - MYSQL_RANDOM_ROOT_PASSWORD=root
+      - MYSQL_RANDOM_ROOT_PASSWORD=
     expose:
       - 3306
 networks:
