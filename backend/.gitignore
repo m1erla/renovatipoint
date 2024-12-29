@@ -35,3 +35,8 @@ build/
 
 ### ENV ###
 .env
+
+docker-compose.yml
+application.yml
+application.properties
+/src/main/resources/springboot.p12
