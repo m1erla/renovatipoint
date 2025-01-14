@@ -1,6 +1,5 @@
 package com.renovatipoint.webApi.controllers;
 
-
 import com.renovatipoint.business.abstracts.AdsService;
 import com.renovatipoint.business.concretes.AdsManager;
 import com.renovatipoint.business.concretes.StorageManager;
@@ -15,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,10 +33,9 @@ public class AdsController {
     private final StorageManager storageManager;
 
     @GetMapping
-    public List<GetAllAdsResponse> getAllAds(){
+    public List<GetAllAdsResponse> getAllAds() {
         return adsManager.getAll();
     }
-
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<GetAllAdsResponse>> getUserAds(@PathVariable String userId) {
@@ -50,33 +49,34 @@ public class AdsController {
     }
 
     @GetMapping("/user-images")
-    public ResponseEntity<?> getUserAdImages(@RequestHeader("Authorization") String authorizationHeader){
+    public ResponseEntity<?> getUserAdImages(@RequestHeader("Authorization") String authorizationHeader) {
         String jwt = authorizationHeader.substring(7).trim();
         String email = jwtService.extractUsername(jwt);
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("User not found!"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found!"));
         return adsManager.getAdImagesForUser(user.getId());
     }
+
     @GetMapping("/{id}/image")
     public ResponseEntity<?> getAdImages(@PathVariable String id) {
         return adsManager.getAdImages(id);
     }
 
     @PostMapping("/ads/{id}/uploadAdImage")
-    public ResponseEntity<?> uploadAdImage(@PathVariable String id, @RequestParam("file") List<MultipartFile> files){
-        try{
+    public ResponseEntity<?> uploadAdImage(@PathVariable String id, @RequestParam("file") List<MultipartFile> files) {
+        try {
             List<String> message = adsManager.uploadAdImage(id, files);
             return ResponseEntity.ok(message);
-        }catch (IOException ex){
+        } catch (IOException ex) {
             return ResponseEntity.status(500).body("Failed to upload ad image");
         }
     }
 
     @PostMapping("/ads/{id}/updateAdImages")
-    public ResponseEntity<?> updateAdImages(@PathVariable String id, @RequestParam("file") List<MultipartFile> files){
+    public ResponseEntity<?> updateAdImages(@PathVariable String id, @RequestParam("file") List<MultipartFile> files) {
         try {
             String message = adsManager.updateAdImage(id, files);
             return ResponseEntity.ok(message);
-        }catch (IOException ex){
+        } catch (IOException ex) {
             return ResponseEntity.status(500).body("Failed to update ad images");
         }
     }
@@ -85,23 +85,27 @@ public class AdsController {
     public ResponseEntity<?> add(@ModelAttribute CreateAdsRequest createAdsRequest) {
         return adsManager.add(createAdsRequest);
     }
+
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable String id, @ModelAttribute UpdateAdsRequest updateAdsRequest){
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> update(@PathVariable String id, @ModelAttribute UpdateAdsRequest updateAdsRequest) {
         updateAdsRequest.setId(id);
         updateAdsRequest.setUserId(updateAdsRequest.getUserId());
         return adsManager.update(updateAdsRequest);
     }
 
-    public ResponseEntity<?> updateAdImage(@PathVariable String id, @RequestParam("files") List<MultipartFile> files) throws IOException {
+    public ResponseEntity<?> updateAdImage(@PathVariable String id, @RequestParam("files") List<MultipartFile> files)
+            throws IOException {
         return ResponseEntity.ok(adsManager.updateAdImage(id, files));
     }
+
     @DeleteMapping("/{id}/ad-image")
-    public ResponseEntity<?> deleteAdImage(@PathVariable String id){
+    public ResponseEntity<?> deleteAdImage(@PathVariable String id) {
         return adsManager.deleteAdImage(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAd(@PathVariable String id){
+    public void deleteAd(@PathVariable String id) {
         this.adsManager.delete(id);
     }
 }

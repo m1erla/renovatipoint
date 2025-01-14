@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 public class CreateAdsRequest {
     private String userId;
-    private String name;
+    private String title;
     private boolean isActive;
     private String descriptions;
     private List<MultipartFile> storages;
