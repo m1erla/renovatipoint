@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class GetAllAdsResponse {
     private String id;
-    private String name;
+    private String title;
     private String descriptions;
     private String imageUrl;
     private String adReleaseDate;
