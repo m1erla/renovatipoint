@@ -1,0 +1,72 @@
+spring:
+  main:
+    allow-circular-references: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+  websocket:
+    enabled: true
+    path: /ws
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+    time-zone: UTC
+  resources:
+    static-locations: classpath:static/
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO}
+    show-sql: ${SHOW_SQL}
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+  flyway:
+    enabled: false
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      expiration: ${JWT_EXPIRATION}
+      refresh-token:
+        expiration: ${JWT_REFRESH_EXPIRATION}
+
+stripe:
+  api-key: ${STRIPE_API_KEY}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET}
+  publishable-key: ${STRIPE_PUBLISHABLE_KEY}
+
+invoice:
+  storage:
+    path: ${INVOICE_STORAGE_PATH}
+
+file:
+  upload-dir: ${FILE_UPLOAD_DIR}
+
+server:
+  ssl:
+    enabled: ${SSL_ENABLED}
+    key-store: classpath:.p12
+    key-store-password: ${SSL_KEY_STORE_PASSWORD}
+    key-store-type: pkcs12
+    key-alias: springboots
+    key-password: ${SSL_KEY_PASSWORD}
+  port: ${SERVER_PORT}
+  http:
+    port: ${SERVER_HTTP_PORT}
+
+config:
+  import: optional:file:.env.prod
+
+profiles:
+  active: prod

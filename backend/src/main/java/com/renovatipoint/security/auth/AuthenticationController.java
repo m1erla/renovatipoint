@@ -1,27 +1,19 @@
 package com.renovatipoint.security.auth;
 
-import com.renovatipoint.business.requests.ExpertRegisterRequest;
+import com.renovatipoint.business.requests.CreateExpertRegisterRequest;
 import com.renovatipoint.business.requests.RegisterRequest;
 import com.renovatipoint.business.responses.ExpertRegisterResponse;
 import com.renovatipoint.business.responses.RegisterResponse;
 import com.renovatipoint.business.rules.UserBusinessRules;
-import com.renovatipoint.entities.concretes.User;
 import com.stripe.exception.StripeException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.security.Principal;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -46,24 +38,8 @@ public class AuthenticationController {
          }
     }
 
-//    @PostMapping("/expertRegister")
-//    public ResponseEntity<?> registerExpert(@Valid @RequestBody ExpertRegisterRequest request, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            List<String> errors = bindingResult.getAllErrors().stream()
-//                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-//                    .collect(Collectors.toList());
-//            return ResponseEntity.badRequest().body(errors);
-//        }
-//
-//        try {
-//            ExpertRegisterResponse response = service.expertRegister(request);
-//            return ResponseEntity.ok(response);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
     @PostMapping("/expertRegister")
-    public ResponseEntity<ExpertRegisterResponse> registerExpert(@RequestBody ExpertRegisterRequest request){
+    public ResponseEntity<ExpertRegisterResponse> registerExpert(@RequestBody CreateExpertRegisterRequest request){
         try {
             return ResponseEntity.ok(service.expertRegister(request));
         }catch (IllegalStateException ex){
@@ -88,7 +64,6 @@ public class AuthenticationController {
 
     }
 
-
     @PostMapping("/refresh-token")
     public void refreshToken(
             HttpServletRequest request,
@@ -97,7 +72,21 @@ public class AuthenticationController {
         service.refreshToken(request, response);
     }
 
-
-
-
 }
+
+//    @PostMapping("/expertRegister")
+//    public ResponseEntity<?> registerExpert(@Valid @RequestBody ExpertRegisterRequest request, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            List<String> errors = bindingResult.getAllErrors().stream()
+//                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+//                    .collect(Collectors.toList());
+//            return ResponseEntity.badRequest().body(errors);
+//        }
+//
+//        try {
+//            ExpertRegisterResponse response = service.expertRegister(request);
+//            return ResponseEntity.ok(response);
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }

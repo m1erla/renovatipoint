@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.security.Key;
 import java.util.Date;
@@ -20,12 +22,14 @@ import java.util.function.Function;
 @Service
 @AllArgsConstructor
 @NoArgsConstructor
+@ConfigurationProperties(prefix = "spring.security.jwt")
+@Validated
 public class JwtService {
-    @Value("${application.security.jwt.secret-key}")
+    @Value("${spring.security.jwt.secret-key}")
     private String secretKey;
-    @Value("${application.security.jwt.expiration}")
+    @Value("${spring.security.jwt.expiration}")
     private long jwtExpiration;
-    @Value("${application.security.jwt.refresh-token.expiration}")
+    @Value("${spring.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
     private final static Logger logger = LoggerFactory.getLogger(JwtService.class);

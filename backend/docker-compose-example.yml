@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "${SERVER_PORT:-8443}:${SERVER_PORT:}"
+      - "${SERVER_HTTP_PORT:-8082}:${SERVER_HTTP_PORT:}"
+    env_file:
+      - .env.prod
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_CONFIG_IMPORT=optional:file:.env.prod
+      - SSL_ENABLED=${SSL_ENABLED:}
+      - SERVER_PORT=${SERVER_PORT:}
+      - SERVER_HTTP_PORT=${SERVER_HTTP_PORT:}
+      - SSL_KEY_STORE_PASSWORD=${SSL_KEY_STORE_PASSWORD:}
+      - SSL_KEY_PASSWORD=${SSL_KEY_PASSWORD:}
+    volumes:
+      - invoice-storage:/app/${INVOICE_STORAGE_PATH:-invoices}
+      - file-storage:/app/${FILE_UPLOAD_DIR:-uploads}
+      - ./.env.prod:/app/.env.prod
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  invoice-storage:
+  file-storage:
+  db-data:
+
+networks:
+  app-network:
+    driver: bridge

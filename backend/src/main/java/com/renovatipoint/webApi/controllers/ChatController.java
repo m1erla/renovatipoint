@@ -2,12 +2,14 @@ package com.renovatipoint.webApi.controllers;
 
 import com.renovatipoint.business.abstracts.UserService;
 import com.renovatipoint.business.concretes.ChatManager;
+import com.renovatipoint.business.concretes.ChatValidationManager;
 import com.renovatipoint.business.requests.CreateChatMessageRequest;
 import com.renovatipoint.business.responses.ErrorResponse;
 import com.renovatipoint.business.responses.GetChatMessageResponse;
 import com.renovatipoint.business.responses.GetChatRoomResponse;
 import com.renovatipoint.business.responses.GetUnreadCountResponse;
 import com.renovatipoint.core.utilities.exceptions.BusinessException;
+import com.renovatipoint.business.responses.SuccessResponse;
 import com.renovatipoint.entities.concretes.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.security.access.AccessDeniedException;
@@ -39,6 +39,7 @@ public class ChatController {
     private final ChatManager chatService;
     private final SimpMessagingTemplate messagingTemplate;
     private final UserService userService;
+    private final ChatValidationManager chatValidationManager;
 
     @MessageMapping("/chat")
     @SendToUser("/queue/messages")
@@ -53,29 +54,19 @@ public class ChatController {
             log.debug("Received message from user {}: {}", userEmail, messageRequest);
 
             // Verify the sender is authorized
-            if (!messageRequest.getSenderId().equals(user.getId())) {
-                throw new AccessDeniedException("Unauthorized sender");
-            }
+            validateSender(messageRequest, user);
+            chatValidationManager.validateChatMessageRequest(messageRequest);
 
             ChatMessage message = chatService.sendMessage(
                     messageRequest.getSenderId(),
                     messageRequest.getChatRoomId(),
                     messageRequest.getContent(),
-                    messageRequest.isSharedInformation()
-            );
+                    messageRequest.isContactInfo());
 
             GetChatMessageResponse response = GetChatMessageResponse.fromEntity(message);
 
             // Send to recipient
-            String recipientId = message.getChatRoom().getUser().getId().equals(messageRequest.getSenderId())
-                    ? message.getChatRoom().getExpert().getId()
-                    : message.getChatRoom().getUser().getId();
-
-            messagingTemplate.convertAndSendToUser(
-                    recipientId,
-                    "/queue/messages",
-                    response
-            );
+            notifyRecipient(message, messageRequest.getSenderId(), response);
 
             return response;
         } catch (Exception e) {
@@ -83,12 +74,14 @@ public class ChatController {
             throw new BusinessException("Failed to process message: " + e.getMessage());
         }
     }
+
     @MessageExceptionHandler
     @SendToUser("/queue/errors")
     public ErrorResponse handleException(Exception exception) {
         log.error("WebSocket error:", exception);
         return new ErrorResponse(exception.getMessage());
     }
+
     @GetMapping("/rooms")
     public ResponseEntity<List<GetChatRoomResponse>> getChatRooms(Principal principal) {
         try {
@@ -136,8 +129,7 @@ public class ChatController {
             Page<ChatMessage> messages = chatService.getChatMessages(
                     chatRoomId,
                     principal.getName(),
-                    PageRequest.of(page, size, Sort.by("timestamp").descending())
-            );
+                    PageRequest.of(page, size, Sort.by("timestamp").descending()));
 
             Page<GetChatMessageResponse> response = messages.map(GetChatMessageResponse::fromEntity);
             return ResponseEntity.ok(response);
@@ -173,5 +165,75 @@ public class ChatController {
             log.error("Error getting unread count", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PostMapping("/rooms/{chatRoomId}/complete")
+    public ResponseEntity<?> markJobAsComplete(
+            @PathVariable String chatRoomId,
+            Principal principal) {
+        try {
+            User user = userService.getByEmail(principal.getName());
+            if (!(user instanceof Expert)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ErrorResponse("Only experts can complete jobs"));
+            }
+
+            chatService.markJobAsComplete(chatRoomId, user.getId());
+            return ResponseEntity.ok().body(new SuccessResponse("Job completed successfully"));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error completing job", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Failed to complete job: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/rooms/{chatRoomId}/share-contact")
+    public ResponseEntity<?> shareContactInformation(
+            @PathVariable String chatRoomId,
+            Principal principal) {
+        try {
+            User user = userService.getByEmail(principal.getName());
+            if (user instanceof Expert) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(new ErrorResponse("Only users can share contact information"));
+            }
+
+            chatService.shareContactInformation(chatRoomId, user.getId());
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ErrorResponse(e.getMessage()));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error sharing contact information", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Failed to share contact information: " + e.getMessage()));
+        }
+    }
+    private void validateSender(CreateChatMessageRequest messageRequest, User user) {
+        if (!"SYSTEM".equals(messageRequest.getSenderId()) &&
+                !messageRequest.getSenderId().equals(user.getId())) {
+            throw new AccessDeniedException("Unauthorized message sender");
+        }
+    }
+
+    private void notifyRecipient(ChatMessage message, String senderId, GetChatMessageResponse response) {
+        String recipientId = message.getChatRoom().getUser().getId().equals(senderId)
+                ? message.getChatRoom().getExpert().getId()
+                : message.getChatRoom().getUser().getId();
+
+        messagingTemplate.convertAndSendToUser(
+                recipientId,
+                "/queue/messages",
+                response);
     }
 }

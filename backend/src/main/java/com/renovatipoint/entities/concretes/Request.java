@@ -1,6 +1,7 @@
 package com.renovatipoint.entities.concretes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.renovatipoint.enums.RequestStatus;
@@ -43,11 +44,18 @@ public class Request {
 
     private String message;
 
+    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL)
+    private ChatRoom chatRoom;
+
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
+
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
     @PrePersist
     protected void onCreate(){
         createdAt = LocalDateTime.now();
+        status = RequestStatus.PENDING;
     }
 
     @PreUpdate

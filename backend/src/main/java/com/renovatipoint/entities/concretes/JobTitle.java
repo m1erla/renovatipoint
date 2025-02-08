@@ -3,6 +3,7 @@ package com.renovatipoint.entities.concretes;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "job_title")
@@ -31,7 +32,7 @@ public class JobTitle {
     private Category category;
 
     @OneToMany(mappedBy = "jobTitle", cascade = CascadeType.PERSIST)
-    private List<Expert> experts;
+    private List<Expert> experts = new ArrayList<>();
 }
 //    @ManyToOne(cascade = CascadeType.PERSIST)
 //    @JoinColumn(name = "user_id", referencedColumnName = "id")

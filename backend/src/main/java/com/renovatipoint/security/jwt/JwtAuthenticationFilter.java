@@ -39,6 +39,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //            filterChain.doFilter(request, response);
 //            return;
 //        }
+
+        if (isWebSocketHandshake(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
@@ -66,6 +71,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isWebSocketHandshake(HttpServletRequest request){
+        return "WebSocket".equalsIgnoreCase(request.getHeader("Upgrade")) ||
+                request.getServletPath().contains("/ws");
     }
 }
 

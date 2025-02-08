@@ -2,221 +2,299 @@ package com.renovatipoint.webApi.controllers;
 
 import com.renovatipoint.business.abstracts.ExpertService;
 import com.renovatipoint.business.abstracts.UserService;
-import com.renovatipoint.business.concretes.ChatMessageManager;
+import com.renovatipoint.business.concretes.ChatManager;
+import com.renovatipoint.business.concretes.NotificationManager;
 import com.renovatipoint.business.concretes.RequestManager;
 import com.renovatipoint.business.requests.CreateRequestDTO;
+import com.renovatipoint.business.responses.GetRequestAcceptedResponse;
 import com.renovatipoint.business.responses.GetRequestsResponse;
-import com.renovatipoint.dataAccess.abstracts.RequestRepository;
+import com.renovatipoint.core.utilities.exceptions.BusinessException;
 import com.renovatipoint.entities.concretes.ChatRoom;
+import com.renovatipoint.entities.concretes.Expert;
 import com.renovatipoint.entities.concretes.Request;
+import com.renovatipoint.entities.concretes.User;
+import com.renovatipoint.enums.NotificationType;
 import com.renovatipoint.enums.RequestStatus;
 import com.renovatipoint.security.jwt.JwtService;
-import com.stripe.exception.StripeException;
+import com.stripe.exception.ApiException;
 import jakarta.persistence.EntityNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/requests")
+@RequiredArgsConstructor
+@Slf4j
 public class RequestController {
     private final RequestManager requestManager;
+    private final ChatManager chatService;
+    private final NotificationManager notificationManager;
     private final UserService userService;
     private final ExpertService expertService;
     private final JwtService jwtService;
-    private final RequestRepository requestRepository;
-    private final ChatMessageManager chatMessageManager;
-    private final Logger logger = LoggerFactory.getLogger(RequestController.class);
-
-    @Autowired
-    public RequestController(RequestManager requestManager, UserService userService, ExpertService expertService, JwtService jwtService, RequestRepository requestRepository, ChatMessageManager chatMessageManager) {
-        this.requestManager = requestManager;
-        this.userService = userService;
-        this.expertService = expertService;
-        this.jwtService = jwtService;
-        this.requestRepository = requestRepository;
-        this.chatMessageManager = chatMessageManager;
-    }
-
-//    @PostMapping
-//    public ResponseEntity<?> createRequest(@Validated @RequestBody CreateRequestDTO requestDTO) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String currentUserEmail = authentication.getName();
-//
-//        User currentUser = userService.getByEmail(currentUserEmail);
-//        if (!(currentUser instanceof Expert)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only experts can create requests");
-//        }
-//
-//        try {
-//            Request createdRequest = requestManager.createRequest(currentUser.getId(), requestDTO.getAdId(), requestDTO);
-//            return ResponseEntity.ok(createdRequest);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body("Failed to create request: " + e.getMessage());
-//        }
-//    }
 
     @PostMapping
-    public ResponseEntity<?> createRequest(@RequestBody CreateRequestDTO requestDTO, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<GetRequestsResponse> createRequest(
+            @RequestBody CreateRequestDTO requestDTO,
+            @RequestHeader("Authorization") String token) {
+        log.info("Received request to create request for ad: {}", requestDTO.getAdId());
         try {
-            logger.info("Received request to create request for ad: {}", requestDTO.getAdId());
-
-            // Extract email from JWT token
             String userEmail = jwtService.extractUsername(token.replace("Bearer ", ""));
-            logger.info("Extracted user email from token: {}", userEmail);
-
             if (userEmail == null) {
-                logger.error("Failed to extract user email from token");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+                throw new BusinessException("Invalid token");
             }
 
             Request createdRequest = requestManager.createRequest(requestDTO.getAdId(), userEmail);
-            logger.info("Request created successfully: {}", createdRequest.getId());
-            return ResponseEntity.ok(createdRequest);
-        } catch (Exception e) {
-            logger.error("Error creating request", e);
-            return ResponseEntity.badRequest().body("Error creating request: " + e.getMessage());
-        }
-    }
-    @GetMapping("/ads/owner/{userId}")
-    public ResponseEntity<List<GetRequestsResponse>> getRequestsByAdOwner(@PathVariable String userId) {
-        List<GetRequestsResponse> requests = requestManager.getRequestsByAdOwner(userId);
-        return ResponseEntity.ok(requests);
-    }
-    @PutMapping("/{requestId}/accept")
-    public ResponseEntity<?> acceptRequest(@PathVariable String requestId, @RequestBody Map<String, String> body) {
-        try {
-            String userId = body.get("userId");
-            if (userId == null || userId.isEmpty()) {
-                logger.error("UserId is missing in the request body");
-                return ResponseEntity.badRequest().body("UserId is required");
-            }
-            Request request = requestRepository.findById(requestId).orElseThrow(() -> new EntityNotFoundException("Request not found"));
-            logger.info("Accepting request: {} for user: {}", requestId, userId);
-            GetRequestsResponse acceptedRequest = requestManager.acceptRequest(requestId, userId);
-            logger.info("Request accepted successfully: {}", acceptedRequest);
+            log.info("Request created successfully: {}", createdRequest.getId());
 
-            ChatRoom chatRoom = chatMessageManager.createChat(userId, request.getExpert().getEmail());
+            // Notify ad owner about new request
+            notificationManager.createAndSendNotification(
+                    createdRequest.getAd().getUser().getId(),
+                    "New Request",
+                    "New request received for your ad: " + createdRequest.getAd().getTitle(),
+                    NotificationType.NEW_REQUEST,
+                    createdRequest.getId());
+            GetRequestsResponse response = GetRequestsResponse.builder()
+                    .id(createdRequest.getId())
+                    .expertId(createdRequest.getExpert().getId())
+                    .expertName(createdRequest.getExpert().getName())
+                    .userId(createdRequest.getAd().getUser().getId())
+                    .userName(createdRequest.getAd().getUser().getName())
+                    .adId(createdRequest.getAd().getId())
+                    .adTitle(createdRequest.getAd().getTitle())
+                    .status(createdRequest.getStatus())
+                    .createdAt(createdRequest.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .message(createdRequest.getMessage())
+                    .build();
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("request", acceptedRequest);
-            response.put("chatRoom", chatRoom);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            logger.error("Error accepting request: {}", e.getMessage(), e);
-            return ResponseEntity.badRequest().body(e.getMessage());
+            log.error("Error creating request", e);
+            throw new BusinessException("Error creating request: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{requestId}/accept")
+    public ResponseEntity<GetRequestAcceptedResponse> acceptRequest(
+            @PathVariable String requestId,
+            @RequestHeader("Authorization") String token) {
+        try {
+            log.info("Accepting request with ID: {}", requestId);
+            String userEmail = jwtService.extractUsername(token.replace("Bearer ", ""));
+            User user = userService.getByEmail(userEmail);
+
+            Request acceptedRequest = requestManager.acceptRequest(requestId, user.getId());
+            ChatRoom chatRoom = chatService.createChatRoomForAcceptedRequest(acceptedRequest);
+
+            GetRequestAcceptedResponse response = GetRequestAcceptedResponse.builder()
+                    .requestId(acceptedRequest.getId())
+                    .status(acceptedRequest.getStatus())
+                    .chatRoomId(chatRoom.getId())
+                    .expertId(acceptedRequest.getExpert().getId())
+                    .userId(acceptedRequest.getUser().getId())
+                    .adId(acceptedRequest.getAd().getId())
+                    .adTitle(acceptedRequest.getAd().getTitle())
+                    .build();
+
+            log.info("Request accepted successfully. RequestId: {}, ChatRoomId: {}",
+                    requestId, chatRoom.getId());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Error accepting request: {}", e.getMessage(), e);
+            throw new BusinessException("Error accepting request: " + e.getMessage());
         }
     }
 
     @PutMapping("/{requestId}/reject")
-    public ResponseEntity<?> rejectRequest(@PathVariable String requestId, @RequestBody Map<String, String> body) {
+    public ResponseEntity<GetRequestsResponse> rejectRequest(
+            @PathVariable String requestId,
+            @RequestParam String userId,
+            Principal principal) {
         try {
-            String userId = body.get("userId");
-            if (userId == null) {
-                return ResponseEntity.badRequest().body("UserId is required");
+            // Verify user
+            if (!userService.getByEmail(principal.getName()).getId().equals(userId)) {
+                throw new AccessDeniedException("Unauthorized access");
             }
+
             Request rejectedRequest = requestManager.rejectRequest(requestId, userId);
-            return ResponseEntity.ok(rejectedRequest);
+
+            // Notify expert about rejection
+            notificationManager.createAndSendNotification(
+                    rejectedRequest.getExpert().getId(),
+                    "Request Rejected",
+                    "Your request for ad: " + rejectedRequest.getAd().getTitle() + " has been rejected",
+                    NotificationType.REQUEST_REJECTED,
+                    rejectedRequest.getId());
+
+            return ResponseEntity.ok(GetRequestsResponse.fromEntity(rejectedRequest));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            log.error("Error rejecting request", e);
+            throw new BusinessException("Error rejecting request: " + e.getMessage());
         }
     }
 
     @PutMapping("/{requestId}/complete")
-    public ResponseEntity<Request> completeRequest(@PathVariable String requestId, @PathVariable String expertId) {
+    public ResponseEntity<GetRequestsResponse> completeRequest(
+            @PathVariable String requestId,
+            @RequestParam String expertId,
+            Principal principal) {
         try {
-            Request request = requestManager.completeRequest(requestId, expertId);
-            return ResponseEntity.ok(request);
-        } catch (StripeException e) {
-            return ResponseEntity.badRequest().body(null);
+            // Verify expert
+            Expert expert = expertService.getByEmail(principal.getName());
+            if (!expert.getId().equals(expertId)) {
+                throw new AccessDeniedException("Unauthorized access");
+            }
+
+            Request completedRequest = requestManager.completeRequest(requestId, expertId);
+
+            // Complete the chat room
+            ChatRoom chatRoom = chatService.getChatRoomByRequestId(requestId)
+                    .orElseThrow(() -> new EntityNotFoundException("Chat room not found"));
+            chatService.markJobAsComplete(chatRoom.getId(), expertId);
+
+            return ResponseEntity.ok(GetRequestsResponse.fromEntity(completedRequest));
+        } catch (Exception e) {
+            log.error("Error completing request", e);
+            throw new BusinessException("Error completing request: " + e.getMessage());
         }
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<GetRequestsResponse>> getRequestsByUser(@PathVariable String userId) {
-        List<GetRequestsResponse> requests = requestManager.getRequestsByUser(userId);
-        return ResponseEntity.ok(requests);
+    @GetMapping("/ads/owner/{userId}")
+    public ResponseEntity<List<GetRequestsResponse>> getRequestsByAdOwner(
+            @PathVariable String userId,
+            Principal principal) {
+        if (!userService.getByEmail(principal.getName()).getId().equals(userId)) {
+            throw new AccessDeniedException("Unauthorized access");
+        }
+        return ResponseEntity.ok(requestManager.getRequestsByAdOwner(userId));
     }
 
     @GetMapping("/expert/{expertId}")
-    public ResponseEntity<List<GetRequestsResponse>> getRequestsByExpert(@PathVariable String expertId) {
-        List<GetRequestsResponse> requests = requestManager.getRequestsByExpert(expertId);
-        return ResponseEntity.ok(requests);
+    public ResponseEntity<List<GetRequestsResponse>> getRequestsByExpert(
+            @PathVariable String expertId,
+            Principal principal) {
+        if (!expertService.getByEmail(principal.getName()).getId().equals(expertId)) {
+            throw new AccessDeniedException("Unauthorized access");
+        }
+        return ResponseEntity.ok(requestManager.getRequestsByExpert(expertId));
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<Request>> getRequestsByStatus(@PathVariable RequestStatus status) {
-        List<Request> requests = requestManager.getRequestsByStatus(status);
-        return ResponseEntity.ok(requests);
-    }
     @PutMapping("/{requestId}/cancel")
-    public ResponseEntity<Request> cancelRequest(@PathVariable String requestId, @RequestParam String userId) {
-        Request request = requestManager.cancelRequest(requestId, userId);
-        return ResponseEntity.ok(request);
-    }
+    public ResponseEntity<GetRequestsResponse> cancelRequest(
+            @PathVariable String requestId,
+            @RequestParam String userId,
+            Principal principal) {
+        try {
+            if (!userService.getByEmail(principal.getName()).getId().equals(userId)) {
+                throw new AccessDeniedException("Unauthorized access");
+            }
 
-    @GetMapping("/ad/{adId}/pending")
-    public ResponseEntity<List<Request>> getPendingRequestsForAd(@PathVariable String adId) {
-        List<Request> requests = requestManager.getPendingRequestsForAd(adId);
-        return ResponseEntity.ok(requests);
+            Request cancelledRequest = requestManager.cancelRequest(requestId, userId);
+
+            // Notify participants
+            notificationManager.createAndSendNotification(
+                    cancelledRequest.getExpert().getId(),
+                    "Request Cancelled",
+                    "Request for ad: " + cancelledRequest.getAd().getTitle() + " has been cancelled",
+                    NotificationType.REQUEST_CANCELLED,
+                    cancelledRequest.getId());
+
+            return ResponseEntity.ok(GetRequestsResponse.fromEntity(cancelledRequest));
+        } catch (Exception e) {
+            log.error("Error cancelling request", e);
+            throw new BusinessException("Error cancelling request: " + e.getMessage());
+        }
     }
 }
-//    @PutMapping("/{requestId}/reject")
-//    public ResponseEntity<Request> rejectRequest(@PathVariable String requestId, @RequestParam String expertId) {
-//        Request request = requestManager.rejectRequest(requestId, expertId);
-//        return ResponseEntity.ok(request);
-//    }
 
-//    @PostMapping
-//    public ResponseEntity<?> createRequest(@RequestBody CreateRequestDTO requestDTO) {
-//        try {
-//            Request createdRequest = requestManager.createRequest(requestDTO.getAdId(), requestDTO.getExpertEmail());
-//            return ResponseEntity.ok(createdRequest);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body("Error creating request: " + e.getMessage());
-//        }
-//    }
-
-//    @PutMapping("/{requestId}/accept")
-//    public ResponseEntity<?> acceptRequest(@PathVariable String requestId, @RequestParam String userId) {
-//        try {
-//            Request acceptedRequest = requestManager.acceptRequest(requestId, userId);
-//            return ResponseEntity.ok(acceptedRequest);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-
-//    @PutMapping("/{requestId}/reject")
-//    public ResponseEntity<?> rejectRequest(@PathVariable String requestId, @RequestParam String userId) {
-//        try {
-//            Request rejectedRequest = requestManager.rejectRequest(requestId, userId);
-//            return ResponseEntity.ok(rejectedRequest);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//    @PutMapping("/{requestId}/accept")
-//    public ResponseEntity<?> acceptRequest(@PathVariable String requestId) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String currentUserEmail = authentication.getName();
-//        User currentUser = userService.getByEmail(currentUserEmail);
+// @PostMapping
+// public ResponseEntity<?> createRequest(@Validated @RequestBody
+// CreateRequestDTO requestDTO) {
+// Authentication authentication =
+// SecurityContextHolder.getContext().getAuthentication();
+// String currentUserEmail = authentication.getName();
 //
-//        try {
-//            Request acceptedRequest = requestManager.acceptRequest(requestId, currentUser.getId());
-//            return ResponseEntity.ok(acceptedRequest);
-//        } catch (EntityNotFoundException | IllegalArgumentException | IllegalStateException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        } catch (StripeException e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body("An error occurred while processing the payment");
-//        }
-//    }
+// User currentUser = userService.getByEmail(currentUserEmail);
+// if (!(currentUser instanceof Expert)) {
+// return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only experts can
+// create requests");
+// }
+//
+// try {
+// Request createdRequest = requestManager.createRequest(currentUser.getId(),
+// requestDTO.getAdId(), requestDTO);
+// return ResponseEntity.ok(createdRequest);
+// } catch (Exception e) {
+// return ResponseEntity.badRequest().body("Failed to create request: " +
+// e.getMessage());
+// }
+// }
+// @PutMapping("/{requestId}/reject")
+// public ResponseEntity<Request> rejectRequest(@PathVariable String requestId,
+// @RequestParam String expertId) {
+// Request request = requestManager.rejectRequest(requestId, expertId);
+// return ResponseEntity.ok(request);
+// }
 
+// @PostMapping
+// public ResponseEntity<?> createRequest(@RequestBody CreateRequestDTO
+// requestDTO) {
+// try {
+// Request createdRequest = requestManager.createRequest(requestDTO.getAdId(),
+// requestDTO.getExpertEmail());
+// return ResponseEntity.ok(createdRequest);
+// } catch (Exception e) {
+// return ResponseEntity.badRequest().body("Error creating request: " +
+// e.getMessage());
+// }
+// }
+
+// @PutMapping("/{requestId}/accept")
+// public ResponseEntity<?> acceptRequest(@PathVariable String requestId,
+// @RequestParam String userId) {
+// try {
+// Request acceptedRequest = requestManager.acceptRequest(requestId, userId);
+// return ResponseEntity.ok(acceptedRequest);
+// } catch (Exception e) {
+// return ResponseEntity.badRequest().body(e.getMessage());
+// }
+// }
+
+// @PutMapping("/{requestId}/reject")
+// public ResponseEntity<?> rejectRequest(@PathVariable String requestId,
+// @RequestParam String userId) {
+// try {
+// Request rejectedRequest = requestManager.rejectRequest(requestId, userId);
+// return ResponseEntity.ok(rejectedRequest);
+// } catch (Exception e) {
+// return ResponseEntity.badRequest().body(e.getMessage());
+// }
+// }
+// @PutMapping("/{requestId}/accept")
+// public ResponseEntity<?> acceptRequest(@PathVariable String requestId) {
+// Authentication authentication =
+// SecurityContextHolder.getContext().getAuthentication();
+// String currentUserEmail = authentication.getName();
+// User currentUser = userService.getByEmail(currentUserEmail);
+//
+// try {
+// Request acceptedRequest = requestManager.acceptRequest(requestId,
+// currentUser.getId());
+// return ResponseEntity.ok(acceptedRequest);
+// } catch (EntityNotFoundException | IllegalArgumentException |
+// IllegalStateException e) {
+// return ResponseEntity.badRequest().body(e.getMessage());
+// } catch (StripeException e) {
+// return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+// .body("An error occurred while processing the payment");
+// }
+// }

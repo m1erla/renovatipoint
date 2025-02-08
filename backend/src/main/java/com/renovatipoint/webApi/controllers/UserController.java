@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import spark.Response;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -34,24 +35,24 @@ public class UserController {
     private final AuthenticationService service;
     private final JwtService jwtService;
 
-
     @GetMapping
-    public List<GetUsersResponse> getAllUsers(){
+    public List<GetUsersResponse> getAllUsers() {
         return userManager.getAll();
     }
 
-
     @GetMapping("/{id}")
-    public GetUsersResponse getUsersById(@PathVariable String id){
+    public GetUsersResponse getUsersById(@PathVariable String id) {
         return userManager.getById(id);
     }
+
     @GetMapping(value = "/{id}/profile-image")
     public ResponseEntity<?> getUserProfileImage(@PathVariable String id) {
         return userManager.getUserProfileImage(id);
     }
 
     @GetMapping("/response")
-    public ResponseEntity<GetUsersResponse> retrieveUserProfileWithResponse(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<GetUsersResponse> retrieveUserProfileWithResponse(
+            @RequestHeader("Authorization") String authorizationHeader) {
         // Extract the token from the Authorization header (remove "Bearer " prefix)
         String jwt = authorizationHeader.substring(7).trim();
 
@@ -59,19 +60,26 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
+    @GetMapping("/current")
+    public ResponseEntity<UserDTO> getCurrentUser(Principal principal) {
+        User user = userManager.getByEmail(principal.getName());
+        return ResponseEntity.ok(UserDTO.fromEntity(user));
+    }
 
     @PatchMapping
     public ResponseEntity<?> changePassword(
-            @RequestBody ChangePasswordRequest request, Principal connectedUser
-    ){
+            @RequestBody ChangePasswordRequest request, Principal connectedUser) {
         return userManager.changePassword(request, connectedUser);
     }
+
     @PostMapping("/{id}/profile-image")
-    public ResponseEntity<?> uploadUserProfileImage(@RequestParam("file") MultipartFile file, @PathVariable User id) throws IOException {
+    public ResponseEntity<?> uploadUserProfileImage(@RequestParam("file") MultipartFile file, @PathVariable User id)
+            throws IOException {
         return userManager.uploadUserProfileImage(file, id.getId());
     }
+
     @PostMapping("{id}/uploadProfileImage")
-    public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable String id){
+    public ResponseEntity<?> uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable String id) {
         try {
             ResponseEntity<?> message = userManager.uploadUserProfileImage(file, id);
             return ResponseEntity.ok(message);
@@ -79,10 +87,23 @@ public class UserController {
             return ResponseEntity.status(500).body("Failed to upload profile image");
         }
     }
-    @PutMapping("/{id}")
+
+    @PutMapping("/update")
     public ResponseEntity<?> update(@ModelAttribute UpdateUserRequest updateUserRequest) throws IOException {
-       return this.userManager.update(updateUserRequest);
+        try {
+            // Token'dan kullanıcı bilgilerini al
+            String userId = updateUserRequest.getId();
+            if (userId == null || userId.isEmpty()) {
+                return ResponseEntity.badRequest().body("User ID is required");
+            }
+
+            return userManager.update(updateUserRequest);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while updating user: " + e.getMessage());
+        }
     }
+
     @DeleteMapping("/{fileName}/profile-image")
     public void deleteUserProfileImage(@PathVariable String fileName) throws IOException {
         storageManager.deleteImage(fileName);
@@ -90,22 +111,21 @@ public class UserController {
 
     @MessageMapping("/user.addUser")
     @SendTo("/user/public")
-    public User addUser(@Payload User user){
+    public User addUser(@Payload User user) {
         userManager.saveUser(user);
         return user;
     }
 
     @MessageMapping("/user.disconnectUser")
     @SendTo("/user/public")
-    public User disconnectUser(@Payload User user){
+    public User disconnectUser(@Payload User user) {
         userManager.disconnect(user);
         return user;
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> findConnectedUsers(){
+    public ResponseEntity<List<User>> findConnectedUsers() {
         return ResponseEntity.ok(userManager.findConnectedUsers());
     }
 
 }
-

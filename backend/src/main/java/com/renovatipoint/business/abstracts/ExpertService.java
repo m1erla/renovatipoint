@@ -9,8 +9,12 @@ import org.springframework.http.ResponseEntity;
 public interface ExpertService {
 
     GetExpertResponse getExpertById(String expertId);
+
     Expert getById(String expertId);
-    GetExpertResponse getByEmail(String email);
+
+    Expert getByEmail(String email);
+
+    Expert save(Expert expert);
 
     ResponseEntity<?> update(UpdateExpertRequest updateExpertRequest);
 

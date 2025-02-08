@@ -1,20 +1,17 @@
 package com.renovatipoint.business.requests;
 
-import com.renovatipoint.entities.concretes.JobTitle;
 import com.renovatipoint.entities.concretes.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class ExpertRegisterRequest {
+public class CreateExpertRegisterRequest {
     @NotBlank(message = "Name is required")
     private String name;
 
@@ -24,15 +21,15 @@ public class ExpertRegisterRequest {
     private String email;
     @NotBlank(message = "Password is required")
     private String password;
-    @NotBlank(message = "Job title is required")
+
+    @NotNull(message = "Job title ID is required")
+    private String jobTitleId;
+
     private String jobTitleName;
 
-    private String jobTitleId;
     @NotBlank(message = "Post code is required")
     private String postCode;
     private String phoneNumber;
     private String address;
     private Role role;
-
-
 }

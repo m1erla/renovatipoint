@@ -2,7 +2,7 @@ package com.renovatipoint.security.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.renovatipoint.business.concretes.StripeManager;
-import com.renovatipoint.business.requests.ExpertRegisterRequest;
+import com.renovatipoint.business.requests.CreateExpertRegisterRequest;
 import com.renovatipoint.business.requests.RegisterRequest;
 import com.renovatipoint.business.responses.ExpertRegisterResponse;
 import com.renovatipoint.business.responses.RegisterResponse;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService{
+public class AuthenticationService {
     private final UserRepository repository;
     private final ExpertRepository expertRepository;
     private final TokenRepository tokenRepository;
@@ -49,27 +49,25 @@ public class AuthenticationService{
 
     private final static Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
-    public ExpertRegisterResponse expertRegister(ExpertRegisterRequest request) throws StripeException {
+    public ExpertRegisterResponse expertRegister(CreateExpertRegisterRequest request) throws StripeException {
+        String stripeCustomerId = null;
         try {
             if (repository.findByEmail(request.getEmail()).isPresent()) {
                 throw new IllegalStateException("Expert with this email already exists!");
             }
+
+            // Validate and get job title - Add explicit logging
+            logger.info("Looking up job title with ID: {}", request.getJobTitleId());
             JobTitle jobTitle = jobTitleRepository.findById(request.getJobTitleId())
-                    .orElseThrow(() -> new EntityNotFoundException("Job title not found!"));
+                    .orElseThrow(() -> {
+                        logger.error("Job title not found with ID: {}", request.getJobTitleId());
+                        return new EntityNotFoundException("Job title not found!");
+                    });
+            logger.info("Found job title: {}", jobTitle.getName());
 
-            // Create a Stripe customer for the expert
-            String stripeCustomerId = stripeManager.createStripeCustomer(request.getEmail(), request.getName());
-
-
-//            Expert expert = this.modelMapperService.forRequest().map(request, Expert.class);
-//
-//            expert.setJobTitle(jobTitle);
-//            expert.setStatus(Status.ONLINE);
-//            expert.setBalance(BigDecimal.ZERO);
-//            expert.setRole(Role.EXPERT);
-//            expert.setAccountBlocked(false);
-//            expert.setStripeCustomerId(stripeCustomerId);
-//            expert.setPaymentIssuesCount(0);
+            // Create Stripe customer
+            stripeCustomerId = stripeManager.createStripeCustomer(request.getEmail(), request.getName());
+            logger.info("Created Stripe customer with ID: {}", stripeCustomerId);
 
             Expert experts = new Expert();
 
@@ -80,22 +78,37 @@ public class AuthenticationService{
             experts.setJobTitle(jobTitle);
             experts.setPassword(passwordEncoder.encode(request.getPassword()));
             experts.setEmail(request.getEmail());
+            experts.setStripeCustomerId(stripeCustomerId);
             experts.setStatus(Status.ONLINE);
             experts.setBalance(BigDecimal.ZERO);
             experts.setRole(Role.EXPERT);
             experts.setAccountBlocked(false);
             experts.setPaymentIssuesCount(0);
-            experts.setAddress(request.getAddress());
-            experts.setStripeCustomerId(stripeCustomerId);
 
-            logger.info("Attempting to save expert: {}", experts);
 
+            // Address null kontrolü ekleyelim
+            if (request.getAddress() == null || request.getAddress().trim().isEmpty()) {
+                throw new IllegalArgumentException("Address cannot be null or empty");
+            }
+            experts.setAddress(request.getAddress().trim());
+
+            // Expert'i kaydet
+            logger.info("Attempting to save expert with Stripe customer ID: {}", stripeCustomerId);
             Expert savedExpert = expertRepository.save(experts);
-            logger.info("Expert saved successfully: {}", savedExpert);
+
+            // Kaydedilen expert'in Stripe customer ID'sini kontrol et
+            if (savedExpert.getStripeCustomerId() == null
+                    || !savedExpert.getStripeCustomerId().equals(stripeCustomerId)) {
+                logger.error("Stripe customer ID was not properly saved. Expected: {}, Actual: {}",
+                        stripeCustomerId, savedExpert.getStripeCustomerId());
+                throw new IllegalStateException("Failed to save Stripe customer ID");
+            }
+            logger.info("Expert saved successfully with Stripe customer ID: {}", savedExpert.getStripeCustomerId());
 
             // Validate if the expert ID is set after saving
             if (savedExpert.getId() == null) {
-                throw new IllegalStateException("Expert ID is invalid after saving. Please verify expert registration.");
+                throw new IllegalStateException(
+                        "Expert ID is invalid after saving. Please verify expert registration.");
             }
 
             String jwtToken = jwtService.generateToken(savedExpert);
@@ -110,86 +123,91 @@ public class AuthenticationService{
                     .paymentMethodId(setupIntent.getClientSecret())
                     .build();
         } catch (DataIntegrityViolationException e) {
+            if (stripeCustomerId != null) {
+                stripeManager.deleteStripeCustomer(stripeCustomerId);
+            }
             logger.error("Data integrity violation during expert registration", e);
             throw new IllegalArgumentException("Invalid data provided for expert registration", e);
         } catch (ConstraintViolationException e) {
+            if (stripeCustomerId != null) {
+                stripeManager.deleteStripeCustomer(stripeCustomerId);
+            }
             logger.error("Constraint violation during expert registration", e);
             String violationMessages = e.getConstraintViolations().stream()
                     .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
                     .collect(Collectors.joining(", "));
             throw new IllegalArgumentException("Constraint violations: " + violationMessages, e);
         } catch (Exception e) {
+            if (stripeCustomerId != null) {
+                stripeManager.deleteStripeCustomer(stripeCustomerId);
+            }
             logger.error("Unexpected error during expert registration", e);
             throw new RuntimeException("An unexpected error occurred during expert registration", e);
         }
     }
-    public RegisterResponse register(RegisterRequest request){
 
-        if (repository.findByEmail(request.getEmail()).isPresent()){
+    public RegisterResponse register(RegisterRequest request) {
+
+        if (repository.findByEmail(request.getEmail()).isPresent()) {
             throw new IllegalStateException("User with this email already exists!");
         }
-        if (repository.findByPhoneNumber(request.getPhoneNumber()).isPresent()){
-            throw new IllegalStateException("This phone number is already in use. Please try a different phone number!");
+        if (repository.findByPhoneNumber(request.getPhoneNumber()).isPresent()) {
+            throw new IllegalStateException(
+                    "This phone number is already in use. Please try a different phone number!");
         }
-         var user = User.builder()
-                 .name(request.getName())
-                 .surname(request.getSurname())
-                 .email(request.getEmail())
-                 .phoneNumber(request.getPhoneNumber())
-                 .password(passwordEncoder.encode(request.getPassword()))
-                 .postCode(request.getPostCode())
-                 .role(Role.USER)
-                 .accountBlocked(false)
-                 .balance(BigDecimal.ZERO)
-                 .status(Status.ONLINE)
-                 .paymentIssuesCount(0)
-                 .build();
-         var savedUser = repository.save(user);
-         var jwtToken = jwtService.generateToken(user);
-         var refreshToken = jwtService.generateRefreshToken(user);
-         saveUserToken(savedUser, jwtToken);
+        var user = User.builder()
+                .name(request.getName())
+                .surname(request.getSurname())
+                .email(request.getEmail())
+                .phoneNumber(request.getPhoneNumber())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .postCode(request.getPostCode())
+                .role(Role.USER)
+                .accountBlocked(false)
+                .balance(BigDecimal.ZERO)
+                .status(Status.ONLINE)
+                .paymentIssuesCount(0)
+                .build();
+        var savedUser = repository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(savedUser, jwtToken);
 
-         return RegisterResponse.builder()
-                 .message("User Created Successfully!")
-                 .userId(user.getId())
-                 .email(user.getEmail())
-                 .build();
+        return RegisterResponse.builder()
+                .message("User Created Successfully!")
+                .userId(user.getId())
+                .email(user.getEmail())
+                .build();
 
     }
 
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()));
 
+            var user = repository.findByEmail(request.getEmail()).orElseThrow(
+                    () -> new IllegalArgumentException("Invalid email or password!"));
 
-    public AuthenticationResponse authenticate( AuthenticationRequest request){
-try {
-    authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                    request.getEmail(),
-                    request.getPassword()
-            )
-    );
+            var jwtToken = jwtService.generateToken(user);
+            var refreshToken = jwtService.generateRefreshToken(user);
+            revokeAllUserTokens(user);
+            saveUserToken(user, jwtToken);
 
-    var user = repository.findByEmail(request.getEmail()).orElseThrow(
-            () -> new IllegalArgumentException("Invalid email or password!")
-    );
-
-    var jwtToken = jwtService.generateToken(user);
-    var refreshToken = jwtService.generateRefreshToken(user);
-    revokeAllUserTokens(user);
-    saveUserToken(user, jwtToken);
-
-    return AuthenticationResponse.builder()
-            .accessToken(jwtToken)
-            .role(user.getRole().name())
-            .userId(user.getId())
-            .userEmail(user.getEmail())
-            .build();
-}catch (Exception ex){
-    throw new IllegalArgumentException("Invalid email or password!");
-}
+            return AuthenticationResponse.builder()
+                    .accessToken(jwtToken)
+                    .role(user.getRole().name())
+                    .userId(user.getId())
+                    .userEmail(user.getEmail())
+                    .build();
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("Invalid email or password!");
+        }
     }
 
-
-    private void saveUserToken(User user, String jwtToken){
+    private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)
@@ -200,9 +218,9 @@ try {
         tokenRepository.save(token);
     }
 
-    private void revokeAllUserTokens(User user){
+    private void revokeAllUserTokens(User user) {
         var validConsumerTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        if(validConsumerTokens.isEmpty())
+        if (validConsumerTokens.isEmpty())
             return;
         validConsumerTokens.forEach(token -> {
             token.setExpired(true);
@@ -210,20 +228,20 @@ try {
         });
         tokenRepository.saveAll(validConsumerTokens);
     }
-   public void refreshToken(
-           HttpServletRequest request,
-           HttpServletResponse response
-   ) throws IOException {
+
+    public void refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String userEmail;
-        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return;
         }
 
         refreshToken = authHeader.substring(7);
         userEmail = jwtService.extractUsername(refreshToken);
-        if(userEmail != null){
+        if (userEmail != null) {
             var user = this.repository.findByEmail(userEmail).orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
@@ -234,10 +252,7 @@ try {
                         .build();
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
-            }
         }
+    }
 
 }
-
-
-

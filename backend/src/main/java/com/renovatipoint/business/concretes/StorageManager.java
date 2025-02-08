@@ -11,6 +11,8 @@ import com.renovatipoint.entities.concretes.Ads;
 import com.renovatipoint.entities.concretes.Storage;
 import com.renovatipoint.entities.concretes.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 
 @Service
 public class StorageManager implements StorageService {
@@ -42,12 +43,14 @@ public class StorageManager implements StorageService {
     private final UserRepository userRepository;
 
     @Autowired
-    public StorageManager(StorageRepository storageRepository, ModelMapperService modelMapperService, AdsRepository adsRepository, UserRepository userRepository) {
+    public StorageManager(StorageRepository storageRepository, ModelMapperService modelMapperService,
+            AdsRepository adsRepository, UserRepository userRepository) {
         this.storageRepository = storageRepository;
         this.modelMapperService = modelMapperService;
         this.adsRepository = adsRepository;
         this.userRepository = userRepository;
     }
+
     @Override
     @Transactional
     public String storeFile(MultipartFile file) throws IOException {
@@ -56,18 +59,20 @@ public class StorageManager implements StorageService {
             Files.createDirectories(uploadPath);
         }
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-//        String randomID = UUID.randomUUID().toString();
-//        String randomName = randomID.concat(fileName.substring(fileName.lastIndexOf(".")));
+        // String randomID = UUID.randomUUID().toString();
+        // String randomName =
+        // randomID.concat(fileName.substring(fileName.lastIndexOf(".")));
         Path filePath = uploadPath.resolve(fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         return fileName;
     }
+
     @Override
     @Transactional
-    public String uploadImage(MultipartFile file, User user) throws IOException{
+    public String uploadImage(MultipartFile file, User user) throws IOException {
         String fileName = storeFile(file);
-                Storage storageData = Storage.builder()
+        Storage storageData = Storage.builder()
                 .name(fileName)
                 .type(file.getContentType())
                 .imageData(ImageUtils.compressImage(file.getBytes()))
@@ -79,6 +84,7 @@ public class StorageManager implements StorageService {
 
         return fileName;
     }
+
     @Override
     @Transactional
     public List<String> uploadImages(List<MultipartFile> files, User user, Ads ad) throws IOException {
@@ -101,16 +107,18 @@ public class StorageManager implements StorageService {
         }
         return fileNames;
     }
+
     @Override
     @Transactional
-    public byte[] downloadImage(String fileName) throws IOException{
-       Optional<Storage> dbImageData = storageRepository.findByName(fileName);
+    public byte[] downloadImage(String fileName) throws IOException {
+        Optional<Storage> dbImageData = storageRepository.findByName(fileName);
         if (dbImageData != null) {
             return ImageUtils.decompressImage(dbImageData.get().getImageData());
         } else {
             throw new FileNotFoundException("File not found with name: " + fileName);
         }
     }
+
     @Override
     @Transactional
     public void deleteImage(String fileName) throws IOException {
@@ -118,24 +126,26 @@ public class StorageManager implements StorageService {
         Files.deleteIfExists(filePath);
         storageRepository.deleteByName(fileName);
     }
-/************************************* Storage Service Implementations *************************************/
-@Override
-@Transactional
-    public ResponseEntity<?> serveImage(String fileName){
-        if (fileName == null || fileName.isEmpty()){
+
+    /*************************************
+     * Storage Service Implementations
+     *************************************/
+    @Override
+    @Transactional
+    public ResponseEntity<?> serveImage(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Image not found");
         }
 
         try {
-          byte[] imageData = downloadImage(fileName);
-          return ResponseEntity.status(HttpStatus.OK)
-                  .contentType(MediaType.IMAGE_JPEG)
-                  .body(imageData);
-        }catch (IOException ex){
+            byte[] imageData = downloadImage(fileName);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(imageData);
+        } catch (IOException ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to load image");
         }
     }
-
 
     @Override
     @Transactional
@@ -147,25 +157,16 @@ public class StorageManager implements StorageService {
                 .collect(Collectors.toList());
     }
 
-//    public ResponseEntity<Resource> getUserProfileImage(int id) throws IOException{
-//        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
-//        Path imagePath = Paths.get(UPLOAD_DIR, user.getProfileImage());
-//
-//        Resource resource = new FileSystemResource(imagePath.toFile());
-//
-//        String fileName= user.getProfileImage();
-//
-//        String contentType = Files.probeContentType(imagePath);
-//        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(resource);
-//    }
-
-//    @Transactional
-//    public void deleteImage(String fileName) throws IOException{
-//        Optional<Image> imageOptional = storageRepository.findByName(fileName);
-//        if (imageOptional.isPresent()){
-//            storageRepository.delete(imageOptional.get());
-//            Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName);
-//            Files.deleteIfExists(filePath);
-//        }
-//    }
+    public Resource loadAsResource(String filename) throws MalformedURLException {
+        try {
+            Path file = Paths.get("src/main/resources/static/uploads").resolve(filename);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            }
+            return null;
+        } catch (MalformedURLException e) {
+            throw e;
+        }
+    }
 }

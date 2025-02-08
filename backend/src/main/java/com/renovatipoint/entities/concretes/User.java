@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -59,6 +58,8 @@ public class User implements UserDetails {
 
     private String postCode;
 
+    private String address;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ads> ads;
 
@@ -82,7 +83,6 @@ public class User implements UserDetails {
     private List<Storage> storages = new ArrayList<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Invoice> invoices = new ArrayList<>();
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -115,10 +115,9 @@ public class User implements UserDetails {
     }
 }
 
+// @OneToMany(mappedBy = "user")
+// private List<JobTitle> jobTitles = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "user")
-//    private List<JobTitle> jobTitles = new ArrayList<>();
-
-//    @ManyToOne(cascade = CascadeType.PERSIST)
-//    @JoinColumn(name = "job_title_id", referencedColumnName = "id")
-//    private JobTitle jobTitle;
+// @ManyToOne(cascade = CascadeType.PERSIST)
+// @JoinColumn(name = "job_title_id", referencedColumnName = "id")
+// private JobTitle jobTitle;

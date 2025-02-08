@@ -9,6 +9,7 @@ import com.renovatipoint.dataAccess.abstracts.StorageRepository;
 import com.renovatipoint.dataAccess.abstracts.UserRepository;
 import com.renovatipoint.entities.concretes.Expert;
 import com.renovatipoint.entities.concretes.Storage;
+import com.stripe.exception.StripeException;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +28,19 @@ public class ExpertManager implements ExpertService {
     private final UserRepository userRepository;
 
     private final StorageManager storageManager;
+    private final StripeManager stripeManager;
     private static final Logger logger = LoggerFactory.getLogger(ExpertManager.class);
     private final ModelMapperService modelMapperService;
 
-
-
-    public ExpertManager(ExpertRepository expertRepository, StorageRepository storageRepository, UserRepository userRepository, StorageManager storageManager, ModelMapperService modelMapperService) {
+    public ExpertManager(ExpertRepository expertRepository, StorageRepository storageRepository,
+            UserRepository userRepository, StorageManager storageManager, ModelMapperService modelMapperService,
+            StripeManager stripeManager) {
         this.expertRepository = expertRepository;
         this.storageRepository = storageRepository;
         this.userRepository = userRepository;
         this.storageManager = storageManager;
         this.modelMapperService = modelMapperService;
+        this.stripeManager = stripeManager;
 
     }
 
@@ -56,39 +59,81 @@ public class ExpertManager implements ExpertService {
     }
 
     @Override
-    public GetExpertResponse getByEmail(String email) {
-        return null;
+    public Expert getByEmail(String email) {
+        Expert expert = this.expertRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Expert not fount with this email"));
+        return this.modelMapperService.forResponse().map(expert, Expert.class);
     }
 
     @Override
     public ResponseEntity<?> update(UpdateExpertRequest updateExpertRequest) {
-        Expert user = expertRepository.findById(updateExpertRequest.getName()).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        try {
+            Expert expert = this.expertRepository.findById(updateExpertRequest.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Expert not found"));
 
+            // Manuel olarak alanları güncelle
+            if (updateExpertRequest.getName() != null)
+                expert.setName(updateExpertRequest.getName());
+            if (updateExpertRequest.getSurname() != null)
+                expert.setSurname(updateExpertRequest.getSurname());
+            if (updateExpertRequest.getEmail() != null)
+                expert.setEmail(updateExpertRequest.getEmail());
+            if (updateExpertRequest.getPhoneNumber() != null)
+                expert.setPhoneNumber(updateExpertRequest.getPhoneNumber());
+            if (updateExpertRequest.getAddress() != null)
+                expert.setAddress(updateExpertRequest.getAddress());
+            if (updateExpertRequest.getPostCode() != null)
+                expert.setPostCode(updateExpertRequest.getPostCode());
+            if (updateExpertRequest.getCompanyName() != null)
+                expert.setCompanyName(updateExpertRequest.getCompanyName());
+            if (updateExpertRequest.getChamberOfCommerceNumber() != null)
+                expert.setChamberOfCommerceNumber(updateExpertRequest.getChamberOfCommerceNumber());
 
-        this.modelMapperService.forRequest().map(updateExpertRequest, user);
-
-        if (updateExpertRequest.getStorages() != null && !updateExpertRequest.getStorages().isEmpty()){
-            try {
-                String oldFileName = user.getProfileImage();
-                List<Storage> oldStorage = user.getStorages();
-                if (oldFileName != null && !oldFileName.isEmpty() && oldStorage != null){
-                    storageManager.deleteImage(oldFileName);
-                    storageRepository.delete((Storage) oldStorage);
+            // Profil resmi güncelleme
+            if (updateExpertRequest.getStorages() != null && !updateExpertRequest.getStorages().isEmpty()) {
+                try {
+                    String oldFileName = expert.getProfileImage();
+                    List<Storage> oldStorage = expert.getStorages();
+                    if (oldFileName != null && !oldFileName.isEmpty() && oldStorage != null) {
+                        storageManager.deleteImage(oldFileName);
+                        storageRepository.deleteAll(oldStorage);
+                    }
+                    String newFileName = storageManager.uploadImage(updateExpertRequest.getStorages(), expert);
+                    expert.setProfileImage(newFileName);
+                } catch (IOException ex) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body("Failed to update expert profile image");
                 }
-                String newFileName = storageManager.uploadImage(updateExpertRequest.getStorages(), user);
-                user.setProfileImage(newFileName);
-                user.setStorages(user.getStorages());
-                userRepository.save(user);
-                expertRepository.save(user);
-
-            }catch (IOException ex){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user profile image");
             }
-        }
 
-        this.userRepository.save(user);
-        return ResponseEntity.ok().body("User information has been changed successfully!");
+            // Uzmanı kaydet
+            Expert updatedExpert = expertRepository.save(expert);
+
+            // Güncellenmiş uzman bilgilerini response olarak dön
+            GetExpertResponse response = modelMapperService.forResponse()
+                    .map(updatedExpert, GetExpertResponse.class);
+
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Expert not found with ID: " + updateExpertRequest.getId());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while updating expert: " + e.getMessage());
+        }
     }
 
+    @Override
+    public Expert save(Expert expert) {
+        try {
+            // Stripe müşteri ID'si oluştur
+            String stripeCustomerId = stripeManager.createStripeCustomer(expert.getEmail(), expert.getName());
+            expert.setStripeCustomerId(stripeCustomerId);
+            return expertRepository.save(expert);
+        } catch (StripeException e) {
+            logger.error("Error creating Stripe customer for expert: {}", expert.getEmail(), e);
+            throw new RuntimeException("Failed to create Stripe customer", e);
+        }
+    }
 
 }

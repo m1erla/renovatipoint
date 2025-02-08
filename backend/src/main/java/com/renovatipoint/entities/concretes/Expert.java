@@ -1,6 +1,5 @@
 package com.renovatipoint.entities.concretes;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -10,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
 @Setter
 @Getter
@@ -18,8 +16,7 @@ import java.util.List;
 @Table(name = "experts")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Expert extends User
-{
+public class Expert extends User {
     @OneToMany(mappedBy = "expert", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "expert-requests")
     private List<Request> expertRequests = new ArrayList<>();
@@ -46,7 +43,6 @@ public class Expert extends User
     @Column(name = "payment_issues_count")
     private int paymentIssuesCount = 0;
 
-
     @Column(name = "account_blocked")
     private boolean accountBlocked = false;
 
@@ -67,5 +63,4 @@ public class Expert extends User
         this.paymentIssuesCount = 0;
         this.accountBlocked = false;
     }
-
 }

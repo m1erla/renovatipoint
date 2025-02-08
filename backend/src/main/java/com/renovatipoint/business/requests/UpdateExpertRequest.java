@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 public class UpdateExpertRequest {
+    private String id;
     private String name;
     private String surname;
     private String email;
