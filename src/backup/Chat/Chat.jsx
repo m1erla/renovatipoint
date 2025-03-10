@@ -117,6 +117,185 @@ export default function Chat() {
       });
     }
   };
+  // Chat room ve kullanıcı kontrolü
+  if (!chatRoom?.id || !user?.id) {
+    throw new Error("Gerekli bilgiler eksik. Lütfen sayfayı yenileyin.");
+  }
+
+  if (!infoShared) {
+    try {
+      // Expert ID kontrolü
+      const expertId = chatRoom?.expert?.id;
+      console.log("Debug - Expert ID for payment:", expertId);
+
+      if (!expertId) {
+        throw new Error(
+          "Uzman bilgisi bulunamadı. Lütfen daha sonra tekrar deneyin."
+        );
+      }
+
+      // Get expert's payment info
+      const paymentInfo = await expertService.getPaymentInfo(expertId);
+      console.log("Debug - Expert payment info:", {
+        hasPaymentSetup: paymentInfo?.hasPaymentSetup,
+        stripeCustomerId: paymentInfo?.stripeCustomerId,
+        paymentMethodId: paymentInfo?.paymentMethodId,
+      });
+
+      if (
+        !paymentInfo ||
+        !paymentInfo.hasPaymentSetup ||
+        !paymentInfo.stripeCustomerId ||
+        !paymentInfo.paymentMethodId
+      ) {
+        throw new Error(
+          "Expert has not set up payment information completely"
+        );
+      }
+
+      // İşlem öncesi onay al
+      const confirmed = window.confirm(
+        "Are you sure you want to share your contact information? €1 will be charged from expert's account."
+      );
+
+      if (!confirmed) {
+        setShowShareDialog(false);
+        return;
+      }
+
+      // Token'ı yeniden kontrol et
+      const currentToken = localStorage.getItem("accessToken");
+      if (!currentToken || currentToken !== token) {
+        throw new Error(
+          "Oturum bilgisi değişti. Lütfen tekrar giriş yapın."
+        );
+      }
+
+      // Ödeme işlemini başlat
+      const paymentResponse = await api.post(
+        `/api/v1/payments/charge`,
+        {
+          expertId: expertId,
+          stripeCustomerId: paymentInfo.stripeCustomerId,
+          paymentMethodId: paymentInfo.paymentMethodId,
+          amount: 1, // 1 Euro in cents
+          currency: "eur",
+          paymentType: "CONTACT_INFO",
+          chatRoomId: chatRoom.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Debug - Payment Response:", paymentResponse.data);
+        // Başarı kontrolü - paymentResponse.data.success yerine status kontrolü yapıyoruz
+        if (!paymentResponse.data || !paymentResponse.data.paymentIntentId) {
+          throw new Error("Ödeme yanıtı geçersiz");
+        }
+
+        // Ödeme durumunu kontrol et
+        if (
+          paymentResponse.data.status === "processing" ||
+          paymentResponse.data.status === "requires_confirmation"
+        ) {
+          let attempts = 0;
+          const maxAttempts = 10;
+          let paymentSucceeded = false;
+
+          while (attempts < maxAttempts) {
+            const statusCheck = await api.get(
+              `/api/v1/payments/payment-intents/${paymentResponse.data.paymentIntentId}/status`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+
+            console.log("Debug - Payment status check:", statusCheck.data);
+
+            if (statusCheck.data.status === "succeeded") {
+              paymentSucceeded = true;
+              break;
+            } else if (
+              statusCheck.data.status === "failed" ||
+              statusCheck.data.status === "canceled"
+            ) {
+              throw new Error("Ödeme işlemi başarısız oldu");
+            }
+
+            attempts++;
+            await new Promise((resolve) => setTimeout(resolve, 3000)); // 3 saniye bekle
+          }
+
+          if (!paymentSucceeded) {
+            throw new Error("Ödeme doğrulama zaman aşımına uğradı");
+          }
+        } else if (paymentResponse.data.status !== "succeeded") {
+          throw new Error(
+            "Ödeme işlemi başarısız oldu: " + paymentResponse.data.status
+          );
+        }
+        toast.success(
+          "Contact information shared successfully and €1 has been charged from expert's account!"
+        );
+      } catch (error) {
+        console.error("Ödeme kontrolü sırasında hata:", error);
+        setShowShareDialog(false);
+
+        // Oturum ve yetkilendirme hatalarını kontrol et
+        if (
+          error.response?.status === 401 ||
+          error.message.includes("Oturum süresi dolmuş") ||
+          error.message.includes("Oturum bilgisi değişti")
+        ) {
+          localStorage.clear();
+          setError("Oturumunuz sonlanmış. Lütfen tekrar giriş yapın.");
+          navigate("/login");
+          return;
+        }
+
+        let errorMessage = error.message;
+        // Hata mesajlarını İngilizceleştir
+        if (errorMessage.includes("Expert payment setup is incomplete")) {
+          errorMessage =
+            "Expert has not completed payment setup. Please try again later.";
+        } else if (
+          errorMessage.includes("Expert Stripe customer ID is missing")
+        ) {
+          errorMessage =
+            "Expert's payment account is missing. Please try again later.";
+        } else if (
+          errorMessage.includes("Expert payment method ID is missing")
+        ) {
+          errorMessage =
+            "Expert's payment method is missing. Please try again later.";
+        } else if (
+          errorMessage.includes(
+            "Expert bank account information is incomplete"
+          )
+        ) {
+          errorMessage =
+            "Expert's bank account information is incomplete. Please try again later.";
+        } else if (errorMessage.includes("Payment verification timeout")) {
+          errorMessage =
+            "Payment verification timed out. Please try again later.";
+        }
+
+        setError(errorMessage);
+        toast.error(
+          errorMessage || "Payment failed. Please try again later."
+        );
+      }
+    } else {
+      setShowShareDialog(false);
+      toast.info("Contact information has already been shared!");
+    }
 
   const handleNotificationReceived = (payload) => {
     const notification = JSON.parse(payload.body);

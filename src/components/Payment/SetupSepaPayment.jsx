@@ -8,10 +8,14 @@ import {
   Snackbar,
   Grid,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import { Alert } from "@mui/material";
-import axios from "axios";
-import { AuthContext } from "../Auth/AuthContext";
+import api from "../../utils/api";
+import { AuthContext } from "../../context/AuthContext";
+import { toast } from "react-hot-toast";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import { paymentService } from "../../services/paymentService";
 
 function SetupSepaPayment() {
   const [iban, setIban] = useState("");
@@ -21,46 +25,84 @@ function SetupSepaPayment() {
   const [success, setSuccess] = useState(false);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess(false);
+    setLoading(true);
 
     try {
-      const response = await axios.post(
-        "/api/v1/experts/setup-sepa",
-        { iban, bic, bankName },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
+      const sepaData = {
+        iban,
+        bic,
+        bankName,
+      };
 
-      localStorage.setItem("stripeCustomerId", response.data.customerId);
-      localStorage.setItem(
-        "stripePaymentMethodId",
-        response.data.paymentMethodId
-      );
+      const response = await paymentService.setupSepaPayment(sepaData);
 
-      setSuccess(true);
-      setTimeout(() => {
-        navigate("/expert-dashboard");
-      }, 2000);
+      if (response.success) {
+        setSuccess(true);
+        toast.success("SEPA ödeme kurulumu başarıyla tamamlandı!");
+        // Redirect after a short delay
+        setTimeout(() => {
+          navigate("/expert-profile");
+        }, 2000);
+      } else {
+        setError(response.error || "SEPA kurulumu sırasında bir hata oluştu");
+        toast.error(
+          response.error || "SEPA kurulumu sırasında bir hata oluştu"
+        );
+      }
     } catch (error) {
+      console.error("SEPA setup error:", error);
       setError(
         error.response?.data?.message ||
-          "An error occurred while setting up SEPA payment."
+          "SEPA ödeme kurulumu sırasında bir hata oluştu."
       );
+      toast.error(
+        error.response?.data?.message ||
+          "SEPA ödeme kurulumu sırasında bir hata oluştu."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetAndSetupSepa = async () => {
+    try {
+      setLoading(true);
+
+      const sepaData = {
+        iban,
+        bic,
+        bankName,
+      };
+
+      const result = await paymentService.resetAndSetupSepaPayment(sepaData);
+
+      if (result.success) {
+        toast.success("SEPA ödeme kurulumu başarıyla yenilendi!");
+        navigate("/expert-profile");
+      } else {
+        toast.error(result.error || "SEPA kurulumu sırasında bir hata oluştu");
+      }
+    } catch (error) {
+      console.error("SEPA kurulum hatası:", error);
+      toast.error(error.message || "SEPA kurulumu sırasında bir hata oluştu");
+    } finally {
+      setLoading(false);
     }
   };
 
   if (!user || user.role !== "EXPERT") {
     return (
-      <Typography>
-        You must be logged in as an expert to access this page.
-      </Typography>
+      <Container maxWidth="sm" sx={{ mt: 12, mb: 8 }}>
+        <Alert severity="error">
+          Bu sayfaya erişmek için uzman olarak giriş yapmanız gerekmektedir.
+        </Alert>
+      </Container>
     );
   }
 
@@ -85,7 +127,7 @@ function SetupSepaPayment() {
             color: "#2c3e50",
           }}
         >
-          Setup SEPA Payment
+          SEPA Ödeme Kurulumu
         </Typography>
 
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
@@ -126,7 +168,7 @@ function SetupSepaPayment() {
               <TextField
                 fullWidth
                 variant="outlined"
-                label="Bank Name"
+                label="Banka Adı"
                 value={bankName}
                 onChange={(e) => setBankName(e.target.value)}
                 required
@@ -143,8 +185,8 @@ function SetupSepaPayment() {
                 type="submit"
                 fullWidth
                 variant="contained"
+                disabled={loading}
                 sx={{
-                  mt: 2,
                   py: 1.5,
                   fontSize: "1.1rem",
                   fontWeight: 600,
@@ -152,41 +194,28 @@ function SetupSepaPayment() {
                   borderRadius: 2,
                 }}
               >
-                Setup Payment
+                {loading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Ödeme Kurulumunu Tamamla"
+                )}
               </Button>
             </Grid>
           </Grid>
         </form>
 
-        <Snackbar
-          open={!!error}
-          autoHideDuration={6000}
-          onClose={() => setError("")}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <Alert
-            onClose={() => setError("")}
-            severity="error"
-            sx={{ width: "100%", boxShadow: 2 }}
-          >
+        {error && (
+          <Alert severity="error" sx={{ mt: 2, width: "100%" }}>
             {error}
           </Alert>
-        </Snackbar>
+        )}
 
-        <Snackbar
-          open={success}
-          autoHideDuration={6000}
-          onClose={() => setSuccess(false)}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        >
-          <Alert
-            onClose={() => setSuccess(false)}
-            severity="success"
-            sx={{ width: "100%", boxShadow: 2 }}
-          >
-            SEPA payment setup successful! Redirecting to dashboard...
+        {success && (
+          <Alert severity="success" sx={{ mt: 2, width: "100%" }}>
+            SEPA ödeme kurulumu başarıyla tamamlandı! Profil sayfasına
+            yönlendiriliyorsunuz...
           </Alert>
-        </Snackbar>
+        )}
       </Box>
     </Container>
   );

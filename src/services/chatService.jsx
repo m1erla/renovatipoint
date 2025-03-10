@@ -1,6 +1,7 @@
 import { Client } from "@stomp/stompjs";
 import api from "../utils/api";
 import SockJS from "sockjs-client";
+import axios from "axios";
 
 class ChatService {
   constructor() {
@@ -16,6 +17,11 @@ class ChatService {
     onErrorReceived
   ) {
     try {
+      if (this.stompClient && this.connected) {
+        console.log("WebSocket already connected");
+        return;
+      }
+
       const token = localStorage.getItem("accessToken");
       const socket = new SockJS(`http://localhost:8080/ws?token=${token}`);
 
@@ -79,55 +85,25 @@ class ChatService {
   }
 
   disconnect() {
-    this.subscriptions.forEach((subscription) => {
-      try {
-        subscription.unsubscribe();
-      } catch (error) {
-        console.error("Error unsubscribing:", error);
-      }
-    });
-    this.subscriptions.clear();
-
     if (this.stompClient) {
+      this.subscriptions.forEach((subscription) => {
+        try {
+          subscription.unsubscribe();
+        } catch (error) {
+          console.error("Error unsubscribing:", error);
+        }
+      });
+      this.subscriptions.clear();
+
       try {
         this.stompClient.deactivate();
       } catch (error) {
         console.error("Error disconnecting:", error);
       }
+      this.connected = false;
     }
-    this.connected = false;
   }
 
-  // async sendMessage(chatRoomId, content, isSharedInformation = false) {
-  //   if (!this.connected) {
-  //     throw new Error("WebSocket not connected");
-  //   }
-
-  //   const message = {
-  //     senderId: localStorage.getItem("userId"),
-  //     chatRoomId: chatRoomId,
-  //     content: content,
-  //     isSharedInformation: isSharedInformation,
-  //     timestamp: new Date().toISOString(),
-  //     type: "CHAT",
-  //   };
-
-  //   return new Promise((resolve, reject) => {
-  //     try {
-  //       this.stompClient.publish({
-  //         destination: "/app/chat",
-  //         body: JSON.stringify(message),
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  //         },
-  //       });
-  //       resolve(message);
-  //     } catch (error) {
-  //       console.error("Error sending message:", error);
-  //       reject(error);
-  //     }
-  //   });
-  // }
   async sendMessage(chatRoomId, messageData) {
     if (!this.connected) {
       throw new Error("WebSocket not connected");
@@ -171,9 +147,8 @@ class ChatService {
           typeof messageData === "object"
             ? JSON.stringify(messageData)
             : messageData,
-        isSharedInformation: false,
         timestamp: new Date().toISOString(),
-        type: "CHAT",
+        messageType: "CHAT",
       };
 
       return new Promise((resolve, reject) => {
@@ -201,7 +176,38 @@ class ChatService {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       });
-      return response.data;
+
+      // Debug logları
+      console.log("Debug - Raw Chat Room Response:", response.data);
+
+      // Backend'den gelen durumu kontrol et
+      const isCompleted = Boolean(
+        response.data.status === "COMPLETED" ||
+          response.data.completed ||
+          response.data.completionPaymentProcessed ||
+          response.data.isCompleted ||
+          response.data.stripePaymentIntentId // Ödeme yapıldıysa kesinlikle tamamlanmıştır
+      );
+
+      // İletişim bilgisi paylaşım durumunu kontrol et
+      const hasContactBeenShared = Boolean(
+        response.data.contactInformationShared ||
+          response.data.hasContactBeenShared ||
+          response.data.contactSharingRecords?.length > 0
+      );
+
+      // Chat room nesnesini oluştur
+      const chatRoom = {
+        ...response.data,
+        isCompleted: isCompleted,
+        status: isCompleted ? "COMPLETED" : response.data.status || "ACTIVE",
+        completed: isCompleted,
+        completionPaymentProcessed: isCompleted,
+        contactInformationShared: hasContactBeenShared,
+      };
+
+      console.log("Debug - Final Chat Room State:", chatRoom);
+      return chatRoom;
     } catch (error) {
       console.error("Error fetching chat room: ", error);
       throw error;
@@ -210,13 +216,26 @@ class ChatService {
 
   async getChatRooms() {
     try {
-      const response = await fetch("/api/v1/chat/rooms", {
+      const response = await api.get("/api/v1/chat/rooms", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       });
-      if (!response.ok) throw new Error("Failed to fetch chat rooms");
-      return await response.json();
+
+      // Her bir chat room için tamamlanma durumunu kontrol et
+      const chatRooms = response.data.map((room) => ({
+        ...room,
+        isCompleted: Boolean(
+          room.completed ||
+            room.status === "COMPLETED" ||
+            room.completionPaymentProcessed
+        ),
+        status: room.status || "ACTIVE",
+        completed: room.completed || false,
+        completionPaymentProcessed: room.completionPaymentProcessed || false,
+      }));
+
+      return chatRooms;
     } catch (error) {
       console.error("Error fetching chat rooms:", error);
       throw error;
@@ -236,212 +255,85 @@ class ChatService {
       );
       return response.data;
     } catch (error) {
-      console.error("Error fetching messages:", error);
+      console.error("Error fetching chat messages:", error);
       throw error;
     }
   }
 
   async markMessagesAsRead(chatRoomId) {
-    await api.post(`/api/v1/chat/rooms/${chatRoomId}/messages/read`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
+    try {
+      await api.post(`/api/v1/chat/rooms/${chatRoomId}/messages/read`, null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+    } catch (error) {
+      console.error("Error marking messages as read:", error);
+      throw error;
+    }
   }
 
   async getUnreadCount(chatRoomId) {
-    const response = await api.get(`/api/v1/chat/rooms/${chatRoomId}/unread`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
-    if (!response.ok) throw new Error("Failed to fetch unread count");
-    const data = await response.json();
-    return data.count;
+    try {
+      const response = await api.get(
+        `/api/v1/chat/rooms/${chatRoomId}/unread`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      return response.data.count;
+    } catch (error) {
+      console.error("Error getting unread count:", error);
+      throw error;
+    }
+  }
+
+  async markJobAsComplete(chatRoomId, paymentIntentId) {
+    try {
+      const response = await api.post(
+        `/api/v1/chat/rooms/${chatRoomId}/complete`,
+        { paymentIntentId },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error completing job:", error);
+      throw error;
+    }
+  }
+
+  async shareContactInformation(chatRoomId) {
+    try {
+      const response = await api.post(
+        `/api/v1/chat/rooms/${chatRoomId}/share-contact`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        throw new Error(
+          error.response.data.message || "Failed to share contact information"
+        );
+      }
+      console.error("Error sharing contact information:", error);
+      throw error;
+    }
+  }
+
+  defaultErrorHandler(error) {
+    console.error("WebSocket error received:", error);
   }
 }
 
-export const chatService = new ChatService();
-
-//let stompClient = null;
-// let name = null;
-// let surname = null;
-
-// const ChatService = {
-//   connect: (userId, onMessageReceived) => {
-//     const token = localStorage.getItem("accessToken");
-//     const socketUrl = `http://localhost:8080/ws?token=${token}`;
-//     const socket = new SockJS(socketUrl);
-//     stompClient = new Client({
-//       webSocketFactory: () => socket,
-//       connectHeaders: {
-//         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-//       },
-//       debug: (str) => {
-//         console.log(str);
-//       },
-//       onConnect: () => {
-//         console.log("WebSocket Connected");
-//         stompClient.subscribe(
-//           `/api/v1/users/user/${userId}/queue/messages`,
-//           onMessageReceived
-//         );
-//         stompClient.subscribe(`/api/v1/users/user/public`, onMessageReceived);
-
-//         stompClient.current.send(
-//           "/app/api/v1/users/user.addUser",
-//           {},
-//           JSON.stringify({ name: name, surname: surname, status: "ONLINE" })
-//         );
-//       },
-//       onStompError: (frame) => {
-//         console.error("Broker reported error: " + frame.headers["message"]);
-//         console.error("Additional details: " + frame.body);
-//       },
-//       onWebSocketClose: (event) => {
-//         console.error("WebSocket connection closed:", event);
-//       },
-//     });
-
-//     stompClient.activate();
-//   },
-
-//   disconnect: () => {
-//     if (stompClient !== null) {
-//       stompClient.deactivate();
-//     }
-//     console.log("Disconnected");
-//   },
-
-//   sendMessage: (senderId, recipientId, content) => {
-//     const chatMessage = {
-//       senderId,
-//       recipientId,
-//       content,
-//       timestamp: new Date(),
-//     };
-//     console.log("Sending message", chatMessage);
-//     if (stompClient && stompClient.active) {
-//       stompClient.publish({
-//         destination: "/app/api/v1/sendMessage",
-//         body: JSON.stringify(chatMessage),
-//       });
-//     } else {
-//       console.error("WebSocket is not connected");
-//     }
-//   },
-
-//   createChat: async (userId, expertEmail) => {
-//     try {
-//       console.log(
-//         "Creating chat for user:",
-//         userId,
-//         "and expert:",
-//         expertEmail
-//       );
-//       const token = localStorage.getItem("accessToken");
-
-//       if (!token) {
-//         console.error("No access token found");
-//         throw new Error("No access token found");
-//       }
-
-//       const response = await api.post(
-//         `/api/v1/create?userId=${userId}&expertEmail=${expertEmail}`,
-//         {}, // Empty object as body
-//         {
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${token}`, // Add token here
-//           },
-//         }
-//       );
-
-//       console.log("Chat creation response:", response.data);
-//       return response.data;
-//     } catch (error) {
-//       console.error("Error creating chat:", error);
-//       if (error.response) {
-//         console.error("Error response:", error.response.data);
-//       }
-//       throw error;
-//     }
-//   },
-//   shareInformation: async (senderId, recipientId, content) => {
-//     const token = localStorage.getItem("accessToken");
-//     try {
-//       const response = await api.post(
-//         `/api/v1/share-information`,
-//         { senderId, recipientId, content, isSharedInformation: true },
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       );
-//       return response.data;
-//     } catch (error) {
-//       console.error("Error sharing information:", error);
-//       throw error;
-//     }
-//   },
-
-//   completeJob: async (chatId) => {
-//     const token = localStorage.getItem("accessToken");
-//     const expertEmail = localStorage.getItem("userEmail");
-//     try {
-//       const response = await api.post(
-//         `/api/v1/complete-job`,
-//         { chatId, expertEmail },
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       );
-//       return response.data;
-//     } catch (error) {
-//       console.error("Error completing job:", error);
-//       throw error;
-//     }
-//   },
-
-//   getChatMessages: async (chatId) => {
-//     const token = localStorage.getItem("accessToken");
-//     const userId = localStorage.getItem("userId");
-//     try {
-//       const response = await api.get(`/api/v1/messages/${userId}/${chatId}`, {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-//       return response.data;
-//     } catch (error) {
-//       console.error("Error fetching chat messages:", error);
-//       throw error;
-//     }
-//   },
-//   getChatRoom: async (adId) => {
-//     const token = localStorage.getItem("acessToken");
-//     if (!token) {
-//       console.error("No access token found");
-//       throw new Error("No access token found");
-//     }
-
-//     try {
-//       const response = await api.get(`/api/v1/room/by-ad/${adId}`, {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-//       return response.data;
-//     } catch (error) {
-//       console.error("Error fetching chat room:", error);
-//     }
-//   },
-// };
-
-// export default ChatService;
+export default new ChatService();

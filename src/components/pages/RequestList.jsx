@@ -13,6 +13,7 @@ import {
   Alert,
   Chip,
   Box,
+  Container,
 } from "@mui/material";
 import RequestService from "../../services/requestService";
 import { useNavigate } from "react-router-dom";
@@ -87,11 +88,22 @@ export default function RequestList() {
 
   const handleComplete = async (requestId) => {
     try {
-      await RequestService.completeRequest(requestId);
-      fetchRequests(userId, userRole);
+      setLoading(true);
+      setError(null);
+
+      const response = await RequestService.completeRequest(requestId);
+      console.log("Complete response:", response);
+
+      if (response.chatRoomId) {
+        navigate(`/chat/${response.chatRoomId}`);
+      } else {
+        await fetchRequests(userId, userRole);
+      }
     } catch (error) {
       console.error("Error completing request:", error);
-      alert("Failed to complete request. Please try again.");
+      setError(error.response?.data?.message || "Failed to complete request");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -181,75 +193,179 @@ export default function RequestList() {
     );
   }
   return (
-    <Box sx={{ maxWidth: 1200, mx: "auto", p: 4 }}>
-      <Grid container spacing={3}>
-        {requests.map((request) => (
-          <Grid item xs={12} sm={6} lg={4} key={request.id}>
-            <Card
-              elevation={1}
-              sx={{
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                transition: "transform 0.2s",
-                "&:hover": {
-                  transform: "translateY(-4px)",
-                  boxShadow: 3,
-                },
-              }}
-            >
-              <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 500 }}>
-                  {request.adTitle || "N/A"}
-                </Typography>
+    <Box
+      sx={{
+        minHeight: "calc(100vh - 200px)",
+        backgroundColor: (theme) =>
+          theme.palette.mode === "dark" ? "#111827" : "#f5f5f7",
+        pt: { xs: 8, sm: 9 },
+        pb: 4,
+        px: { xs: 2, sm: 4 },
+      }}
+    >
+      <Container maxWidth="lg">
+        <Box sx={{ mb: { xs: 3, sm: 4 } }}>
+          <Typography
+            variant="h4"
+            gutterBottom
+            sx={{
+              fontWeight: 600,
+              color: (theme) =>
+                theme.palette.mode === "dark" ? "#fff" : "#2c3e50",
+              fontSize: { xs: "1.75rem", sm: "2rem", md: "2.25rem" },
+            }}
+          >
+            Requests
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              mb: 3,
+              color: (theme) =>
+                theme.palette.mode === "dark"
+                  ? "rgba(255, 255, 255, 0.7)"
+                  : "text.secondary",
+            }}
+          >
+            Manage your requests and communications with experts
+          </Typography>
+        </Box>
 
-                <Box sx={{ mb: 2 }}>
-                  <Chip
-                    label={request.status}
-                    color={getStatusColor(request.status)}
-                    size="small"
-                    sx={{ borderRadius: 1 }}
-                  />
-                </Box>
-
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 2 }}
-                >
-                  {request.expertName || "N/A"}
-                </Typography>
-
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  onClick={() => handleOpenDialog(request)}
+        <Grid container spacing={3}>
+          {requests.map((request) => (
+            <Grid item xs={12} sm={6} lg={4} key={request.id}>
+              <Card
+                elevation={0}
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: (theme) =>
+                      theme.palette.mode === "dark"
+                        ? "0 8px 24px rgba(0,0,0,0.3)"
+                        : "0 8px 24px rgba(0,0,0,0.12)",
+                  },
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  border: "1px solid",
+                  borderColor: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "rgba(255, 255, 255, 0.1)"
+                      : "divider",
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "#1f2937"
+                      : "background.paper",
+                }}
+              >
+                <CardContent
                   sx={{
-                    mt: "auto",
-                    color: "#2c3e50",
-                    borderColor: "#2c3e50",
-                    "&:hover": {
-                      borderColor: "#1a252f",
-                      backgroundColor: "#1a252f",
-                      color: "#f5f5f5",
-                    },
+                    flexGrow: 1,
+                    p: 3,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2,
                   }}
                 >
-                  View Details
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 500,
+                      color: (theme) =>
+                        theme.palette.mode === "dark" ? "#fff" : "#2c3e50",
+                      mb: 1,
+                    }}
+                  >
+                    {request.adTitle || "N/A"}
+                  </Typography>
+
+                  <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                    <Chip
+                      label={request.status}
+                      color={getStatusColor(request.status)}
+                      size="small"
+                      sx={{
+                        borderRadius: 1,
+                        fontWeight: 500,
+                      }}
+                    />
+                  </Box>
+
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: (theme) =>
+                        theme.palette.mode === "dark"
+                          ? "rgba(255, 255, 255, 0.7)"
+                          : "text.secondary",
+                    }}
+                  >
+                    Expert: {request.expertName || "N/A"}
+                  </Typography>
+
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    onClick={() => handleOpenDialog(request)}
+                    sx={{
+                      mt: "auto",
+                      py: 1,
+                      color: (theme) =>
+                        theme.palette.mode === "dark" ? "#fff" : "#2c3e50",
+                      borderColor: (theme) =>
+                        theme.palette.mode === "dark"
+                          ? "rgba(255, 255, 255, 0.2)"
+                          : "#2c3e50",
+                      "&:hover": {
+                        borderColor: (theme) =>
+                          theme.palette.mode === "dark"
+                            ? "rgba(255, 255, 255, 0.3)"
+                            : "#1a252f",
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === "dark"
+                            ? "rgba(255, 255, 255, 0.05)"
+                            : "rgba(44, 62, 80, 0.04)",
+                      },
+                      textTransform: "none",
+                      fontWeight: 500,
+                    }}
+                  >
+                    View Details
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
 
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
         maxWidth="sm"
         fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            boxShadow: (theme) =>
+              theme.palette.mode === "dark"
+                ? "0 8px 32px rgba(0,0,0,0.3)"
+                : "0 8px 32px rgba(0,0,0,0.08)",
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark" ? "#1f2937" : "#fff",
+          },
+        }}
       >
-        <DialogTitle sx={{ pb: 1 }}>
+        <DialogTitle
+          sx={{
+            pb: 1,
+            color: (theme) =>
+              theme.palette.mode === "dark" ? "#fff" : "inherit",
+          }}
+        >
           {selectedRequest?.adTitle || "N/A"}
         </DialogTitle>
 
@@ -257,7 +373,15 @@ export default function RequestList() {
           {selectedRequest && (
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Typography variant="body2" color="text.secondary">
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: (theme) =>
+                      theme.palette.mode === "dark"
+                        ? "rgba(255, 255, 255, 0.7)"
+                        : "text.secondary",
+                  }}
+                >
                   Status:
                 </Typography>
                 <Chip
@@ -268,14 +392,30 @@ export default function RequestList() {
               </Box>
 
               <Typography variant="body2">
-                <Box component="span" sx={{ color: "text.secondary" }}>
+                <Box
+                  component="span"
+                  sx={{
+                    color: (theme) =>
+                      theme.palette.mode === "dark"
+                        ? "rgba(255, 255, 255, 0.7)"
+                        : "text.secondary",
+                  }}
+                >
                   Requested by:
                 </Box>{" "}
                 {selectedRequest.expertName || "N/A"}
               </Typography>
 
               <Typography variant="body2">
-                <Box component="span" sx={{ color: "text.secondary" }}>
+                <Box
+                  component="span"
+                  sx={{
+                    color: (theme) =>
+                      theme.palette.mode === "dark"
+                        ? "rgba(255, 255, 255, 0.7)"
+                        : "text.secondary",
+                  }}
+                >
                   Description:
                 </Box>{" "}
                 {selectedRequest.message || "No description available"}
@@ -286,7 +426,13 @@ export default function RequestList() {
 
         <DialogActions sx={{ p: 2, pt: 1 }}>
           {selectedRequest && renderActionButtons(selectedRequest)}
-          <Button onClick={handleCloseDialog} color="inherit">
+          <Button
+            onClick={handleCloseDialog}
+            sx={{
+              color: (theme) =>
+                theme.palette.mode === "dark" ? "#fff" : "inherit",
+            }}
+          >
             Close
           </Button>
         </DialogActions>

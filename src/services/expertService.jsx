@@ -8,23 +8,25 @@ const getAuthHeader = () => {
   return { Authorization: `Bearer ${token}` };
 };
 
-const getProfile = async () => {
-  const token = localStorage.getItem("accessToken"); // Retrieve the token from localStorage
-  const response = await api.get(`/api/v1/experts/responseExpert`, {
-    headers: {
-      Authorization: `Bearer ${token}`, // Send the token in the Authorization header
-    },
-  });
-  return response.data;
-};
 const getExpertProfile = async () => {
   try {
     const response = await api.get(`/api/v1/experts/responseExpert`, {
       headers: getAuthHeader(),
     });
+
+    if (!response.data) {
+      throw new Error("No data received from expert profile endpoint");
+    }
+
     return response.data;
   } catch (error) {
-    if (error.response && error.response.status === 401) {
+    console.error("Expert profile error:", {
+      message: error.message,
+      response: error.response,
+      status: error.response?.status,
+    });
+
+    if (error.response?.status === 401) {
       localStorage.removeItem("accessToken");
       throw new Error("Session expired. Please log in again.");
     }
@@ -43,64 +45,92 @@ const getExpertById = async (expertId) => {
     throw error;
   }
 };
-const registerExpert = async (expertData) => {
-  try {
-    // First validate that we have a job title ID
-    if (!expertData.jobTitleId) {
-      throw new Error("Job title selection is required");
-    }
-
-    // Create the registration request with proper job title information
-    const registrationData = {
-      name: expertData.name,
-      surname: expertData.surname,
-      email: expertData.email,
-      password: expertData.password,
-      jobTitleId: expertData.jobTitleId, // Make sure this is being passed
-      jobTitleName: expertData.jobTitleName, // Include this for reference
-      postCode: expertData.postCode,
-      phoneNumber: expertData.phoneNumber,
-      address: expertData.address,
-      role: "EXPERT", // Explicitly set the role
-    };
-
-    console.log("Sending expert registration data:", registrationData); // Debug log
-
-    const response = await api.post(
-      "/api/v1/auth/expertRegister",
-      registrationData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error("Expert registration error:", error);
-    throw new Error(
-      error.response?.data?.message || "Failed to register expert"
-    );
-  }
-};
 
 const getPaymentInfo = async (expertId) => {
   try {
+    // Token kontrolü
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("Oturum süresi dolmuş. Lütfen tekrar giriş yapın.");
+    }
+
     const response = await api.get(`/api/v1/experts/${expertId}/payment-info`, {
-      headers: getAuthHeader(),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     });
+
+    console.log("Debug - Expert payment info response:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error fetching expert payment info:", error);
+    console.error("Error getting expert payment info:", error);
+
+    // 401 hatası kontrolü
+    if (error.response?.status === 401) {
+      throw new Error("Oturum süresi dolmuş. Lütfen tekrar giriş yapın.");
+    }
+
+    throw error;
+  }
+};
+
+const createStripeCustomer = async () => {
+  try {
+    const response = await api.post(
+      `/api/v1/experts/create-stripe-customer`,
+      null,
+      {
+        headers: getAuthHeader(),
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error creating stripe customer:", error);
+    throw error;
+  }
+};
+
+const attachPaymentMethod = async (paymentMethodData) => {
+  try {
+    const response = await api.post(
+      `/api/v1/experts/attach-payment-method`,
+      paymentMethodData,
+      {
+        headers: getAuthHeader(),
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error attaching payment method:", error);
+    throw error;
+  }
+};
+
+const updateExpertProfile = async (updateData) => {
+  try {
+    const response = await api.put(
+      `/api/v1/experts/${updateData.id}`,
+      updateData,
+      {
+        headers: {
+          ...getAuthHeader(),
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating expert profile:", error);
     throw error;
   }
 };
 
 export default {
   getPaymentInfo,
-  registerExpert,
-  getProfile,
   getExpertById,
   getExpertProfile,
+  createStripeCustomer,
+  attachPaymentMethod,
+  updateExpertProfile,
 };

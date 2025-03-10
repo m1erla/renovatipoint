@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import paymentService from "../../services/paymentService";
+import { paymentService } from "../../services/paymentService";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import PaymentDialog from "./PaymentDialog";
 
 function SepaPayment() {
   const [amount, setAmount] = useState("");
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
   const handlePayment = async () => {
     try {
-      const customerId = localStorage.getItem("customerId"); // Retrieve customerId from localStorage
-      const paymentMethodId = localStorage.getItem("paymentMethodId"); // Retrieve paymentMethodId
+      const customerId = localStorage.getItem("customerId");
+      const paymentMethodId = localStorage.getItem("paymentMethodId");
 
       if (!customerId || !paymentMethodId) {
         alert(
@@ -18,19 +20,25 @@ function SepaPayment() {
       }
 
       const paymentData = {
-        customerId: customerId, // Pass customerId
-        paymentMethodId: paymentMethodId, // Pass paymentMethodId
-        amount: amount, // Pass the amount
+        customerId: customerId,
+        paymentMethodId: paymentMethodId,
+        amount: amount,
       };
       const response = await paymentService.createSepaPaymentIntent(
         paymentData
       );
       console.log("Payment Initialted", response);
 
-      alert("Payment initiated successfully.");
+      // Show success dialog instead of alert
+      setShowSuccessDialog(true);
     } catch (error) {
       console.error("Error initiating payment", error);
     }
+  };
+
+  const handleCloseDialog = () => {
+    setShowSuccessDialog(false);
+    setAmount(""); // Reset amount after successful payment
   };
 
   return (
@@ -89,6 +97,12 @@ function SepaPayment() {
           Pay Now
         </Button>
       </Box>
+
+      <PaymentDialog
+        open={showSuccessDialog}
+        onClose={handleCloseDialog}
+        amount={amount}
+      />
     </Container>
   );
 }

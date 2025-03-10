@@ -1,23 +1,22 @@
 import api from "../utils/api";
 
+const getAuthHeader = () => {
+  const token = localStorage.getItem("accessToken");
+  if (!token) {
+    throw new Error("No access token found");
+  }
+  return { Authorization: `Bearer ${token}` };
+};
+
 const getCurrentUserInfo = async () => {
   try {
-    const response = await fetch("/api/v1/users/current", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "Content-Type": "application/json",
-      },
+    const response = await api.get("/api/v1/users/current", {
+      headers: getAuthHeader(),
     });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch user information");
-    }
-
-    const userData = await response.json();
     return {
-      name: userData.name,
-      phone: userData.phoneNumber, // Assuming this matches your User entity field
-      email: userData.email,
+      name: response.data.name,
+      phone: response.data.phoneNumber,
+      email: response.data.email,
     };
   } catch (error) {
     console.error("Error fetching user info:", error);
@@ -27,20 +26,10 @@ const getCurrentUserInfo = async () => {
 
 const updateUserInfo = async (userInfo) => {
   try {
-    const response = await fetch("/api/v1/users/current", {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userInfo),
+    const response = await api.put("/api/v1/users/update", userInfo, {
+      headers: getAuthHeader(),
     });
-
-    if (!response.ok) {
-      throw new Error("Failed to update user information");
-    }
-
-    return await response.json();
+    return response.data;
   } catch (error) {
     console.error("Error updating user info:", error);
     throw new Error("Could not update user information");
@@ -48,40 +37,22 @@ const updateUserInfo = async (userInfo) => {
 };
 
 const getProfile = async () => {
-  const token = localStorage.getItem("accessToken"); // Retrieve the token from localStorage
-  const response = await api.get(`/api/v1/users/response`, {
-    headers: {
-      Authorization: `Bearer ${token}`, // Send the token in the Authorization header
-    },
+  const response = await api.get("/api/v1/users/response", {
+    headers: getAuthHeader(),
   });
   return response.data;
 };
 
 const getUserProfile = async () => {
-  const token = localStorage.getItem("accessToken"); // Retrieve the token from localStorage
-  if (!token) {
-    throw new Error("No access token found");
-  }
-
-  const response = await api.get(`/api/v1/users/response`, {
-    headers: {
-      Authorization: `Bearer ${token}`, // Send the token in the Authorization header
-    },
+  const response = await api.get("/api/v1/users/response", {
+    headers: getAuthHeader(),
   });
-
   return response.data;
 };
 
-const registerUser = async (data) => {
-  const response = await api.post(`/api/v1/auth/register`, data);
-  return response.data;
-};
 const getUserProfileById = async (userId) => {
-  const token = localStorage.getItem("accessToken"); // Retrieve JWT from localStorage
   const response = await api.get(`/api/v1/users/${userId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: getAuthHeader(),
   });
   return response.data;
 };
@@ -89,7 +60,6 @@ const getUserProfileById = async (userId) => {
 export default {
   getCurrentUserInfo,
   updateUserInfo,
-  registerUser,
   getProfile,
   getUserProfileById,
   getUserProfile,

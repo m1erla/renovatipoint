@@ -1,0 +1,137 @@
+{
+  "id": 3,
+  "name": "Tadilat & Yenileme",
+  "slug": "tadilat-yenileme",
+  "icon": "HomeModernIcon",
+  "description": "Evinizin her köşesinde profesyonel tadilat ve yenileme hizmetleri.",
+  "longDescription": "Evinizin veya iş yerinizin ihtiyaç duyduğu tadilat ve yenileme işlemleri için profesyonel çözümler sunuyoruz. Deneyimli ekiplerimiz ile mutfak, banyo, salon ve tüm yaşam alanlarınızda modern, fonksiyonel ve estetik dönüşümler gerçekleştiriyoruz. En yeni malzemeler ve trendler ile mekanlarınıza yeni bir soluk kazandırıyoruz.",
+  "expertCount": 52,
+  "image": "/images/categories/renovation.jpg",
+  "backgroundImage": "/images/backgrounds/renovation-bg.jpg",
+  "serviceCount": 12,
+  "isActive": true,
+  "createdAt": "2023-10-01T10:00:00Z",
+  "updatedAt": "2023-10-01T10:00:00Z",
+  "features": [
+    {
+      "title": "Profesyonel Tasarım",
+      "description": "Uzman iç mimarlarımız ile mekanlarınız için özel tasarımlar"
+    },
+    {
+      "title": "Kaliteli Malzeme",
+      "description": "En yüksek kalitede ve dayanıklı malzemeler kullanımı"
+    },
+    {
+      "title": "Zamanında Teslim",
+      "description": "Projelerinizin zamanında ve bütçeye uygun tamamlanması"
+    },
+    {
+      "title": "Geniş Hizmet Ağı",
+      "description": "Kapsamlı tadilat ve yenileme hizmetleri"
+    }
+  ],
+  "testimonials": [
+    {
+      "author": "Ali R.",
+      "role": "İşletme Sahibi",
+      "avatar": "/images/testimonials/ali.jpg",
+      "content": "Ofisimizin tüm tadilat işlemlerini Renovatipoint ile gerçekleştirdik. Profesyonel ekipleri, kaliteli malzemeleri ve zamanında teslimat için çok teşekkür ederiz."
+    },
+    {
+      "author": "Seda M.",
+      "role": "Mimar",
+      "avatar": "/images/testimonials/seda.jpg",
+      "content": "Müşterilerim için Renovatipoint'i tercih ediyorum. Mutfak ve banyo yenileme projelerinde gösterdikleri titizlik ve kalite gerçekten takdire şayan."
+    },
+    {
+      "author": "Caner B.",
+      "role": "Ev Sahibi",
+      "avatar": "/images/testimonials/caner.jpg",
+      "content": "Evimizin komple tadilatını Renovatipoint'e emanet ettik ve sonuçtan çok memnun kaldık. Özellikle mutfak ve banyodaki dönüşüm inanılmazdı."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Tadilat süreci ne kadar sürer?",
+      "answer": "Projenin kapsamına bağlı olarak tadilat süreci değişebilir. Küçük projeler 1-2 hafta sürerken, kapsamlı yenilemeler 1-3 ay arasında tamamlanabilir."
+    },
+    {
+      "question": "Tadilat sırasında evimde yaşayabilir miyim?",
+      "answer": "Tadilat kapsamına bağlı olarak değişir. Küçük çaplı işlemlerde evde yaşamaya devam edebilirsiniz, ancak kapsamlı tadilatlar için geçici olarak başka bir yerde konaklamanız önerilir."
+    },
+    {
+      "question": "Tadilat için gerekli izinleri siz mi alıyorsunuz?",
+      "answer": "Evet, gerekli tüm yasal izinler ve belediye onayları ekibimiz tarafından alınmaktadır. Sizin herhangi bir prosedürle uğraşmanıza gerek kalmaz."
+    },
+    {
+      "question": "Tadilat sonrası temizlik yapılıyor mu?",
+      "answer": "Evet, tüm tadilat projelerimiz sonrasında detaylı temizlik hizmeti sunuyoruz. Evinizi tamamen kullanıma hazır şekilde teslim ediyoruz."
+    },
+    {
+      "question": "Tadilat için kullanılan malzemeleri kendim seçebilir miyim?",
+      "answer": "Kesinlikle! Tasarım sürecinde seçeceğiniz tüm malzemeler, renkler ve dokular için size çeşitli seçenekler sunuyoruz. Final kararı her zaman size aittir."
+    }
+  ],
+  "services": [
+    {
+      "id": 6,
+      "name": "Mutfak Yenileme",
+      "slug": "mutfak-yenileme"
+    },
+    {
+      "id": 7,
+      "name": "Banyo Yenileme",
+      "slug": "banyo-yenileme"
+    },
+    {
+      "id": 201,
+      "name": "Salon Yenileme",
+      "slug": "salon-yenileme"
+    },
+    {
+      "id": 202,
+      "name": "Zemin Kaplama",
+      "slug": "zemin-kaplama"
+    },
+    {
+      "id": 203,
+      "name": "Duvar Kaplama",
+      "slug": "duvar-kaplama"
+    },
+    {
+      "id": 204,
+      "name": "Dolap & Mobilya Yapımı",
+      "slug": "dolap-mobilya-yapimi"
+    },
+    {
+      "id": 205,
+      "name": "Asma Tavan",
+      "slug": "asma-tavan"
+    },
+    {
+      "id": 206,
+      "name": "Kapı & Pencere Değişimi",
+      "slug": "kapi-pencere-degisimi"
+    },
+    {
+      "id": 207,
+      "name": "Ofis Tadilatı",
+      "slug": "ofis-tadilati"
+    },
+    {
+      "id": 208,
+      "name": "Dükkan Tadilatı",
+      "slug": "dukkan-tadilati"
+    },
+    {
+      "id": 209,
+      "name": "Çatı Tadilatı",
+      "slug": "cati-tadilati"
+    },
+    {
+      "id": 210,
+      "name": "Balkon Kapatma",
+      "slug": "balkon-kapatma"
+    }
+  ]
+} 

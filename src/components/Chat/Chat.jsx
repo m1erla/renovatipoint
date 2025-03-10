@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -8,43 +8,73 @@ import {
   Typography,
   CircularProgress,
   Alert,
-  Grid,
-  Snackbar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Container,
+  Chip,
 } from "@mui/material";
-import { Send as SendIcon, Info as InfoIcon } from "@mui/icons-material";
-import { chatService } from "../../services/chatService";
-import { showConfirmDialog } from "../ConfirmationDialog";
-import paymentService from "../../services/paymentService";
-import userService from "../../services/userService";
+import {
+  Send as SendIcon,
+  Info as InfoIcon,
+  Share as ShareIcon,
+  Person as PersonIcon,
+  Payment as PaymentIcon,
+} from "@mui/icons-material";
+import chatService from "../../services/chatService";
+import { AuthContext } from "../../context/AuthContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import api from "../../utils/api";
+import { paymentService } from "../../services/paymentService";
+import { loadStripe } from "@stripe/stripe-js";
 import expertService from "../../services/expertService";
+import PaymentConfirmation from "../Payment/PaymentConfirmation";
+import PaymentFailure from "../Payment/PaymentFailure";
+import invoiceService from "../../services/invoiceService";
 
 export default function Chat() {
   const { chatRoomId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const [chatRoom, setChatRoom] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [infoShared, setInfoShared] = useState(false);
   const [jobCompleted, setJobCompleted] = useState(false);
   const messagesEndRef = useRef(null);
-  const [page] = useState(0);
-  const navigate = useNavigate();
-  const userId = localStorage.getItem("userId");
-  const userRole = localStorage.getItem("role");
-  const [pendingPayment, setPendingPayment] = useState(null);
-  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
-  const [paymentType, setPaymentType] = useState(null);
-  const [paymentAmount, setPaymentAmount] = useState(0);
-  const [paymentInProgress, setPaymentInProgress] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "info",
-  });
-  const [messageData, setMessageData] = useState(null);
   const shouldScrollRef = useRef(true);
+  const { user } = useContext(AuthContext);
+  const [showCompleteDialog, setShowCompleteDialog] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
+  const [showPaymentFailure, setShowPaymentFailure] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState(null);
+  const [paymentError, setPaymentError] = useState(null);
+  const navigate = useNavigate();
+  const [hasSharedContactInfo, setHasSharedContactInfo] = useState(false);
+  const [processingPayment, setProcessingPayment] = useState(false);
+
+  const handleError = (error) => {
+    console.error("Error occurred:", error);
+
+    if (error.response?.status === 401) {
+      localStorage.clear();
+      setError("Oturum süresi dolmuş. Lütfen tekrar giriş yapın.");
+      navigate("/login");
+      return;
+    }
+
+    let errorMessage = error.message;
+    if (error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    } else if (typeof error === "string") {
+      errorMessage = error;
+    }
+
+    setError(errorMessage);
+  };
 
   useEffect(() => {
     const initializeChat = async () => {
@@ -52,49 +82,96 @@ export default function Chat() {
         setLoading(true);
         setError(null);
 
-        // Get chat room details
-        console.log("Fetching chat room:", chatRoomId); // Debug log
-        const room = await chatService.getChatRoom(chatRoomId);
-        console.log("Received chat room:", room); // Debug log
-        setChatRoom(room);
+        // Token kontrolü
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          throw new Error("Oturum süresi dolmuş. Lütfen tekrar giriş yapın.");
+        }
 
-        // Get messages
-        const messageData = await chatService.getChatMessages(chatRoomId, page);
-        setMessages(messageData.content || []);
+        if (!user?.id) {
+          throw new Error(
+            "Kullanıcı bilgisi bulunamadı. Lütfen tekrar giriş yapın."
+          );
+        }
 
-        // Connect WebSocket
-        const userId = localStorage.getItem("userId");
-        chatService.connect(
-          userId,
+        await chatService.connect(
+          user.id,
           handleMessageReceived,
           handleNotificationReceived
         );
 
-        // Sayfa yüklendiğinde en alta kaydır
-        setTimeout(() => {
-          scrollToBottom();
-        }, 100);
+        const room = await chatService.getChatRoom(chatRoomId);
+        console.log("Debug - Chat Room Data:", room);
+
+        if (!room) {
+          throw new Error("Sohbet odası bulunamadı.");
+        }
+
+        // Chat room state'ini güvenli bir şekilde güncelle
+        const updatedRoom = {
+          ...room,
+          id: room.id || chatRoomId,
+          expert: {
+            id: room.expert?.id || room.expertId,
+            name: room.expert?.name || "Expert",
+            email: room.expert?.email,
+            companyName: room.expert?.companyName,
+          },
+          isCompleted: Boolean(
+            room.status === "COMPLETED" ||
+              room.completed ||
+              room.completionPaymentProcessed ||
+              room.isCompleted
+          ),
+          contactInformationShared: Boolean(
+            room.contactInformationShared ||
+              room.contactShared ||
+              room.hasContactBeenShared
+          ),
+          status: room.status || "ACTIVE",
+        };
+
+        console.log("Debug - Updated Room State:", updatedRoom);
+
+        setChatRoom(updatedRoom);
+        setJobCompleted(updatedRoom.isCompleted);
+        setInfoShared(updatedRoom.contactInformationShared);
+
+        const messageData = await chatService.getChatMessages(chatRoomId);
+        if (messageData?.content) {
+          setMessages(messageData.content);
+        }
       } catch (error) {
-        console.error("Chat initialization error:", error);
-        setError("Failed to initialize chat. " + error.message);
+        console.error("Error initializing chat:", error);
+        handleError(error);
       } finally {
         setLoading(false);
       }
     };
 
-    if (chatRoomId) {
+    if (chatRoomId && user) {
       initializeChat();
     }
 
     return () => {
       chatService.disconnect();
     };
-  }, [chatRoomId]);
+  }, [chatRoomId, user, navigate]);
+
   const handleMessageReceived = (payload) => {
     try {
       const message = JSON.parse(payload.body);
+
+      // Check if this is a shared info message
+      if (
+        message.messageType === "CONTACT_INFO" ||
+        (message.content &&
+          message.content.includes("Contact information has been shared"))
+      ) {
+        setInfoShared(true);
+      }
+
       setMessages((prevMessages) => {
-        // Check if message already exists to prevent duplicates
         const messageExists = prevMessages.some(
           (msg) =>
             msg.id === message.id ||
@@ -107,20 +184,20 @@ export default function Chat() {
           return prevMessages;
         }
 
-        // Only scroll for new messages
         shouldScrollRef.current = true;
         return [...prevMessages, message];
       });
     } catch (error) {
-      console.error("Error handling received message:", error);
+      console.error("Error receiving message:", error);
     }
   };
+
   useEffect(() => {
     if (shouldScrollRef.current) {
       scrollToBottom();
       shouldScrollRef.current = false;
     }
-  }, [messages]); // This will run whenever messages change
+  }, [messages]);
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -133,422 +210,620 @@ export default function Chat() {
 
   const handleNotificationReceived = (payload) => {
     const notification = JSON.parse(payload.body);
-    // Handle different notification types if needed
-    console.log("Received notification:", notification);
+    console.log("Notification received:", notification);
   };
-
-  // const scrollToBottom = () => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // };
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
+    const tempMessageData = {
+      id: `temp-${Date.now()}`,
+      senderId: user?.id,
+      chatRoomId: chatRoomId,
+      content: newMessage.trim(),
+      timestamp: new Date().toISOString(),
+      messageType: "CHAT",
+      pending: true,
+    };
+
     try {
-      // Create message object with a unique ID
-      const messageData = {
-        id: `temp-${Date.now()}`, // Temporary ID for optimistic update
-        senderId: userId,
-        chatRoomId: chatRoomId,
-        content: newMessage.trim(),
-        isSharedInformation: false,
-        timestamp: new Date().toISOString(),
-        messageType: "CHAT",
-        pending: true, // Add a flag to mark message as pending
-      };
-
-      // Optimistically add message to UI
-      setMessages((prevMessages) => [...prevMessages, messageData]);
-
-      // Clear input immediately
+      setMessages((prevMessages) => [...prevMessages, tempMessageData]);
       setNewMessage("");
-
-      // Ensure scroll happens after message is added
       shouldScrollRef.current = true;
 
-      // Send message to server
-      await chatService.sendMessage(chatRoomId, messageData.content);
+      await chatService.sendMessage(chatRoomId, tempMessageData);
 
-      // Update message to remove pending state
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
-          msg.id === messageData.id ? { ...msg, pending: false } : msg
+          msg.id === tempMessageData.id ? { ...msg, pending: false } : msg
         )
       );
     } catch (error) {
       console.error("Error sending message:", error);
-
-      // Remove failed message from UI
       setMessages((prevMessages) =>
-        prevMessages.filter((msg) => msg.id !== messageData.id)
+        prevMessages.filter((msg) => msg.id !== tempMessageData.id)
       );
-
       setError("Failed to send message");
-
-      // Restore message to input
-      setNewMessage(messageData.content);
+      setNewMessage(tempMessageData.content);
     }
   };
 
-  // Enhanced contact sharing flow
-  const handleShareContactInfo = async () => {
+  const handleMarkJobAsComplete = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // First fetch expert's payment info
-      const expertPaymentInfo = await expertService.getPaymentInfo(
-        chatRoom.expert.id
-      );
-
-      if (!expertPaymentInfo || !expertPaymentInfo.stripeCustomerId) {
-        throw new Error("Expert has not set up payment information yet");
+      // Token kontrolü
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        throw new Error("Session expired. Please login again.");
       }
 
-      // Show confirmation dialog
-      const confirmed = await showConfirmDialog({
-        title: "Share Contact Information",
-        message:
-          "Your contact information will be shared with the expert. They will be charged €1 after accepting it.",
-        confirmText: "Share Info",
-        cancelText: "Cancel",
-      });
+      // Expert ve chat room kontrolü
+      if (!chatRoom?.id || !user?.id) {
+        throw new Error("Required information is missing");
+      }
+
+      // Ödeme onayı
+      const confirmed = window.confirm(
+        "Are you sure you want to complete this job? €5 will be charged from your account."
+      );
+      setProcessingPayment(true);
 
       if (!confirmed) {
+        setShowCompleteDialog(false);
         return;
       }
-      const expertId = chatRoom.expert.id;
-      if (!expertId) {
-        throw new Error("Expert information not found");
+
+      // Expert ödeme bilgilerini kontrol et
+      const paymentInfo = await expertService.getPaymentInfo(user.id);
+
+      if (
+        !paymentInfo?.hasPaymentSetup ||
+        !paymentInfo?.stripeCustomerId ||
+        !paymentInfo?.paymentMethodId
+      ) {
+        throw new Error("Please complete your payment setup first");
       }
-      // Process payment
-      // await paymentService.chargeExpert(
-      //   chatRoom.expert.id,
-      //   1.0,
-      //   "CONTACT_INFO"
-      // );
-      await paymentService.chargeExpert(expertId, 1.0, "CONTACT_INFO");
-      // Get current user's information
-      const userInfo = await userService.getCurrentUserInfo();
-      // Create and send contact information message
 
-      const contactInfoMessage = {
-        senderId: userId,
-        chatRoomId: chatRoomId,
-        content: `USER_CONTACT_INFORMATIONS:\nName: ${userInfo.name}\nPhone: ${userInfo.phone}\nEmail: ${userInfo.email}\n`,
-        isSharedInformation: true,
-        // type: "CONTACT_INFO", // Changed from USER_INFO to CONTACT_INFO
-        messageType: "CONTACT_INFO", // Added this to ensure proper type handling
-        timestamp: new Date().toISOString(),
-      };
+      // Ödeme işlemini başlat
+      const paymentResponse = await api.post(
+        `/api/v1/payments/charge`,
+        {
+          expertId: user.id,
+          stripeCustomerId: paymentInfo.stripeCustomerId,
+          paymentMethodId: paymentInfo.paymentMethodId,
+          amount: 5, // 5 Euro
+          currency: "eur",
+          paymentType: "JOB_COMPLETION",
+          chatRoomId: chatRoom.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      // Send contact info message
-      await chatService.sendMessage(chatRoomId, contactInfoMessage);
+      // Ödeme yanıtını kontrol et
+      if (!paymentResponse.data || !paymentResponse.data.paymentIntentId) {
+        throw new Error("Invalid payment response");
+      }
 
-      // // Send payment request message with correct type
-      // const paymentRequestMessage = {
-      //   senderId: userId,
-      //   chatRoomId: chatRoomId,
-      //   content:
-      //     "Contact information has been shared. Please accept to pay €1.",
-      //   isSharedInformation: false,
-      //   // type: "PAYMENT_REQUEST",
-      //   messageType: "PAYMENT_REQUEST", // Added explicit message type
-      //   timestamp: new Date().toISOString(),
-      // };
+      // Ödeme durumunu kontrol et
+      if (
+        paymentResponse.data.status === "succeeded" ||
+        paymentResponse.data.status === "processing" ||
+        paymentResponse.data.status === "requires_confirmation"
+      ) {
+        let attempts = 0;
+        const maxAttempts = 10;
+        let paymentSucceeded = false;
 
-      // await chatService.sendMessage(chatRoomId, paymentRequestMessage);
+        while (attempts < maxAttempts) {
+          const statusCheck = await api.get(
+            `/api/v1/payments/payment-intents/${paymentResponse.data.paymentIntentId}/status`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
 
-      setInfoShared(true);
-      showSnackbar("Contact information shared successfully", "success");
-      scrollToBottom();
+          console.log("Debug - Payment status check:", statusCheck.data);
+
+          if (statusCheck.data.status === "succeeded") {
+            paymentSucceeded = true;
+            break;
+          } else if (
+            statusCheck.data.status === "failed" ||
+            statusCheck.data.status === "canceled"
+          ) {
+            throw new Error("Payment failed");
+          }
+
+          attempts++;
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+        }
+
+        if (!paymentSucceeded) {
+          throw new Error("Payment verification timeout");
+        }
+
+        if (paymentSucceeded) {
+          setPaymentDetails({
+            amount: 5,
+            paymentType: "JOB_COMPLETION",
+            paymentIntentId: paymentResponse.data.paymentIntentId,
+          });
+          setShowPaymentConfirmation(true);
+
+          try {
+            // Fatura oluştur
+            await invoiceService.generateExpertInvoice(
+              user.id,
+              5,
+              paymentResponse.data.paymentIntentId,
+              "JOB_COMPLETION"
+            );
+
+            // İşi tamamla ve ödeme ID'sini gönder
+            await chatService.markJobAsComplete(
+              chatRoomId,
+              paymentResponse.data.paymentIntentId
+            );
+
+            // Chat room'u güncelle
+            const updatedRoom = await chatService.getChatRoom(chatRoomId);
+            setChatRoom(updatedRoom);
+            setShowCompleteDialog(false);
+
+            // Sistem mesajı ekle
+            const systemMessage = {
+              senderId: "SYSTEM",
+              chatRoomId: chatRoomId,
+              content: `Job has been marked as completed by the expert. Completion fee (€5) has been charged.`,
+              messageType: "SYSTEM",
+              timestamp: new Date().toISOString(),
+            };
+
+            setMessages((prev) => [...prev, systemMessage]);
+            toast.success(
+              "Job completed successfully and €5 has been charged from your account!"
+            );
+          } catch (error) {
+            console.error("Error in completion process:", error);
+            throw error;
+          }
+        }
+      } else {
+        throw new Error(
+          `Payment failed with status: ${paymentResponse.data.status}`
+        );
+      }
     } catch (error) {
-      console.error("Contact sharing error:", error);
-      handleContactSharingError(error);
+      console.error("Job completion error:", error);
+      setShowCompleteDialog(false);
+
+      if (error.response?.status === 401) {
+        localStorage.clear();
+        setError("Session expired. Please login again.");
+        navigate("/login");
+        return;
+      }
+
+      let errorMessage = error.message;
+      if (errorMessage.includes("Payment verification timeout")) {
+        errorMessage =
+          "Payment is still processing. Please check your dashboard for the status.";
+      } else if (errorMessage.includes("Payment failed")) {
+        errorMessage = "Payment failed. Please try again later.";
+      }
+
+      setPaymentError(errorMessage);
+      setPaymentDetails({
+        amount: 5,
+        paymentType: "JOB_COMPLETION",
+      });
+      setShowPaymentFailure(true);
+      setError(errorMessage);
     } finally {
       setLoading(false);
+      setProcessingPayment(false);
     }
   };
 
-  // Expert's payment acceptance handler
-  const handlePaymentAcceptance = async () => {
+  const handleShareContact = async () => {
     try {
       setLoading(true);
+      setError(null);
 
-      const confirmed = await showConfirmDialog({
-        title: "Accept Payment",
-        message:
-          "You will be charged €1 for receiving the contact information. Continue?",
-        confirmText: "Accept & Pay",
-        cancelText: "Cancel",
-      });
-
-      if (!confirmed) {
-        return;
+      // Token kontrolü
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        throw new Error("Session expired. Please login again.");
       }
 
-      setPaymentInProgress(true);
+      // Chat room ve expert kontrolü
+      if (!chatRoom?.id || !chatRoom?.expert?.id) {
+        throw new Error(
+          "Required information is missing. Please refresh the page."
+        );
+      }
 
-      // Process the payment
-      const paymentResult = await paymentService.chargeExpert(
-        userId, // Expert's ID
-        1.0 // €1.00
-      );
+      if (!infoShared) {
+        try {
+          // Expert ID kontrolü
+          const expertId = chatRoom.expert.id;
+          console.log("Debug - Expert ID for payment:", expertId);
 
-      // Send confirmation message with correct type
-      const confirmationMessage = {
-        senderId: userId,
-        chatRoomId: chatRoomId,
-        content: "Payment successful - Contact information is now accessible",
-        // type: "SYSTEM",
-        messageType: "SYSTEM", // Added explicit message type
-        timestamp: new Date().toISOString(),
-      };
+          // Get expert's payment info
+          const paymentInfo = await expertService.getPaymentInfo(expertId);
+          console.log("Debug - Expert payment info:", {
+            hasPaymentSetup: paymentInfo?.hasPaymentSetup,
+            stripeCustomerId: paymentInfo?.stripeCustomerId,
+            paymentMethodId: paymentInfo?.paymentMethodId,
+          });
 
-      await chatService.sendMessage(chatRoomId, confirmationMessage);
+          if (
+            !paymentInfo ||
+            !paymentInfo.hasPaymentSetup ||
+            !paymentInfo.stripeCustomerId ||
+            !paymentInfo.paymentMethodId
+          ) {
+            throw new Error(
+              "Expert has not set up payment information completely"
+            );
+          }
 
-      setInfoShared(true);
-      setPendingPayment(null);
-      showSnackbar("Payment processed successfully", "success");
+          // Get fresh user data
+          const userResponse = await api.get("/api/v1/users/response", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!userResponse.data) {
+            throw new Error("Could not fetch user details");
+          }
+
+          const currentUser = {
+            ...user,
+            ...userResponse.data,
+          };
+
+          // İşlem öncesi onay al
+          const confirmed = window.confirm(
+            "Are you sure you want to share your contact information? €1 will be charged from expert's account."
+          );
+
+          if (!confirmed) {
+            setShowShareDialog(false);
+            return;
+          }
+
+          // Ödeme işlemini başlat
+          const paymentResponse = await api.post(
+            `/api/v1/payments/charge`,
+            {
+              expertId: expertId,
+              stripeCustomerId: paymentInfo.stripeCustomerId,
+              paymentMethodId: paymentInfo.paymentMethodId,
+              amount: 1, // 1 Euro in cents
+              currency: "eur",
+              paymentType: "CONTACT_INFO",
+              chatRoomId: chatRoom.id,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          console.log("Debug - Payment Response:", paymentResponse.data);
+
+          if (!paymentResponse.data || !paymentResponse.data.paymentIntentId) {
+            throw new Error("Invalid payment response");
+          }
+
+          // Ödeme durumunu kontrol et
+          if (
+            paymentResponse.data.status === "processing" ||
+            paymentResponse.data.status === "requires_confirmation"
+          ) {
+            let attempts = 0;
+            const maxAttempts = 10;
+            let paymentSucceeded = false;
+
+            while (attempts < maxAttempts) {
+              const statusCheck = await api.get(
+                `/api/v1/payments/payment-intents/${paymentResponse.data.paymentIntentId}/status`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+
+              console.log("Debug - Payment status check:", statusCheck.data);
+
+              if (statusCheck.data.status === "succeeded") {
+                paymentSucceeded = true;
+                break;
+              } else if (
+                statusCheck.data.status === "failed" ||
+                statusCheck.data.status === "canceled"
+              ) {
+                throw new Error("Payment failed");
+              }
+
+              attempts++;
+              await new Promise((resolve) => setTimeout(resolve, 3000));
+            }
+
+            if (!paymentSucceeded) {
+              throw new Error("Payment verification timeout");
+            }
+          } else if (paymentResponse.data.status !== "succeeded") {
+            throw new Error("Payment failed: " + paymentResponse.data.status);
+          }
+
+          try {
+            // Fatura oluştur
+            await invoiceService.generateExpertInvoice(
+              expertId,
+              1,
+              paymentResponse.data.paymentIntentId,
+              "CONTACT_INFO"
+            );
+
+            // İletişim bilgilerini hazırla
+            const contactInfo = {
+              name: currentUser.name || "",
+              surname: currentUser.surname || "",
+              email: currentUser.email || "",
+              phoneNumber: currentUser.phoneNumber || "",
+              address: currentUser.address || "",
+              postCode: currentUser.postCode || "",
+            };
+
+            console.log("Debug - User Contact Info:", {
+              userDetails: currentUser,
+              preparedContactInfo: contactInfo,
+            });
+
+            // Mesaj içeriğini hazırla
+            const messageContent = {
+              type: "contact_info",
+              userInfo: {
+                title: "Contact Information",
+                data: [
+                  {
+                    label: "Name",
+                    value: `${contactInfo.name} ${contactInfo.surname}`.trim(),
+                  },
+                  { label: "Email", value: contactInfo.email },
+                  { label: "Phone", value: contactInfo.phoneNumber },
+                  { label: "Address", value: contactInfo.address },
+                  { label: "Post Code", value: contactInfo.postCode },
+                ].filter(
+                  (item) => item.value && item.value !== "undefined undefined"
+                ),
+              },
+            };
+
+            // Mesajı gönder
+            const message = {
+              senderId: user.id,
+              chatRoomId: chatRoom.id,
+              content: JSON.stringify(messageContent),
+              messageType: "CONTACT_INFO",
+              timestamp: new Date().toISOString(),
+            };
+
+            await chatService.sendMessage(chatRoom.id, message);
+            setMessages((prev) => [...prev, message]);
+
+            // Chat room durumunu güncelle
+            const updatedRoom = {
+              ...chatRoom,
+              contactInformationShared: true,
+              contactShared: true,
+              lastPaymentStatus: "succeeded",
+              lastPaymentIntentId: paymentResponse.data.paymentIntentId,
+            };
+
+            // chatService üzerinden güncelleme yap
+            const updatedChatRoom = await chatService.updateChatRoom(
+              chatRoom.id,
+              updatedRoom
+            );
+            setChatRoom(updatedChatRoom);
+            setInfoShared(true);
+            setShowShareDialog(false);
+
+            toast.success(
+              "Contact information shared successfully and €1 has been charged from expert's account!"
+            );
+          } catch (error) {
+            console.error("Error in contact info process:", error);
+            throw error;
+          }
+        } catch (error) {
+          console.error("Payment process error:", error);
+          handlePaymentError(error);
+        }
+      } else {
+        setShowShareDialog(false);
+        toast.info("Contact information has already been shared!");
+      }
     } catch (error) {
-      console.error("Payment error:", error);
+      console.error("Contact information sharing error:", error);
       handlePaymentError(error);
     } finally {
       setLoading(false);
-      setPaymentInProgress(false);
-    }
-  };
-  const handlePaymentRequest = async (messageType, amount) => {
-    try {
-      // First confirm with the user
-      const confirmed = await showConfirmDialog({
-        title:
-          messageType === "CONTACT_INFO"
-            ? "Access Contact Information"
-            : "Complete Job",
-        message: `You will be charged €${amount} for ${
-          messageType === "CONTACT_INFO"
-            ? "accessing contact information"
-            : "completing this job"
-        }. Continue?`,
-        confirmText: `Pay €${amount}`,
-        cancelText: "Cancel",
-      });
-
-      if (!confirmed) return;
-
-      setPaymentInProgress(true);
-
-      // Process the payment
-      const paymentResult = await paymentService.chargeExpert(
-        chatRoom.expert.id,
-        amount,
-        messageType
-      );
-
-      if (paymentResult.status === "succeeded") {
-        // Handle successful payment
-        if (messageType === "CONTACT_INFO") {
-          setInfoShared(true);
-          // Send confirmation message as a simple string
-          await chatService.sendMessage(chatRoomId, {
-            senderId: "SYSTEM",
-            chatRoomId: chatRoomId,
-            content:
-              "Payment successful - Contact information is now accessible",
-            messageType: "SYSTEM",
-            timestamp: new Date().toISOString(),
-          });
-        } else if (messageType === "JOB_COMPLETION") {
-          setJobCompleted(true);
-          await chatService.sendMessage(chatRoomId, {
-            senderId: "SYSTEM",
-            chatRoomId: chatRoomId,
-            content: "Job marked as complete - Payment processed successfully",
-            messageType: "SYSTEM",
-            timestamp: new Date().toISOString(),
-          });
-          setTimeout(() => navigate("/chat-rooms"), 2000);
-        }
-        showSnackbar("Payment processed successfully", "success");
-      } else {
-        throw new Error("Payment was not completed successfully");
-      }
-    } catch (error) {
-      console.error("Payment error:", error);
-      showSnackbar(error.message || "Payment failed", "error");
-    } finally {
-      setPaymentInProgress(false);
     }
   };
 
-  const handleCompleteJob = async () => {
-    try {
-      setLoading(true);
-
-      const confirmed = await showConfirmDialog({
-        title: "Complete Job",
-        message:
-          "Completing the job will charge €5 from your account. Continue?",
-        confirmText: "Complete",
-        cancelText: "Cancel",
-      });
-
-      if (confirmed) {
-        await chatService.completeJob(chatRoomId);
-        await paymentService.chargeExpert(
-          chatRoom.expert.id,
-          5,
-          "JOB_COMPLETION"
-        );
-        setJobCompleted(true);
-        navigate("/chat-rooms");
-      }
-    } catch (error) {
-      setError("Failed to complete job: " + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Error handling utilities
-  const handleContactSharingError = (error) => {
-    let errorMessage = "Failed to share contact information";
-
-    if (error.message.includes("EntityNotFoundException")) {
-      errorMessage = "Expert not found. Please try again.";
-    } else if (error.message.includes("InsufficientBalanceException")) {
-      errorMessage = "Expert has insufficient balance for this action";
-    } else if (error.message.includes("not set up payment")) {
-      errorMessage = "Expert has not set up payment information";
-    }
-
-    setError(errorMessage);
-    showSnackbar(errorMessage, "error");
-  };
-
+  // Yardımcı fonksiyon: Ödeme hatalarını işle
   const handlePaymentError = (error) => {
-    let errorMessage = "Payment failed";
+    setShowShareDialog(false);
 
-    if (error.message.includes("insufficient_funds")) {
-      errorMessage = "Insufficient funds for this transaction";
-    } else if (error.message.includes("payment_method_not_available")) {
-      errorMessage =
-        "Payment method is not available. Please check your payment setup";
+    if (error.response?.status === 401) {
+      localStorage.clear();
+      setError("Session expired. Please login again.");
+      navigate("/login");
+      return;
     }
 
+    let errorMessage = error.message;
+    if (errorMessage.includes("Expert payment setup is incomplete")) {
+      errorMessage =
+        "Expert has not completed payment setup. Please try again later.";
+    } else if (errorMessage.includes("Expert Stripe customer ID is missing")) {
+      errorMessage =
+        "Expert's payment account is missing. Please try again later.";
+    } else if (errorMessage.includes("Expert payment method ID is missing")) {
+      errorMessage =
+        "Expert's payment method is missing. Please try again later.";
+    } else if (
+      errorMessage.includes("Expert bank account information is incomplete")
+    ) {
+      errorMessage =
+        "Expert's bank account information is incomplete. Please try again later.";
+    } else if (errorMessage.includes("Payment verification timeout")) {
+      errorMessage = "Payment verification timed out. Please try again later.";
+    }
+
+    setPaymentError(errorMessage);
+    setPaymentDetails({
+      amount: 1,
+      paymentType: "CONTACT_INFO",
+    });
+    setShowPaymentFailure(true);
     setError(errorMessage);
-    showSnackbar(errorMessage, "error");
   };
 
   const renderMessage = (message) => {
-    // Null check for message
     if (!message || !message.content) {
       return null;
     }
 
-    // Special rendering for contact information
-    if (message.type === "USER_INFO") {
-      // Safely extract contact info even if format is inconsistent
-      let infoContent = [];
+    if (message.messageType === "CONTACT_INFO") {
+      let contentData;
       try {
-        infoContent = message.content
-          .replace(/CONTACT_INFO(_START)?/i, "")
-          .replace(/CONTACT_INFO_END/i, "")
-          .trim()
-          .split("\n")
-          .filter((line) => line); // Remove empty lines
-      } catch (err) {
-        console.error("Error parsing contact info:", err);
-        infoContent = [message.content]; // Fallback to showing raw content
+        contentData = JSON.parse(message.content);
+        if (contentData.type === "contact_info") {
+          return (
+            <Paper
+              sx={{
+                p: 2,
+                bgcolor: "#fff",
+                border: "1px solid #e0e0e0",
+                borderRadius: 2,
+                mb: 1,
+                width: "100%",
+                maxWidth: "500px",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+              }}
+            >
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  mb: 2,
+                  color: "#1976d2",
+                  fontWeight: "600",
+                }}
+              >
+                <PersonIcon fontSize="small" />
+                {contentData.userInfo.title}
+              </Typography>
+
+              <Box
+                sx={{
+                  bgcolor: "#f8f9fa",
+                  borderRadius: 1,
+                  p: 2,
+                  border: "1px solid #e9ecef",
+                }}
+              >
+                {contentData.userInfo.data.map((item, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      py: 1,
+                      borderBottom:
+                        index < contentData.userInfo.data.length - 1
+                          ? "1px solid #dee2e6"
+                          : "none",
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#6c757d",
+                        fontWeight: "500",
+                        minWidth: "100px",
+                      }}
+                    >
+                      {item.label}:
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#212529",
+                        fontWeight: "400",
+                        wordBreak: "break-all",
+                      }}
+                    >
+                      {item.value}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+
+              <Typography
+                variant="caption"
+                sx={{
+                  display: "block",
+                  mt: 2,
+                  color: "#6c757d",
+                  textAlign: "right",
+                }}
+              >
+                {new Date(message.timestamp).toLocaleString()}
+              </Typography>
+            </Paper>
+          );
+        }
+      } catch (e) {
+        console.error("Error parsing message content:", e);
       }
-
-      return (
-        <Paper
-          sx={{
-            p: 2,
-            bgcolor: "#2c3e50",
-            border: "1px solid #90caf9",
-            borderRadius: 2,
-            mb: 1,
-            maxWidth: "100%", // Prevent overflow
-          }}
-        >
-          <Typography variant="subtitle1" gutterBottom color="white">
-            Contact Information
-          </Typography>
-          {infoContent.map((line, index) => (
-            <Typography
-              key={index}
-              variant="body2"
-              color="white"
-              sx={{ wordBreak: "break-word" }} // Handle long text
-            >
-              {line}
-            </Typography>
-          ))}
-          <Typography
-            variant="caption"
-            color="white"
-            sx={{ mt: 1, display: "block" }}
-          >
-            {message.timestamp
-              ? new Date(message.timestamp).toLocaleString()
-              : "Time not available"}
-          </Typography>
-        </Paper>
-      );
     }
 
-    // Special rendering for payment request messages
-    if (message.messageType === "PAYMENT_REQUEST") {
-      return (
-        <Paper
-          sx={{
-            p: 2,
-            bgcolor: "#fff3e0",
-            border: "1px solid #ffe0b2",
-            borderRadius: 2,
-            mb: 1,
-            maxWidth: "100%",
-          }}
-        >
-          <Typography
-            variant="body1"
-            gutterBottom
-            sx={{ wordBreak: "break-word" }}
-          >
-            {message.content}
-          </Typography>
-          {userRole === "EXPERT" && !infoShared && !paymentInProgress && (
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => handlePaymentAcceptance()}
-              sx={{ mt: 1 }}
-              disabled={loading}
-            >
-              Accept & Pay €1
-            </Button>
-          )}
-        </Paper>
-      );
-    }
-
-    // Regular message rendering with improved error handling
+    // Default message render
     return (
       <Paper
         sx={{
           p: 2,
-          bgcolor: message.senderId === userId ? "#2c3e50" : "grey.100",
-          color: message.senderId === userId ? "white" : "black",
+          bgcolor: message.senderId === user?.id ? "#2c3e50" : "grey.100",
+          color: message.senderId === user?.id ? "white" : "black",
           maxWidth: "100%",
-          alignSelf: message.senderId === userId ? "flex-end" : "flex-start",
+          alignSelf: message.senderId === user?.id ? "flex-end" : "flex-start",
           mb: 1,
           opacity: message.pending ? 0.7 : 1,
           position: "relative",
-          wordBreak: "break-word", // Prevent text overflow
+          wordBreak: "break-word",
         }}
       >
         <Typography variant="body1">{message.content}</Typography>
@@ -562,6 +837,87 @@ export default function Chat() {
           {message.pending && " (sending...)"}
         </Typography>
       </Paper>
+    );
+  };
+
+  const renderActionButtons = () => {
+    // Kullanıcı ve chat room kontrolü
+    if (!user || !chatRoom) {
+      return null;
+    }
+
+    const isExpert = user.role === "EXPERT";
+    const isUser = user.role === "USER";
+    const isActive = chatRoom.status === "ACTIVE";
+    const isCompleted = chatRoom.isCompleted || chatRoom.status === "COMPLETED";
+    const hasSharedContact =
+      chatRoom.contactInformationShared ||
+      chatRoom.contactShared ||
+      chatRoom.hasContactBeenShared ||
+      messages.some((msg) => msg.messageType === "CONTACT_INFO");
+
+    console.log("Debug - Action Buttons State:", {
+      userRole: user.role,
+      isExpert,
+      isUser,
+      isActive,
+      isCompleted,
+      hasSharedContact,
+      chatRoomStatus: chatRoom.status,
+      contactShared: chatRoom.contactShared,
+      contactInformationShared: chatRoom.contactInformationShared,
+      hasContactBeenShared: chatRoom.hasContactBeenShared,
+      messagesWithContactInfo: messages.filter(
+        (msg) => msg.messageType === "CONTACT_INFO"
+      ).length,
+    });
+
+    return (
+      <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+        {/* Share Contact Button - Only for Users */}
+        {isUser && !hasSharedContact && isActive && (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<ShareIcon />}
+            onClick={() => setShowShareDialog(true)}
+            disabled={loading}
+          >
+            Share Contact Info (€1)
+          </Button>
+        )}
+
+        {/* Complete Job Button - Only for Experts */}
+        {isExpert && !isCompleted && hasSharedContact && isActive && (
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<PaymentIcon />}
+            onClick={() => setShowCompleteDialog(true)}
+            disabled={loading}
+          >
+            Complete Job (€5)
+          </Button>
+        )}
+
+        {/* Status Indicators */}
+        {hasSharedContact && (
+          <Chip
+            label="Contact Info Shared"
+            color="info"
+            variant="outlined"
+            size="small"
+          />
+        )}
+        {isCompleted && (
+          <Chip
+            label="Job Completed"
+            color="success"
+            variant="outlined"
+            size="small"
+          />
+        )}
+      </Box>
     );
   };
 
@@ -586,12 +942,9 @@ export default function Chat() {
           <Button
             color="inherit"
             size="small"
-            onClick={() => {
-              setError(null);
-              window.location.reload();
-            }}
+            onClick={() => window.location.reload()}
           >
-            Retry
+            Try Again
           </Button>
         }
       >
@@ -600,261 +953,223 @@ export default function Chat() {
     );
   }
 
-  const isExpert = userRole === "EXPERT";
-
-  const showSnackbar = (message, severity = "info") => {
-    setSnackbar({
-      open: true,
-      message: message || "An error occurred", // Fallback message
-      severity,
-    });
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
-
   return (
     <Box
       sx={{
-        height: "85vh",
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        p: 3,
-        bgcolor: "#f5f5f7",
-        overflow: "hidden", // Prevent page scroll
+        minHeight: "calc(100vh - 200px)",
+        backgroundColor: "#f5f5f7",
+        pt: { xs: 8, sm: 9 },
+        pb: 4,
       }}
     >
-      {/* Payment Header */}
-      {isExpert && pendingPayment && !paymentInProgress && (
+      <Container maxWidth="lg">
+        {loading && (
+          <Box display="flex" justifyContent="center" my={4}>
+            <CircularProgress />
+          </Box>
+        )}
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 4 }}>
+            {error}
+          </Alert>
+        )}
+
+        {/* Chat title */}
         <Paper
           elevation={2}
           sx={{
             p: 2.5,
-            bgcolor: "#fff",
             borderRadius: 2,
+            bgcolor: "#fff",
             border: "1px solid #e0e0e0",
           }}
         >
-          <Grid
-            container
-            alignItems="center"
-            justifyContent="space-between"
-            spacing={2}
-          >
-            <Grid item xs={12} sm={8}>
-              <Typography variant="subtitle1" sx={{ color: "#2c3e50" }}>
-                Contact information has been shared. Accept payment to view?
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                sx={{
-                  bgcolor: "#2c3e50",
-                  "&:hover": { bgcolor: "#1a252f" },
-                }}
-                onClick={handlePaymentAcceptance}
-                disabled={loading || paymentInProgress}
-              >
-                Accept & Pay €1
-              </Button>
-            </Grid>
-          </Grid>
+          <Typography variant="h5" sx={{ color: "#2c3e50", fontWeight: 600 }}>
+            {chatRoom?.ad?.title || "Chat Room"}
+          </Typography>
+          {chatRoom?.expertBlocked && (
+            <Alert severity="error" sx={{ mt: 1 }}>
+              Expert account is blocked
+            </Alert>
+          )}
+          {renderActionButtons()}
         </Paper>
-      )}
 
-      {/* Status Notifications */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          sx={{ width: "100%" }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-
-      {/* Payment Processing Overlay */}
-      {paymentInProgress && (
-        <Box
+        {/* Messages area */}
+        <Paper
+          elevation={2}
           sx={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
+            flex: 1,
+            overflowY: "auto",
+            p: 3,
+            mt: 3,
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            bgcolor: "rgba(0, 0, 0, 0.5)",
-            zIndex: 1000,
+            flexDirection: "column-reverse",
+            gap: 2,
+            borderRadius: 2,
+            bgcolor: "#fff",
+            border: "1px solid #e0e0e0",
+            minHeight: "60vh",
           }}
+          ref={messagesEndRef}
         >
-          <Paper
-            elevation={4}
-            sx={{
-              p: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 2,
-              borderRadius: 2,
-            }}
-          >
-            <CircularProgress sx={{ color: "#2c3e50" }} />
-            <Typography variant="h6" sx={{ color: "#2c3e50" }}>
-              Processing payment...
-            </Typography>
-          </Paper>
-        </Box>
-      )}
-
-      {/* Chat Room Title */}
-      <Paper
-        elevation={2}
-        sx={{
-          p: 2.5,
-          borderRadius: 2,
-          bgcolor: "#fff",
-          border: "1px solid #e0e0e0",
-        }}
-      >
-        <Typography variant="h5" sx={{ color: "#2c3e50", fontWeight: 600 }}>
-          {chatRoom?.ad?.title || "Chat Room"}
-        </Typography>
-        {chatRoom?.expertBlocked && (
-          <Alert severity="error" sx={{ mt: 1 }}>
-            Expert account is blocked
-          </Alert>
-        )}
-      </Paper>
-
-      {/* Messages Area */}
-      <Paper
-        elevation={2}
-        sx={{
-          flex: 1,
-          overflowY: "auto",
-          p: 3,
-          display: "flex",
-          flexDirection: "column-reverse",
-          gap: 2,
-          borderRadius: 2,
-          bgcolor: "#fff",
-          border: "1px solid #e0e0e0",
-          scrollBehavior: "smooth",
-        }}
-      >
-        <div ref={messagesEndRef} />
-        {Array.isArray(messages) &&
-          messages
+          {messages
             .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
             .map((message) => (
               <Box
-                key={message.id || Date.now()} // Fallback unique key + Math.random()
+                key={message.id}
                 sx={{
                   alignSelf:
-                    message.senderId === userId ? "flex-end" : "flex-start",
+                    message.senderId === user?.id ? "flex-end" : "flex-start",
                   maxWidth: "70%",
                 }}
               >
                 {renderMessage(message)}
               </Box>
             ))}
-      </Paper>
+        </Paper>
 
-      {/* Message Input Area */}
-      <Paper
-        elevation={2}
-        sx={{
-          p: 2.5,
-          borderRadius: 2,
-          bgcolor: "#fff",
-          border: "1px solid #e0e0e0",
-        }}
-      >
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs>
+        {/* Message input */}
+        {!chatRoom?.isCompleted && (
+          <Paper
+            component="form"
+            sx={{
+              p: 2,
+              mt: 3,
+              display: "flex",
+              gap: 2,
+              borderRadius: 2,
+              bgcolor: "#fff",
+              border: "1px solid #e0e0e0",
+            }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSendMessage();
+            }}
+          >
             <TextField
               fullWidth
+              variant="outlined"
+              placeholder="Type a message..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSendMessage();
-                }
-              }}
-              placeholder="Type a message..."
-              variant="outlined"
-              size="medium"
-              disabled={loading || chatRoom?.expertBlocked}
-              multiline
-              maxRows={4}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#2c3e50" },
-                  "&.Mui-focused fieldset": { borderColor: "#2c3e50" },
-                },
-              }}
+              disabled={loading}
+              size="small"
             />
-          </Grid>
-          <Grid item>
             <Button
               variant="contained"
+              color="primary"
+              endIcon={<SendIcon />}
               onClick={handleSendMessage}
-              startIcon={<SendIcon />}
-              disabled={
-                loading || !newMessage.trim() || chatRoom?.expertBlocked
-              }
-              sx={{
-                bgcolor: "#2c3e50",
-                "&:hover": { bgcolor: "#1a252f" },
-              }}
+              disabled={!newMessage.trim() || loading}
             >
               Send
             </Button>
-          </Grid>
-          {userRole === "USER" && !infoShared && (
-            <Grid item>
-              <Button
-                variant="outlined"
-                onClick={handleShareContactInfo}
-                startIcon={<InfoIcon />}
-                disabled={loading || chatRoom?.expertBlocked}
-                sx={{
-                  borderColor: "#2c3e50",
-                  color: "#2c3e50",
-                  "&:hover": {
-                    borderColor: "#1a252f",
-                    bgcolor: "rgba(44, 62, 80, 0.04)",
-                  },
-                }}
-              >
-                Share Info (€1)
-              </Button>
-            </Grid>
-          )}
-        </Grid>
-      </Paper>
+          </Paper>
+        )}
 
-      {/* Error Handling */}
-      <Snackbar
-        open={!!error}
-        autoHideDuration={6000}
-        onClose={() => setError(null)}
-      >
-        <Alert severity="error" onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      </Snackbar>
+        {/* Share Contact Dialog */}
+        <Dialog
+          open={showShareDialog}
+          onClose={() => setShowShareDialog(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>Share Contact Information</DialogTitle>
+          <DialogContent>
+            <Typography>
+              By sharing your contact information, €1 will be charged from the
+              expert's account. This will allow direct communication with the
+              expert.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => setShowShareDialog(false)}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleShareContact}
+              variant="contained"
+              color="primary"
+              disabled={loading}
+            >
+              Share and Charge €1
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Complete Job Dialog */}
+        <Dialog
+          open={showCompleteDialog}
+          onClose={() => setShowCompleteDialog(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>Complete Job</DialogTitle>
+          <DialogContent>
+            <Typography>
+              By marking this job as complete, €5 will be charged from your
+              account. This action cannot be undone.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => setShowCompleteDialog(false)}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleMarkJobAsComplete}
+              variant="contained"
+              color="success"
+              disabled={loading}
+            >
+              Complete and Pay €5
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {showPaymentConfirmation && paymentDetails && (
+          <PaymentConfirmation
+            amount={paymentDetails.amount}
+            paymentType={paymentDetails.paymentType}
+            redirectUrl={`/chat/${chatRoomId}`}
+            onComplete={() => {
+              setShowPaymentConfirmation(false);
+              setPaymentDetails(null);
+            }}
+          />
+        )}
+
+        {showPaymentFailure && paymentDetails && (
+          <PaymentFailure
+            amount={paymentDetails.amount}
+            paymentType={paymentDetails.paymentType}
+            errorMessage={paymentError}
+            redirectUrl={`/chat/${chatRoomId}`}
+            onRetry={() => {
+              setShowPaymentFailure(false);
+              setPaymentDetails(null);
+              setPaymentError(null);
+              if (paymentDetails.paymentType === "JOB_COMPLETION") {
+                setShowCompleteDialog(true);
+              } else {
+                setShowShareDialog(true);
+              }
+            }}
+            onComplete={() => {
+              setShowPaymentFailure(false);
+              setPaymentDetails(null);
+              setPaymentError(null);
+            }}
+          />
+        )}
+      </Container>
     </Box>
   );
 }

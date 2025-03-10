@@ -101,28 +101,36 @@ const RequestService = {
     return response.data;
   },
   completeRequest: async (requestId) => {
-    const response = await api.put(`/api/v1/requests/${requestId}/complete`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Failed to accept request");
-    }
-    return response.json();
+    const expertId = localStorage.getItem("userId");
+    const response = await api.put(
+      `/api/v1/requests/${requestId}/complete?expertId=${expertId}`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+    return response.data;
   },
   cancelRequest: async (requestId) => {
-    const response = await api.put(`/api/v1/requests/${requestId}/cancel`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Failed to accept request");
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await api.put(
+        `/api/v1/requests/${requestId}/cancel`,
+        { userId },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error cancelling request:", error);
+      throw error;
     }
-    return response.json();
   },
 };
 

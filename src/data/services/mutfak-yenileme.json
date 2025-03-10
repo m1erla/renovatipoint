@@ -1,0 +1,165 @@
+{
+  "id": 6,
+  "name": "Mutfak Yenileme",
+  "slug": "mutfak-yenileme",
+  "icon": "HomeModernIcon",
+  "description": "Mutfağınız için komple yenileme hizmetleri.",
+  "longDescription": "Mutfağınız evinizin kalbi, ailenizin buluşma noktasıdır. Renovatipoint'in profesyonel mutfak yenileme hizmetleri ile mutfağınızı sadece estetik açıdan değil, fonksiyonel açıdan da tamamen yenileyebilirsiniz. Uzman ekibimiz, en yeni trendleri ve teknolojileri kullanarak, ihtiyaçlarınıza ve zevkinize uygun, hem göze hitap eden hem de kullanışlı mutfak tasarımları sunuyor.",
+  "shortDescription": "Mutfağınız için komple yenileme hizmetleri",
+  "categoryId": 3,
+  "categoryName": "Tadilat & Yenileme",
+  "expertCount": 42,
+  "image": "/images/services/kitchen-renovation.jpg",
+  "backgroundImage": "/images/backgrounds/kitchen-renovation-bg.jpg",
+  "features": [
+    "Mutfak dolabı yenileme",
+    "Tezgah değişimi",
+    "Zemin yenileme",
+    "Tesisat yenileme"
+  ],
+  "benefits": [
+    "Modern ve fonksiyonel mutfak",
+    "Ev değerinin artması",
+    "Profesyonel tasarım",
+    "Kaliteli malzemeler"
+  ],
+  "isActive": true,
+  "createdAt": "2023-10-01T10:00:00Z",
+  "updatedAt": "2023-10-01T10:00:00Z",
+  "packages": [
+    {
+      "id": 1,
+      "name": "Temel Yenileme Paketi",
+      "description": "Mutfağınız için temel yenileme paketi",
+      "price": 15000,
+      "duration": "1-2 hafta",
+      "features": [
+        "Dolap kapakları yenileme",
+        "Tezgah değişimi",
+        "Eviye ve batarya değişimi",
+        "Aydınlatma yenileme",
+        "Duvar boyama"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Standart Yenileme Paketi",
+      "description": "En çok tercih edilen kapsamlı mutfak yenileme paketi",
+      "price": 25000,
+      "duration": "2-3 hafta",
+      "features": [
+        "Temel Paket özellikleri",
+        "Komple dolap yenileme",
+        "Zemin kaplama",
+        "Fayans değişimi",
+        "Tesisat yenileme"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Premium Yenileme Paketi",
+      "description": "Mutfağınız için tam kapsamlı yenileme paketi",
+      "price": 40000,
+      "duration": "3-4 hafta",
+      "features": [
+        "Standart Paket özellikleri",
+        "Özel tasarım dolaplar",
+        "Granit/mermer tezgah",
+        "Ankastre ürün montajı",
+        "Ada/bar tezgah yapımı",
+        "Akıllı mutfak teknolojileri"
+      ]
+    }
+  ],
+  "process": [
+    {
+      "step": 1,
+      "title": "Ücretsiz Keşif",
+      "description": "Uzman ekibimiz mutfağınızı inceleyerek ihtiyaçlarınızı belirler."
+    },
+    {
+      "step": 2,
+      "title": "Tasarım ve Planlama",
+      "description": "İhtiyaçlarınıza göre özel mutfak tasarımı ve maliyet planlaması yapılır."
+    },
+    {
+      "step": 3,
+      "title": "Malzeme Seçimi",
+      "description": "Dolap, tezgah, zemin ve aksesuar gibi malzemelerin seçimi yapılır."
+    },
+    {
+      "step": 4,
+      "title": "Uygulama",
+      "description": "Profesyonel ekibimiz tarafından yenileme işlemi gerçekleştirilir."
+    },
+    {
+      "step": 5,
+      "title": "Kontrol ve Teslim",
+      "description": "Son kontroller yapılarak mutfağınız kullanıma hazır hale getirilir."
+    }
+  ],
+  "testimonials": [
+    {
+      "author": "Gül K.",
+      "role": "Ev Sahibi",
+      "avatar": "/images/testimonials/gul.jpg",
+      "content": "Mutfağımın yenilenmesi için Renovatipoint'i tercih ettim ve sonuçtan çok memnun kaldım. Profesyonel ekipleri ve kaliteli malzemeleri ile hayalimdeki mutfağa kavuştum."
+    },
+    {
+      "author": "Emre T.",
+      "role": "İşletme Sahibi",
+      "avatar": "/images/testimonials/emre.jpg",
+      "content": "Restoranımızın mutfak yenilemesi için Renovatipoint ile çalıştık. Endüstriyel mutfak konusundaki uzmanlıkları ve zamanında teslimatları için teşekkür ederiz."
+    },
+    {
+      "author": "Deniz S.",
+      "role": "Mimar",
+      "avatar": "/images/testimonials/deniz.jpg",
+      "content": "Müşterilerime Renovatipoint'i öneriyorum. Mutfak yenileme konusundaki profesyonel yaklaşımları ve kaliteli işçilikleri ile fark yaratıyorlar."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Mutfak yenileme süreci ne kadar sürer?",
+      "answer": "Yenileme kapsamına bağlı olarak 1-4 hafta arasında değişebilir. Kapsamlı projeler için süre uzayabilir."
+    },
+    {
+      "question": "Mutfak yenileme sırasında evimde yaşayabilir miyim?",
+      "answer": "Evet, ancak mutfağınızı kullanamayacağınız için alternatif bir çözüm düşünmeniz gerekebilir."
+    },
+    {
+      "question": "Mutfak için kullanılan malzemeleri kendim seçebilir miyim?",
+      "answer": "Kesinlikle! Dolap, tezgah, zemin, fayans gibi tüm malzemelerin seçiminde size çeşitli alternatifler sunuyoruz."
+    },
+    {
+      "question": "Eski mutfak eşyalarımı kullanabilir miyim?",
+      "answer": "Evet, mevcut cihazlarınız yeni tasarıma uygunsa kullanılabilir veya yeni cihazlar için önerilerimizi değerlendirebilirsiniz."
+    },
+    {
+      "question": "Mutfak yenileme için ödeme şekilleri nelerdir?",
+      "answer": "Nakit, kredi kartı veya taksitli ödeme seçeneklerimiz bulunmaktadır. Ayrıca banka kredisi için de destek sağlıyoruz."
+    }
+  ],
+  "similarServices": [
+    {
+      "id": 7,
+      "name": "Banyo Yenileme",
+      "slug": "banyo-yenileme"
+    },
+    {
+      "id": 201,
+      "name": "Salon Yenileme",
+      "slug": "salon-yenileme"
+    },
+    {
+      "id": 202,
+      "name": "Zemin Kaplama",
+      "slug": "zemin-kaplama"
+    },
+    {
+      "id": 204,
+      "name": "Dolap & Mobilya Yapımı",
+      "slug": "dolap-mobilya-yapimi"
+    }
+  ]
+} 

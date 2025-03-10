@@ -1,0 +1,117 @@
+{
+  "id": 1,
+  "name": "Ev Temizliği",
+  "slug": "ev-temizligi",
+  "icon": "HomeIcon",
+  "description": "Profesyonel temizlik hizmetleri ile eviniz pırıl pırıl olsun.",
+  "longDescription": "Modern yaşamın hızlı temposunda kaliteli ev temizliği için her zaman yeterli vakit bulunamayabilir. Renovatipoint'in profesyonel ve güvenilir ev temizlik hizmetleri ile, evinizin temizliği artık sizin için bir endişe kaynağı olmaktan çıkıyor. Uzman ekiplerimiz, en kaliteli temizlik ürünleri ve en son teknoloji ekipmanlarla evinizi köşe bucak temizleyerek, size sadece temizliğin keyfini çıkarma fırsatı sunuyor.",
+  "expertCount": 45,
+  "image": "/images/categories/home-cleaning.jpg",
+  "backgroundImage": "/images/backgrounds/home-cleaning-bg.jpg",
+  "serviceCount": 8,
+  "isActive": true,
+  "createdAt": "2023-10-01T10:00:00Z",
+  "updatedAt": "2023-10-01T10:00:00Z",
+  "features": [
+    {
+      "title": "Kapsamlı Temizlik",
+      "description": "Evinizin her köşesi detaylı temizlenir"
+    },
+    {
+      "title": "Uzman Ekip",
+      "description": "Deneyimli ve profesyonel temizlik uzmanları"
+    },
+    {
+      "title": "Kaliteli Ekipman",
+      "description": "Son teknoloji temizlik makineleri ve ekipmanları"
+    },
+    {
+      "title": "Çevre Dostu Çözümler",
+      "description": "Çevre dostu temizlik ürünleri kullanımı"
+    }
+  ],
+  "testimonials": [
+    {
+      "author": "Ayşe Y.",
+      "role": "Ev Hanımı",
+      "avatar": "/images/testimonials/ayse.jpg",
+      "content": "Renovatipoint'in ev temizlik hizmetini ayda bir düzenli olarak kullanıyorum. Evim her seferinde pırıl pırıl oluyor. Kesinlikle herkese tavsiye ederim!"
+    },
+    {
+      "author": "Mehmet K.",
+      "role": "Mühendis",
+      "avatar": "/images/testimonials/mehmet.jpg",
+      "content": "Yoğun iş tempomda ev temizliğine vakit ayıramıyordum. Renovatipoint ile tanıştıktan sonra bu sorunu tamamen çözdüm. Artık eve geldiğimde tertemiz bir ortam beni karşılıyor."
+    },
+    {
+      "author": "Zeynep T.",
+      "role": "Öğretmen",
+      "avatar": "/images/testimonials/zeynep.jpg",
+      "content": "Derin temizlik hizmetini aldım ve sonuçtan çok memnun kaldım. Özellikle banyo ve mutfaktaki detaylı temizlik gerçekten etkileyiciydi."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Ev temizlik hizmeti ne kadar sürer?",
+      "answer": "Evinizin büyüklüğüne ve temizlik paketinize bağlı olarak genellikle 2-4 saat arasında sürer."
+    },
+    {
+      "question": "Temizlik için kendi ekipmanlarımı sağlamam gerekiyor mu?",
+      "answer": "Hayır, temizlik ekibimiz tüm gerekli ekipman ve malzemeleri yanlarında getirir."
+    },
+    {
+      "question": "Evde evcil hayvanım varsa temizlik yapılabilir mi?",
+      "answer": "Evet, evcil hayvanlar ile ilgili herhangi bir engel bulunmamaktadır. Temizlik sırasında evcil hayvanınızın güvenliği için gerekli önlemleri almanızı öneririz."
+    },
+    {
+      "question": "Düzenli temizlik paketleri var mı?",
+      "answer": "Evet, haftalık, iki haftalık veya aylık olarak düzenli temizlik paketlerimiz bulunmaktadır."
+    },
+    {
+      "question": "Temizlik öncesi evde olmam gerekir mi?",
+      "answer": "Bu tamamen size bağlıdır. Dilerseniz evde bulunabilir veya temizlik ekibimize güvenebilirsiniz."
+    }
+  ],
+  "services": [
+    {
+      "id": 1,
+      "name": "Ev Temizliği",
+      "slug": "ev-temizligi"
+    },
+    {
+      "id": 2,
+      "name": "Ofis Temizliği",
+      "slug": "ofis-temizligi"
+    },
+    {
+      "id": 3,
+      "name": "Halı Yıkama",
+      "slug": "hali-yikama"
+    },
+    {
+      "id": 101,
+      "name": "Derin Temizlik",
+      "slug": "derin-temizlik"
+    },
+    {
+      "id": 102,
+      "name": "Taşınma Sonrası Temizlik",
+      "slug": "tasinma-sonrasi-temizlik"
+    },
+    {
+      "id": 103,
+      "name": "İnşaat Sonrası Temizlik",
+      "slug": "insaat-sonrasi-temizlik"
+    },
+    {
+      "id": 104,
+      "name": "Koltuk Temizliği",
+      "slug": "koltuk-temizligi"
+    },
+    {
+      "id": 105,
+      "name": "Cam Temizliği",
+      "slug": "cam-temizligi"
+    }
+  ]
+} 
