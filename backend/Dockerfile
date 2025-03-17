@@ -12,10 +12,10 @@ WORKDIR /app
 COPY --from=build /app/target/furkankarakus-0.0.1-SNAPSHOT.jar app.jar
 
 # Copy the .env.prod file
-COPY .env.prod /app/.env.prod
-
+#COPY .env.prod /app/.env.prod
+#
 # Copy the SSL keystore file
-COPY src/main/resources/combined.p12 /app/combined.p12
+#COPY src/main/resources/combined.p12 /app/combined.p12
 
 # Expose the HTTPS port
 EXPOSE 8443
