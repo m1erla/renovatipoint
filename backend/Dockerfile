@@ -1,16 +1,19 @@
 # Build stage
 FROM maven:3.8.5-openjdk-17 AS build
+
+# Set working directory
 WORKDIR /app
 
-# Debug - list the current directory contents
+# Debug - list what files are available in the build context
 RUN ls -la
 
-# Copy pom.xml first for better caching
-COPY pom.xml .
-# Copy the rest of the project
-COPY src ./src/
+# Copy everything to the container (adjust if you need to exclude files)
+COPY . .
 
-# Remove the prod profile if it doesn't exist
+# Debug - verify what got copied
+RUN ls -la
+
+# Build the application
 RUN mvn clean package -DskipTests
 
 # Create necessary directories
@@ -23,8 +26,13 @@ WORKDIR /app
 # Create user
 RUN useradd -m javauser
 
-# Copy the built artifact and directories
+# Copy the built artifact
 COPY --from=build /app/target/furkankarakus-0.0.1-SNAPSHOT.jar /app/furkankarakus.jar
+
+# Copy the SSL keystore
+COPY --from=build /app/src/main/resources/combined.p12 /app/combined.p12
+
+# Copy directories
 COPY --from=build /app/invoices /app/invoices
 COPY --from=build /app/uploads /app/uploads
 
