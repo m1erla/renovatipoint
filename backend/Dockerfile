@@ -1,24 +1,19 @@
-# Stage 1: Build the application
 FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 COPY . /app
 RUN mvn clean package -Pprod -DskipTests
 
-# Stage 2: Create the runtime image
 FROM openjdk:17.0.1-jdk-slim
-WORKDIR /app
-
-# Copy the JAR file from the build stage
-COPY --from=build /app/target/furkankarakus-0.0.1-SNAPSHOT.jar app.jar
-
-# Copy the .env.prod file
-#COPY .env.prod /app/.env.prod
-#
-# Copy the SSL keystore file
-#COPY src/main/resources/combined.p12 /app/combined.p12
-
-# Expose the HTTPS port
+COPY --from=build /app/target/furkankarakus-0.0.1-SNAPSHOT.jar furkankarakus.jar
 EXPOSE 8443
+ENTRYPOINT ["java","-jar","furkankarakus.jar"]
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "-Dspring.config.import=optional:file:.env.prod", "app.jar"]
+FROM maven:3.8.5-openjdk-17 AS build
+WORKDIR /app
+COPY . /app
+RUN mvn clean package -Pprod -DskipTests
+# Create necessary directories with proper permissions
+RUN mkdir -p /app/invoices /app/uploads
+RUN chown -R javauser:javauser /app
+
+FROM openjdk:17.0.1-jdk-slim
