@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@Table(name = "image_data", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "name"})})
+@Table(name = "storage", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "name"})})
 @Entity
 @Builder
 @Getter
@@ -21,7 +21,7 @@ public class Storage {
     private String type;
 
     @Lob
-    @Column(name = "image_data", columnDefinition = "LONGBLOB")
+    @Column(name = "image_data", columnDefinition = "BYTEA")
     private byte[] imageData;
 
     private String url;
@@ -33,7 +33,6 @@ public class Storage {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "ad_id", referencedColumnName = "id")
     private Ads ads;
-
 
 }
 
