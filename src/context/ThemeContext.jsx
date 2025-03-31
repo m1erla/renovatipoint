@@ -480,6 +480,13 @@ export function ThemeProvider({ children }) {
     document.documentElement.setAttribute("data-theme", mode);
     document.documentElement.style.colorScheme = mode;
 
+    // HTML'e dark sınıfını ekle veya kaldır
+    if (mode === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+
     // Meta teması güncelle
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {

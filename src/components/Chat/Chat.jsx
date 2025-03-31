@@ -1,27 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Box,
-  Paper,
-  TextField,
-  Button,
-  Typography,
-  CircularProgress,
-  Alert,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Container,
-  Chip,
-} from "@mui/material";
-import {
-  Send as SendIcon,
-  Info as InfoIcon,
-  Share as ShareIcon,
-  Person as PersonIcon,
-  Payment as PaymentIcon,
-} from "@mui/icons-material";
+import { motion, AnimatePresence } from "framer-motion";
 import chatService from "../../services/chatService";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
@@ -33,6 +12,19 @@ import expertService from "../../services/expertService";
 import PaymentConfirmation from "../Payment/PaymentConfirmation";
 import PaymentFailure from "../Payment/PaymentFailure";
 import invoiceService from "../../services/invoiceService";
+import {
+  PaperAirplaneIcon,
+  InformationCircleIcon,
+  ShareIcon,
+  UserIcon,
+  CreditCardIcon,
+  ExclamationCircleIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ArrowPathIcon,
+  ChatBubbleLeftRightIcon,
+  ClockIcon,
+} from "@heroicons/react/24/outline";
 
 export default function Chat() {
   const { chatRoomId } = useParams();
@@ -44,6 +36,7 @@ export default function Chat() {
   const [infoShared, setInfoShared] = useState(false);
   const [jobCompleted, setJobCompleted] = useState(false);
   const messagesEndRef = useRef(null);
+  const scrollContainerRef = useRef(null);
   const shouldScrollRef = useRef(true);
   const { user } = useContext(AuthContext);
   const [showCompleteDialog, setShowCompleteDialog] = useState(false);
@@ -55,6 +48,37 @@ export default function Chat() {
   const navigate = useNavigate();
   const [hasSharedContactInfo, setHasSharedContactInfo] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 300, damping: 24 },
+    },
+  };
+
+  const messageVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 500, damping: 25 },
+    },
+    exit: { opacity: 0, scale: 0.9 },
+  };
 
   const handleError = (error) => {
     console.error("Error occurred:", error);
@@ -200,11 +224,9 @@ export default function Chat() {
   }, [messages]);
 
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop =
+        scrollContainerRef.current.scrollHeight;
     }
   };
 
@@ -709,101 +731,68 @@ export default function Chat() {
     setError(errorMessage);
   };
 
-  const renderMessage = (message) => {
+  const formatDate = (dateString) => {
+    try {
+      return new Date(dateString).toLocaleString();
+    } catch (e) {
+      return "Time not available";
+    }
+  };
+
+  const renderMessage = (message, index) => {
     if (!message || !message.content) {
       return null;
     }
 
+    const isCurrentUser = message.senderId === user?.id;
+    const isSystemMessage =
+      message.senderId === "SYSTEM" || message.messageType === "SYSTEM";
+
+    // Handle contact info message
     if (message.messageType === "CONTACT_INFO") {
       let contentData;
       try {
         contentData = JSON.parse(message.content);
         if (contentData.type === "contact_info") {
           return (
-            <Paper
-              sx={{
-                p: 2,
-                bgcolor: "#fff",
-                border: "1px solid #e0e0e0",
-                borderRadius: 2,
-                mb: 1,
-                width: "100%",
-                maxWidth: "500px",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
-              }}
+            <motion.div
+              key={message.id || index}
+              variants={messageVariants}
+              className={`flex ${
+                isCurrentUser ? "justify-end" : "justify-start"
+              } mb-4`}
             >
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  mb: 2,
-                  color: "#1976d2",
-                  fontWeight: "600",
-                }}
-              >
-                <PersonIcon fontSize="small" />
-                {contentData.userInfo.title}
-              </Typography>
+              <div className="rounded-2xl bg-blue-50 dark:bg-blue-900/30 p-4 max-w-md shadow-sm border border-blue-200 dark:border-blue-800/50">
+                <div className="flex items-center gap-2 mb-3 text-blue-700 dark:text-blue-300 font-semibold">
+                  <UserIcon className="w-5 h-5" />
+                  {contentData.userInfo.title}
+                </div>
 
-              <Box
-                sx={{
-                  bgcolor: "#f8f9fa",
-                  borderRadius: 1,
-                  p: 2,
-                  border: "1px solid #e9ecef",
-                }}
-              >
-                {contentData.userInfo.data.map((item, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      py: 1,
-                      borderBottom:
-                        index < contentData.userInfo.data.length - 1
-                          ? "1px solid #dee2e6"
-                          : "none",
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#6c757d",
-                        fontWeight: "500",
-                        minWidth: "100px",
-                      }}
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-blue-100 dark:border-blue-800">
+                  {contentData.userInfo.data.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className={`py-2 flex justify-between ${
+                        idx < contentData.userInfo.data.length - 1
+                          ? "border-b border-gray-100 dark:border-gray-700"
+                          : ""
+                      }`}
                     >
-                      {item.label}:
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#212529",
-                        fontWeight: "400",
-                        wordBreak: "break-all",
-                      }}
-                    >
-                      {item.value}
-                    </Typography>
-                  </Box>
-                ))}
-              </Box>
+                      <span className="text-gray-600 dark:text-gray-400 font-medium">
+                        {item.label}:
+                      </span>
+                      <span className="text-gray-900 dark:text-gray-200 break-all">
+                        {item.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
 
-              <Typography
-                variant="caption"
-                sx={{
-                  display: "block",
-                  mt: 2,
-                  color: "#6c757d",
-                  textAlign: "right",
-                }}
-              >
-                {new Date(message.timestamp).toLocaleString()}
-              </Typography>
-            </Paper>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-right">
+                  {formatDate(message.timestamp)}
+                </div>
+              </div>
+            </motion.div>
           );
         }
       } catch (e) {
@@ -811,32 +800,56 @@ export default function Chat() {
       }
     }
 
-    // Default message render
-    return (
-      <Paper
-        sx={{
-          p: 2,
-          bgcolor: message.senderId === user?.id ? "#2c3e50" : "grey.100",
-          color: message.senderId === user?.id ? "white" : "black",
-          maxWidth: "100%",
-          alignSelf: message.senderId === user?.id ? "flex-end" : "flex-start",
-          mb: 1,
-          opacity: message.pending ? 0.7 : 1,
-          position: "relative",
-          wordBreak: "break-word",
-        }}
-      >
-        <Typography variant="body1">{message.content}</Typography>
-        <Typography
-          variant="caption"
-          sx={{ opacity: 0.7, display: "block", mt: 1 }}
+    // System message
+    if (isSystemMessage) {
+      return (
+        <motion.div
+          key={message.id || index}
+          variants={messageVariants}
+          className="flex justify-center my-4"
         >
-          {message.timestamp
-            ? new Date(message.timestamp).toLocaleString()
-            : "Time not available"}
-          {message.pending && " (sending...)"}
-        </Typography>
-      </Paper>
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 rounded-full px-4 py-2 text-sm flex items-center">
+            <InformationCircleIcon className="w-4 h-4 mr-2" />
+            {message.content}
+          </div>
+        </motion.div>
+      );
+    }
+
+    // Regular chat message
+    return (
+      <motion.div
+        key={message.id || index}
+        variants={messageVariants}
+        className={`flex ${
+          isCurrentUser ? "justify-end" : "justify-start"
+        } mb-4`}
+      >
+        <div
+          className={`relative rounded-2xl p-4 max-w-md shadow-sm ${
+            isCurrentUser
+              ? "bg-primary text-primary-foreground rounded-br-none"
+              : "bg-card dark:bg-gray-800 text-foreground dark:text-white rounded-bl-none border border-border/50 dark:border-gray-700/50"
+          } ${message.pending ? "opacity-70" : ""}`}
+        >
+          <p className="whitespace-pre-wrap break-words">{message.content}</p>
+          <div
+            className={`text-xs ${
+              isCurrentUser
+                ? "text-primary-foreground/70"
+                : "text-muted-foreground dark:text-gray-400"
+            } mt-2 flex items-center justify-end gap-1`}
+          >
+            {message.pending && (
+              <span className="inline-flex items-center gap-1">
+                <ClockIcon className="w-3 h-3" />
+                Sending...
+              </span>
+            )}
+            <span>{formatDate(message.timestamp)}</span>
+          </div>
+        </div>
+      </motion.div>
     );
   };
 
@@ -873,267 +886,344 @@ export default function Chat() {
     });
 
     return (
-      <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+      <div className="flex flex-wrap gap-2 mt-3">
         {/* Share Contact Button - Only for Users */}
         {isUser && !hasSharedContact && isActive && (
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<ShareIcon />}
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setShowShareDialog(true)}
             disabled={loading}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Share Contact Info (€1)
-          </Button>
+            <ShareIcon className="w-5 h-5" />
+            İletişim Bilgilerini Paylaş (€1)
+          </motion.button>
         )}
 
         {/* Complete Job Button - Only for Experts */}
         {isExpert && !isCompleted && hasSharedContact && isActive && (
-          <Button
-            variant="contained"
-            color="success"
-            startIcon={<PaymentIcon />}
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setShowCompleteDialog(true)}
             disabled={loading}
+            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Complete Job (€5)
-          </Button>
+            <CreditCardIcon className="w-5 h-5" />
+            İşi Tamamla (€5)
+          </motion.button>
         )}
 
         {/* Status Indicators */}
         {hasSharedContact && (
-          <Chip
-            label="Contact Info Shared"
-            color="info"
-            variant="outlined"
-            size="small"
-          />
+          <div className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 flex items-center gap-1">
+            <InformationCircleIcon className="w-4 h-4" />
+            İletişim Bilgileri Paylaşıldı
+          </div>
         )}
         {isCompleted && (
-          <Chip
-            label="Job Completed"
-            color="success"
-            variant="outlined"
-            size="small"
-          />
+          <div className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 flex items-center gap-1">
+            <CheckCircleIcon className="w-4 h-4" />
+            İş Tamamlandı
+          </div>
         )}
-      </Box>
+      </div>
     );
   };
 
-  if (loading) {
+  if (loading && !chatRoom) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="200px"
-      >
-        <CircularProgress />
-      </Box>
+      <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 rounded-full border-4 border-t-primary border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
+          <div className="absolute inset-2 rounded-full border-4 border-t-primary/50 border-r-transparent border-b-transparent border-l-transparent animate-spin-slow"></div>
+        </div>
+      </div>
     );
   }
 
-  if (error) {
+  if (error && !chatRoom) {
     return (
-      <Alert
-        severity="error"
-        action={
-          <Button
-            color="inherit"
-            size="small"
+      <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md p-6 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-2xl shadow-lg"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <XCircleIcon className="w-6 h-6" />
+            <h3 className="text-lg font-semibold">Hata</h3>
+          </div>
+          <p>{error}</p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
           >
-            Try Again
-          </Button>
-        }
-      >
-        {error}
-      </Alert>
+            <ArrowPathIcon className="w-5 h-5" />
+            Tekrar Dene
+          </motion.button>
+        </motion.div>
+      </div>
     );
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: "calc(100vh - 200px)",
-        backgroundColor: "#f5f5f7",
-        pt: { xs: 8, sm: 9 },
-        pb: 4,
-      }}
-    >
-      <Container maxWidth="lg">
-        {loading && (
-          <Box display="flex" justifyContent="center" my={4}>
-            <CircularProgress />
-          </Box>
-        )}
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 4 }}>
-            {error}
-          </Alert>
-        )}
-
-        {/* Chat title */}
-        <Paper
-          elevation={2}
-          sx={{
-            p: 2.5,
-            borderRadius: 2,
-            bgcolor: "#fff",
-            border: "1px solid #e0e0e0",
-          }}
+    <div className="min-h-[calc(100vh-200px)] bg-gradient-to-b from-background to-background/95 dark:from-gray-900 dark:to-gray-950 pt-8 sm:pt-12 pb-8 px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          className="flex flex-col h-[calc(100vh-240px)]"
         >
-          <Typography variant="h5" sx={{ color: "#2c3e50", fontWeight: 600 }}>
-            {chatRoom?.ad?.title || "Chat Room"}
-          </Typography>
-          {chatRoom?.expertBlocked && (
-            <Alert severity="error" sx={{ mt: 1 }}>
-              Expert account is blocked
-            </Alert>
-          )}
-          {renderActionButtons()}
-        </Paper>
+          {/* Chat Header */}
+          <motion.div variants={itemVariants} className="mb-4">
+            <div className="bg-card dark:bg-gray-800 rounded-2xl shadow-lg p-5 border border-border/50 dark:border-gray-700/50">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary/10 dark:bg-primary-foreground/10 rounded-full flex items-center justify-center">
+                    <ChatBubbleLeftRightIcon className="w-6 h-6 text-primary dark:text-primary-foreground" />
+                  </div>
+                  <h1 className="text-xl font-bold text-foreground dark:text-white">
+                    {chatRoom?.ad?.title || "Sohbet"}
+                  </h1>
+                </div>
 
-        {/* Messages area */}
-        <Paper
-          elevation={2}
-          sx={{
-            flex: 1,
-            overflowY: "auto",
-            p: 3,
-            mt: 3,
-            display: "flex",
-            flexDirection: "column-reverse",
-            gap: 2,
-            borderRadius: 2,
-            bgcolor: "#fff",
-            border: "1px solid #e0e0e0",
-            minHeight: "60vh",
-          }}
-          ref={messagesEndRef}
-        >
-          {messages
-            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-            .map((message) => (
-              <Box
-                key={message.id}
-                sx={{
-                  alignSelf:
-                    message.senderId === user?.id ? "flex-end" : "flex-start",
-                  maxWidth: "70%",
-                }}
-              >
-                {renderMessage(message)}
-              </Box>
-            ))}
-        </Paper>
+                {chatRoom?.expertBlocked && (
+                  <div className="px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 flex items-center gap-1">
+                    <ExclamationCircleIcon className="w-4 h-4" />
+                    Uzman hesabı bloke edildi
+                  </div>
+                )}
+              </div>
 
-        {/* Message input */}
-        {!chatRoom?.isCompleted && (
-          <Paper
-            component="form"
-            sx={{
-              p: 2,
-              mt: 3,
-              display: "flex",
-              gap: 2,
-              borderRadius: 2,
-              bgcolor: "#fff",
-              border: "1px solid #e0e0e0",
-            }}
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSendMessage();
-            }}
+              {renderActionButtons()}
+            </div>
+          </motion.div>
+
+          {/* Chat Messages Container */}
+          <motion.div
+            variants={itemVariants}
+            className="flex-1 bg-card dark:bg-gray-800 rounded-2xl shadow-lg border border-border/50 dark:border-gray-700/50 p-5 mb-4 overflow-hidden flex flex-col"
           >
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Type a message..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              disabled={loading}
-              size="small"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              endIcon={<SendIcon />}
-              onClick={handleSendMessage}
-              disabled={!newMessage.trim() || loading}
+            {/* Messages Area */}
+            <div
+              ref={scrollContainerRef}
+              className="flex-1 overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent"
             >
-              Send
-            </Button>
-          </Paper>
-        )}
+              <AnimatePresence>
+                {messages
+                  .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
+                  .map((message, index) => renderMessage(message, index))}
+              </AnimatePresence>
+              <div ref={messagesEndRef}></div>
+            </div>
+          </motion.div>
+
+          {/* Message Input Area */}
+          {!chatRoom?.isCompleted && (
+            <motion.div
+              variants={itemVariants}
+              className="bg-card dark:bg-gray-800 rounded-2xl shadow-lg border border-border/50 dark:border-gray-700/50 p-4"
+            >
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSendMessage();
+                }}
+                className="flex items-center gap-3"
+              >
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  disabled={loading}
+                  placeholder="Mesajınızı yazın..."
+                  className="flex-1 px-4 py-3 rounded-xl border-2 border-border dark:border-gray-600 bg-background dark:bg-gray-700 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                />
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  type="submit"
+                  disabled={!newMessage.trim() || loading}
+                  className="p-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                >
+                  <PaperAirplaneIcon className="w-6 h-6" />
+                </motion.button>
+              </form>
+            </motion.div>
+          )}
+        </motion.div>
 
         {/* Share Contact Dialog */}
-        <Dialog
-          open={showShareDialog}
-          onClose={() => setShowShareDialog(false)}
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle>Share Contact Information</DialogTitle>
-          <DialogContent>
-            <Typography>
-              By sharing your contact information, €1 will be charged from the
-              expert's account. This will allow direct communication with the
-              expert.
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => setShowShareDialog(false)}
-              disabled={loading}
+        <AnimatePresence>
+          {showShareDialog && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+              onClick={() => !loading && setShowShareDialog(false)}
             >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleShareContact}
-              variant="contained"
-              color="primary"
-              disabled={loading}
-            >
-              Share and Charge €1
-            </Button>
-          </DialogActions>
-        </Dialog>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="bg-background dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full p-6"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h2 className="text-xl font-bold text-foreground dark:text-white mb-4 flex items-center gap-2">
+                  <ShareIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                  İletişim Bilgilerini Paylaş
+                </h2>
+
+                <p className="text-muted-foreground dark:text-gray-300 mb-6">
+                  İletişim bilgilerinizi paylaşarak, uzmanın hesabından €1 ücret
+                  alınacaktır. Bu, uzmanla doğrudan iletişim kurmanıza olanak
+                  tanıyacaktır.
+                </p>
+
+                <div className="flex justify-end gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setShowShareDialog(false)}
+                    disabled={loading}
+                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    İptal
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleShareContact}
+                    disabled={loading}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    {loading ? (
+                      <>
+                        <svg
+                          className="animate-spin h-4 w-4 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        <span>İşleniyor...</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShareIcon className="w-5 h-5" />
+                        <span>Paylaş ve €1 Ücret Al</span>
+                      </>
+                    )}
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Complete Job Dialog */}
-        <Dialog
-          open={showCompleteDialog}
-          onClose={() => setShowCompleteDialog(false)}
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle>Complete Job</DialogTitle>
-          <DialogContent>
-            <Typography>
-              By marking this job as complete, €5 will be charged from your
-              account. This action cannot be undone.
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => setShowCompleteDialog(false)}
-              disabled={loading}
+        <AnimatePresence>
+          {showCompleteDialog && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+              onClick={() => !loading && setShowCompleteDialog(false)}
             >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleMarkJobAsComplete}
-              variant="contained"
-              color="success"
-              disabled={loading}
-            >
-              Complete and Pay €5
-            </Button>
-          </DialogActions>
-        </Dialog>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="bg-background dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full p-6"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h2 className="text-xl font-bold text-foreground dark:text-white mb-4 flex items-center gap-2">
+                  <CheckCircleIcon className="w-6 h-6 text-green-600 dark:text-green-400" />
+                  İşi Tamamla
+                </h2>
 
+                <p className="text-muted-foreground dark:text-gray-300 mb-6">
+                  Bu işi tamamlayarak, hesabınızdan €5 ücret alınacaktır. Bu
+                  işlem geri alınamaz.
+                </p>
+
+                <div className="flex justify-end gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setShowCompleteDialog(false)}
+                    disabled={loading}
+                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    İptal
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleMarkJobAsComplete}
+                    disabled={loading}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    {processingPayment ? (
+                      <>
+                        <svg
+                          className="animate-spin h-4 w-4 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        <span>İşleniyor...</span>
+                      </>
+                    ) : (
+                      <>
+                        <CreditCardIcon className="w-5 h-5" />
+                        <span>Tamamla ve €5 Öde</span>
+                      </>
+                    )}
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Payment Components */}
         {showPaymentConfirmation && paymentDetails && (
           <PaymentConfirmation
             amount={paymentDetails.amount}
@@ -1169,7 +1259,7 @@ export default function Chat() {
             }}
           />
         )}
-      </Container>
-    </Box>
+      </div>
+    </div>
   );
 }

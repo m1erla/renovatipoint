@@ -1,0 +1,178 @@
+{
+  "common": {
+    "welcome": "Hoş Geldiniz",
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "logout": "Çıkış Yap",
+    "profile": "Profil",
+    "search": "Ara",
+    "loading": "Yükleniyor...",
+    "notFound": "Sayfa Bulunamadı",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "submit": "Gönder",
+    "language": "Dil",
+    "theme": "Tema",
+    "darkMode": "Karanlık Mod",
+    "lightMode": "Aydınlık Mod"
+  },
+  "navbar": {
+    "home": "Ana Sayfa",
+    "about": "Hakkımızda",
+    "contact": "İletişim",
+    "services": "Hizmetler",
+    "ads": "İlanlar",
+    "myAds": "İlanlarım",
+    "createAd": "İlan Oluştur",
+    "requests": "İstekler",
+    "chat": "Mesajlar",
+    "help": "Yardım"
+  },
+  "admin": {
+    "dashboard": "Gösterge Paneli",
+    "users": "Kullanıcılar",
+    "ads": "İlanlar",
+    "storage": "Depolama",
+    "welcome": "Hoş geldiniz",
+    "stats": {
+      "totalUsers": "Toplam Kullanıcı",
+      "activeAds": "Aktif İlanlar",
+      "storedFiles": "Depolanan Dosyalar",
+      "totalRevenue": "Toplam Kazanç"
+    },
+    "activities": "Son Aktiviteler",
+    "popularAds": "Popüler İlanlar",
+    "noActivityData": "Aktivite verisi şu anda mevcut değil",
+    "noAdData": "İlan verisi şu anda mevcut değil",
+    "user": "Kullanıcı",
+    "action": "İşlem",
+    "date": "Tarih",
+    "ad": "İlan",
+    "owner": "Sahip",
+    "visits": "Ziyaret"
+  },
+  "auth": {
+    "loginTitle": "Hesabınıza Giriş Yapın",
+    "registerTitle": "Yeni Hesap Oluşturun",
+    "email": "E-posta",
+    "password": "Şifre",
+    "confirmPassword": "Şifreyi Onayla",
+    "forgotPassword": "Şifremi Unuttum",
+    "dontHaveAccount": "Hesabınız yok mu?",
+    "alreadyHaveAccount": "Zaten hesabınız var mı?",
+    "expertRegister": "Uzman Olarak Kaydol",
+    "becomeExpert": "Uzman Olun",
+    "fullName": "Ad Soyad",
+    "phone": "Telefon",
+    "address": "Adres"
+  },
+  "footer": {
+    "rights": "Tüm hakları saklıdır",
+    "terms": "Kullanım Koşulları",
+    "privacy": "Gizlilik Politikası",
+    "contact": "İletişim",
+    "company": "Şirket",
+    "about": "Hakkımızda",
+    "careers": "Kariyer",
+    "services": "Hizmetler",
+    "homeRenovation": "Ev Yenileme",
+    "gardenDesign": "Bahçe Tasarımı",
+    "specialProjects": "Özel Projeler",
+    "support": "Destek",
+    "helpCenter": "Yardım Merkezi"
+  },
+  "pages": {
+    "home": {
+      "title": "Renovatipoint ile hayalinizdeki mekana kavuşun",
+      "subtitle": "Profesyonel hizmetlerimizle evinizi ya da iş yerinizi baştan yaratın"
+    },
+    "about": {
+      "title": "Hakkımızda",
+      "history": "Tarihçemiz",
+      "mission": "Misyonumuz",
+      "vision": "Vizyonumuz",
+      "team": "Ekibimiz"
+    },
+    "contact": {
+      "title": "İletişime Geçin",
+      "subtitle": "Sorularınız mı var? Bize ulaşın.",
+      "form": {
+        "name": "Adınız",
+        "email": "E-posta Adresiniz",
+        "subject": "Konu",
+        "message": "Mesajınız",
+        "send": "Mesaj Gönder"
+      },
+      "success": "Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.",
+      "error": "Mesajınız gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+      "info": {
+        "address": "Adres",
+        "phone": "Telefon",
+        "email": "E-posta"
+      }
+    }
+  },
+  "services": {
+    "title": "Hizmetlerimiz",
+    "homeRenovation": "Ev Yenileme",
+    "gardenDesign": "Bahçe Tasarımı",
+    "specialProjects": "Özel Projeler"
+  },
+  "profile": {
+    "personalInfo": "Kişisel Bilgiler",
+    "accountSettings": "Hesap Ayarları",
+    "notifications": "Bildirimler",
+    "payments": "Ödeme Yöntemleri",
+    "changePassword": "Şifre Değiştir",
+    "deleteAccount": "Hesabı Sil",
+    "uploadPhoto": "Fotoğraf Yükle"
+  },
+  "ads": {
+    "createTitle": "Yeni İlan Oluştur",
+    "editTitle": "İlanı Düzenle",
+    "myAdsTitle": "İlanlarım",
+    "categories": "Kategoriler",
+    "filters": "Filtreler",
+    "sort": "Sıralama",
+    "search": "İlan Ara",
+    "form": {
+      "title": "Başlık",
+      "category": "Kategori",
+      "description": "Açıklama",
+      "price": "Fiyat",
+      "location": "Konum",
+      "images": "Görseller",
+      "phone": "Telefon",
+      "contactInfo": "İletişim Bilgileri",
+      "publish": "Yayınla",
+      "update": "Güncelle"
+    },
+    "status": {
+      "active": "Aktif",
+      "inactive": "Pasif",
+      "pending": "Onay Bekliyor",
+      "rejected": "Reddedildi"
+    },
+    "details": {
+      "contactSeller": "Satıcı ile İletişime Geç",
+      "postDate": "Yayın Tarihi",
+      "views": "Görüntüleme",
+      "share": "Paylaş",
+      "report": "Şikayet Et",
+      "similar": "Benzer İlanlar"
+    }
+  },
+  "chat": {
+    "title": "Mesajlaşma",
+    "send": "Gönder",
+    "newMessage": "Yeni Mesaj",
+    "noMessages": "Henüz mesaj yok",
+    "startConversation": "Bir konuşma başlatın",
+    "typeMessage": "Mesajınızı yazın...",
+    "chatRooms": "Mesaj Odaları",
+    "noChats": "Henüz bir sohbet yok",
+    "lastMessage": "Son mesaj"
+  }
+} 

@@ -12,17 +12,22 @@ import {
   ArrowRightOnRectangleIcon,
   BuildingStorefrontIcon,
   UserPlusIcon,
+  GlobeAltIcon,
 } from "@heroicons/react/24/outline";
+import { useLanguage } from "../../context/LanguageContext";
+import { useAuth } from "../../context/AuthContext";
 
 function Navbar() {
   const { mode, toggleTheme } = useCustomTheme();
+  const { t, language, changeLanguage, availableLanguages } = useLanguage();
+  const { isAuthenticated, user, logout } = useAuth();
   const isDarkMode = mode === "dark";
-  const isAuthenticated = !!localStorage.getItem("accessToken");
-  const userRole = localStorage.getItem("role");
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
 
   // Handle scrolling effect
   useEffect(() => {
@@ -38,9 +43,7 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("role");
-    localStorage.removeItem("userId");
+    logout();
     navigate("/");
     setIsOpen(false);
   };
@@ -50,46 +53,58 @@ function Navbar() {
   // Simplified navigation items - removed Chat, Requests, Create Ad
   const navItems = !isAuthenticated
     ? [
-        { label: "Home", path: "/", icon: <HomeIcon className="w-5 h-5" /> },
         {
-          label: "Login",
+          label: t("navbar.home"),
+          path: "/",
+          icon: <HomeIcon className="w-5 h-5" />,
+        },
+        {
+          label: t("common.login"),
           path: "/login",
           icon: <ArrowRightOnRectangleIcon className="w-5 h-5" />,
         },
         {
-          label: "Register",
+          label: t("common.register"),
           path: "/register",
           icon: <UserPlusIcon className="w-5 h-5" />,
         },
         {
-          label: "Expert Register",
+          label: t("auth.expertRegister"),
           path: "/expert-register",
           icon: <UserPlusIcon className="w-5 h-5" />,
         },
       ]
-    : userRole === "EXPERT"
+    : user?.role === "EXPERT"
     ? [
-        { label: "Home", path: "/", icon: <HomeIcon className="w-5 h-5" /> },
         {
-          label: "Expert Profile",
+          label: t("navbar.home"),
+          path: "/",
+          icon: <HomeIcon className="w-5 h-5" />,
+        },
+        {
+          label: t("profile.personalInfo"),
           path: "/expert-profile",
           icon: <UserIcon className="w-5 h-5" />,
         },
         {
-          label: "Browse Ads",
+          label: t("navbar.ads"),
           path: "/ads",
           icon: <BuildingStorefrontIcon className="w-5 h-5" />,
         },
       ]
     : [
-        { label: "Home", path: "/", icon: <HomeIcon className="w-5 h-5" /> },
         {
-          label: "My Profile",
+          label: t("navbar.home"),
+          path: "/",
+          icon: <HomeIcon className="w-5 h-5" />,
+        },
+        {
+          label: t("profile.personalInfo"),
           path: "/user-profile",
           icon: <UserIcon className="w-5 h-5" />,
         },
         {
-          label: "Browse Ads",
+          label: t("navbar.ads"),
           path: "/ads",
           icon: <BuildingStorefrontIcon className="w-5 h-5" />,
         },
@@ -131,6 +146,23 @@ function Navbar() {
   const menuItemVariants = {
     closed: { opacity: 0, x: 20 },
     open: { opacity: 1, x: 0 },
+  };
+
+  const dropdownVariants = {
+    hidden: { opacity: 0, scale: 0.95, y: -5 },
+    visible: { opacity: 1, scale: 1, y: 0 },
+  };
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const toggleLangDropdown = () => {
+    setLangDropdownOpen(!langDropdownOpen);
   };
 
   return (

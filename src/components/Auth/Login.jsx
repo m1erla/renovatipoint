@@ -23,6 +23,8 @@ function Login() {
         navigate("/expert-profile");
       } else if (response.role === "USER") {
         navigate("/user-profile");
+      } else if (response.role === "ADMIN") {
+        navigate("/admin");
       } else {
         setError("Unknown user role");
       }

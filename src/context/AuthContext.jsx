@@ -1,8 +1,17 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import api from "../utils/api";
 import authService from "../services/authService";
 
 export const AuthContext = createContext();
+
+// useAuth hook'u ile AuthContext'e kolay erişim sağlayacağız
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

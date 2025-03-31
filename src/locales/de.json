@@ -1,0 +1,178 @@
+{
+  "common": {
+    "welcome": "Willkommen",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "logout": "Abmelden",
+    "profile": "Profil",
+    "search": "Suchen",
+    "loading": "Wird geladen...",
+    "notFound": "Seite nicht gefunden",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "submit": "Absenden",
+    "language": "Sprache",
+    "theme": "Thema",
+    "darkMode": "Dunkelmodus",
+    "lightMode": "Hellmodus"
+  },
+  "navbar": {
+    "home": "Startseite",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "services": "Dienstleistungen",
+    "ads": "Anzeigen",
+    "myAds": "Meine Anzeigen",
+    "createAd": "Anzeige erstellen",
+    "requests": "Anfragen",
+    "chat": "Nachrichten",
+    "help": "Hilfe"
+  },
+  "admin": {
+    "dashboard": "Übersicht",
+    "users": "Benutzer",
+    "ads": "Anzeigen",
+    "storage": "Speicher",
+    "welcome": "Willkommen",
+    "stats": {
+      "totalUsers": "Benutzer insgesamt",
+      "activeAds": "Aktive Anzeigen",
+      "storedFiles": "Gespeicherte Dateien",
+      "totalRevenue": "Gesamtumsatz"
+    },
+    "activities": "Neueste Aktivitäten",
+    "popularAds": "Beliebte Anzeigen",
+    "noActivityData": "Keine Aktivitätsdaten verfügbar",
+    "noAdData": "Keine Anzeigendaten verfügbar",
+    "user": "Benutzer",
+    "action": "Aktion",
+    "date": "Datum",
+    "ad": "Anzeige",
+    "owner": "Besitzer",
+    "visits": "Besuche"
+  },
+  "auth": {
+    "loginTitle": "Bei Ihrem Konto anmelden",
+    "registerTitle": "Neues Konto erstellen",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "forgotPassword": "Passwort vergessen",
+    "dontHaveAccount": "Noch kein Konto?",
+    "alreadyHaveAccount": "Bereits ein Konto?",
+    "expertRegister": "Als Experte registrieren",
+    "becomeExpert": "Experte werden",
+    "fullName": "Vollständiger Name",
+    "phone": "Telefon",
+    "address": "Adresse"
+  },
+  "footer": {
+    "rights": "Alle Rechte vorbehalten",
+    "terms": "Nutzungsbedingungen",
+    "privacy": "Datenschutzrichtlinie",
+    "contact": "Kontakt",
+    "company": "Unternehmen",
+    "about": "Über uns",
+    "careers": "Karriere",
+    "services": "Dienstleistungen",
+    "homeRenovation": "Hausrenovierung",
+    "gardenDesign": "Gartengestaltung",
+    "specialProjects": "Spezialprojekte",
+    "support": "Support",
+    "helpCenter": "Hilfezentrum"
+  },
+  "pages": {
+    "home": {
+      "title": "Verwandeln Sie Ihren Raum mit Renovatipoint",
+      "subtitle": "Gestalten Sie Ihr Zuhause oder Geschäft neu mit unseren professionellen Dienstleistungen"
+    },
+    "about": {
+      "title": "Über uns",
+      "history": "Unsere Geschichte",
+      "mission": "Unsere Mission",
+      "vision": "Unsere Vision",
+      "team": "Unser Team"
+    },
+    "contact": {
+      "title": "Kontakt aufnehmen",
+      "subtitle": "Haben Sie Fragen? Kontaktieren Sie uns.",
+      "form": {
+        "name": "Ihr Name",
+        "email": "Ihre E-Mail",
+        "subject": "Betreff",
+        "message": "Ihre Nachricht",
+        "send": "Nachricht senden"
+      },
+      "success": "Ihre Nachricht wurde erfolgreich gesendet. Wir werden uns in Kürze bei Ihnen melden.",
+      "error": "Beim Senden Ihrer Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+      "info": {
+        "address": "Adresse",
+        "phone": "Telefon",
+        "email": "E-Mail"
+      }
+    }
+  },
+  "services": {
+    "title": "Unsere Dienstleistungen",
+    "homeRenovation": "Hausrenovierung",
+    "gardenDesign": "Gartengestaltung",
+    "specialProjects": "Spezialprojekte"
+  },
+  "profile": {
+    "personalInfo": "Persönliche Informationen",
+    "accountSettings": "Kontoeinstellungen",
+    "notifications": "Benachrichtigungen",
+    "payments": "Zahlungsmethoden",
+    "changePassword": "Passwort ändern",
+    "deleteAccount": "Konto löschen",
+    "uploadPhoto": "Foto hochladen"
+  },
+  "ads": {
+    "createTitle": "Neue Anzeige erstellen",
+    "editTitle": "Anzeige bearbeiten",
+    "myAdsTitle": "Meine Anzeigen",
+    "categories": "Kategorien",
+    "filters": "Filter",
+    "sort": "Sortieren",
+    "search": "Anzeigen suchen",
+    "form": {
+      "title": "Titel",
+      "category": "Kategorie",
+      "description": "Beschreibung",
+      "price": "Preis",
+      "location": "Standort",
+      "images": "Bilder",
+      "phone": "Telefon",
+      "contactInfo": "Kontaktinformationen",
+      "publish": "Veröffentlichen",
+      "update": "Aktualisieren"
+    },
+    "status": {
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "pending": "Ausstehend",
+      "rejected": "Abgelehnt"
+    },
+    "details": {
+      "contactSeller": "Verkäufer kontaktieren",
+      "postDate": "Veröffentlichungsdatum",
+      "views": "Aufrufe",
+      "share": "Teilen",
+      "report": "Melden",
+      "similar": "Ähnliche Anzeigen"
+    }
+  },
+  "chat": {
+    "title": "Messaging",
+    "send": "Senden",
+    "newMessage": "Neue Nachricht",
+    "noMessages": "Noch keine Nachrichten",
+    "startConversation": "Starten Sie eine Konversation",
+    "typeMessage": "Geben Sie Ihre Nachricht ein...",
+    "chatRooms": "Chat-Räume",
+    "noChats": "Noch keine Chats",
+    "lastMessage": "Letzte Nachricht"
+  }
+} 

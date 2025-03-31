@@ -21,6 +21,16 @@ const getAllAds = async () => {
   }
 };
 
+const getAdById = async (adId) => {
+  try {
+    const response = await api.get(`/api/v1/ads/${adId}`);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+};
+
 const getAdsByUserId = async (userId) => {
   try {
     const response = await api.get(`/api/v1/ads/user/${userId}`, {
@@ -95,6 +105,7 @@ const updateAd = async (id, formData) => {
 export default {
   getAllAds,
   getAdsByUserId,
+  getAdById,
   updateAd,
   getAuthHeader,
   getAdImages,

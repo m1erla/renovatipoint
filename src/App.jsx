@@ -31,6 +31,7 @@ import ChatRoom from "./components/Chat/ChatRoom";
 import CreateAd from "./components/Ads/CreateAd";
 import MyAds from "./components/Ads/MyAds";
 import AdList from "./components/Ads/AdList";
+import AdDetail from "./components/Ads/AdDetail";
 
 // Page Components
 import HomePage from "./components/pages/HomePage";
@@ -52,96 +53,171 @@ import SpecialProjects from "./components/pages/services/SpecialProjects";
 import HelpCenter from "./components/pages/support/HelpCenter";
 import PrivacyPolicy from "./components/pages/support/PrivacyPolicy";
 import TermsOfService from "./components/pages/support/TermsOfService";
+import Unauthorized from "./components/pages/Unauthorized";
 
-// Theme
-import theme from "./theme";
+// Admin Components
+import AdminLayout from "./components/admin/layout/AdminLayout";
+import Dashboard from "./components/admin/dashboard/Dashboard";
+import UserList from "./components/admin/users/UserList";
+import AdminAdList from "./components/admin/ads/AdList";
+import StorageManagement from "./components/admin/storage/StorageManagement";
+import AdminGuard from "./guards/AdminGuard";
+
+// Theme and Language
 import { useCustomTheme } from "./context/ThemeContext";
+import { LanguageProvider } from "./context/LanguageContext";
 
 function App() {
   const { theme: customTheme } = useCustomTheme();
 
   return (
-    <MUIThemeProvider theme={theme}>
-      <CssBaseline />
-      <AuthProvider>
-        <BrowserRouter>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              minHeight: "100vh",
-            }}
-          >
-            <Navbar />
-            <Box component="main" sx={{ flexGrow: 1 }}>
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/expert-register" element={<ExpertRegister />} />
+    <LanguageProvider>
+      <MUIThemeProvider theme={customTheme}>
+        <CssBaseline />
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Admin Routes */}
+              <Route
+                path="/admin"
+                element={
+                  <AdminGuard>
+                    <AdminLayout>
+                      <Dashboard />
+                    </AdminLayout>
+                  </AdminGuard>
+                }
+              />
+              <Route
+                path="/admin/users"
+                element={
+                  <AdminGuard>
+                    <AdminLayout>
+                      <UserList />
+                    </AdminLayout>
+                  </AdminGuard>
+                }
+              />
+              <Route
+                path="/admin/ads"
+                element={
+                  <AdminGuard>
+                    <AdminLayout>
+                      <AdminAdList />
+                    </AdminLayout>
+                  </AdminGuard>
+                }
+              />
+              <Route
+                path="/admin/storage"
+                element={
+                  <AdminGuard>
+                    <AdminLayout>
+                      <StorageManagement />
+                    </AdminLayout>
+                  </AdminGuard>
+                }
+              />
 
-                {/* Kategori ve Servis Detay Sayfaları */}
-                <Route path="/kategori/:id" element={<CategoryDetail />} />
-                <Route path="/servis/:id" element={<ServiceDetail />} />
+              {/* Main App Routes */}
+              <Route
+                path="*"
+                element={
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      minHeight: "100vh",
+                    }}
+                  >
+                    <Navbar />
+                    <Box component="main" sx={{ flexGrow: 1 }}>
+                      <Routes>
+                        {/* Public Routes */}
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route
+                          path="/expert-register"
+                          element={<ExpertRegister />}
+                        />
 
-                {/* Profile Routes */}
-                <Route path="/expert-profile" element={<ExpertProfile />} />
-                <Route path="/user-profile" element={<UserProfile />} />
+                        {/* Kategori ve Servis Detay Sayfaları */}
+                        <Route
+                          path="/kategori/:id"
+                          element={<CategoryDetail />}
+                        />
+                        <Route path="/servis/:id" element={<ServiceDetail />} />
 
-                {/* Payment Routes */}
-                <Route path="/sepa-payment" element={<SepaPayment />} />
-                <Route
-                  path="/setup-sepa-payment"
-                  element={<SetupSepaPayment />}
-                />
-                <Route
-                  path="/payment-confirmation"
-                  element={<PaymentConfirmation />}
-                />
+                        {/* Profile Routes */}
+                        <Route
+                          path="/expert-profile"
+                          element={<ExpertProfile />}
+                        />
+                        <Route path="/user-profile" element={<UserProfile />} />
 
-                {/* Ad Routes */}
-                <Route path="/ads" element={<AdList />} />
-                <Route path="/create-ad" element={<CreateAd />} />
-                <Route path="/my-ads" element={<MyAds />} />
+                        {/* Payment Routes */}
+                        <Route path="/sepa-payment" element={<SepaPayment />} />
+                        <Route
+                          path="/setup-sepa-payment"
+                          element={<SetupSepaPayment />}
+                        />
+                        <Route
+                          path="/payment-confirmation"
+                          element={<PaymentConfirmation />}
+                        />
 
-                {/* Request Routes */}
-                <Route path="/requests" element={<RequestList />} />
+                        {/* Ad Routes */}
+                        <Route path="/ads" element={<AdList />} />
+                        <Route path="/ads/:id" element={<AdDetail />} />
+                        <Route path="/create-ad" element={<CreateAd />} />
+                        <Route path="/my-ads" element={<MyAds />} />
 
-                {/* Chat Routes */}
-                <Route path="/chat/:chatRoomId" element={<Chat />} />
-                <Route path="/chat-rooms" element={<ChatRoom />} />
+                        {/* Request Routes */}
+                        <Route path="/requests" element={<RequestList />} />
 
-                {/* Company Pages */}
-                <Route path="/about" element={<AboutUs />} />
-                <Route path="/careers" element={<Careers />} />
-                <Route path="/contact" element={<ContactUs />} />
+                        {/* Chat Routes */}
+                        <Route path="/chat/:chatRoomId" element={<Chat />} />
+                        <Route path="/chat-rooms" element={<ChatRoom />} />
 
-                {/* Services Pages */}
-                <Route
-                  path="/services/home-renovation"
-                  element={<HomeRenovation />}
-                />
-                <Route
-                  path="/services/garden-design"
-                  element={<GardenDesign />}
-                />
-                <Route
-                  path="/services/special-projects"
-                  element={<SpecialProjects />}
-                />
+                        {/* Company Pages */}
+                        <Route path="/about" element={<AboutUs />} />
+                        <Route path="/careers" element={<Careers />} />
+                        <Route path="/contact" element={<ContactUs />} />
 
-                {/* Support Pages */}
-                <Route path="/help" element={<HelpCenter />} />
-                <Route path="/privacy" element={<PrivacyPolicy />} />
-                <Route path="/terms" element={<TermsOfService />} />
-              </Routes>
-            </Box>
-            <Footer />
-          </Box>
-        </BrowserRouter>
-      </AuthProvider>
-    </MUIThemeProvider>
+                        {/* Services Pages */}
+                        <Route
+                          path="/services/home-renovation"
+                          element={<HomeRenovation />}
+                        />
+                        <Route
+                          path="/services/garden-design"
+                          element={<GardenDesign />}
+                        />
+                        <Route
+                          path="/services/special-projects"
+                          element={<SpecialProjects />}
+                        />
+
+                        {/* Support Pages */}
+                        <Route path="/help" element={<HelpCenter />} />
+                        <Route path="/privacy" element={<PrivacyPolicy />} />
+                        <Route path="/terms" element={<TermsOfService />} />
+                        <Route
+                          path="/unauthorized"
+                          element={<Unauthorized />}
+                        />
+                      </Routes>
+                    </Box>
+                    <Footer />
+                  </Box>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </MUIThemeProvider>
+    </LanguageProvider>
   );
 }
 

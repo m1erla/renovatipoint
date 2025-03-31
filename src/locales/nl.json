@@ -1,0 +1,178 @@
+{
+  "common": {
+    "welcome": "Welkom",
+    "login": "Inloggen",
+    "register": "Registreren",
+    "logout": "Uitloggen",
+    "profile": "Profiel",
+    "search": "Zoeken",
+    "loading": "Laden...",
+    "notFound": "Pagina niet gevonden",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "submit": "Verzenden",
+    "language": "Taal",
+    "theme": "Thema",
+    "darkMode": "Donkere modus",
+    "lightMode": "Lichte modus"
+  },
+  "navbar": {
+    "home": "Home",
+    "about": "Over ons",
+    "contact": "Contact",
+    "services": "Diensten",
+    "ads": "Advertenties",
+    "myAds": "Mijn advertenties",
+    "createAd": "Advertentie maken",
+    "requests": "Verzoeken",
+    "chat": "Berichten",
+    "help": "Help"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "users": "Gebruikers",
+    "ads": "Advertenties",
+    "storage": "Opslag",
+    "welcome": "Welkom",
+    "stats": {
+      "totalUsers": "Totaal aantal gebruikers",
+      "activeAds": "Actieve advertenties",
+      "storedFiles": "Opgeslagen bestanden",
+      "totalRevenue": "Totale inkomsten"
+    },
+    "activities": "Recente activiteiten",
+    "popularAds": "Populaire advertenties",
+    "noActivityData": "Geen activiteitengegevens beschikbaar",
+    "noAdData": "Geen advertentiegegevens beschikbaar",
+    "user": "Gebruiker",
+    "action": "Actie",
+    "date": "Datum",
+    "ad": "Advertentie",
+    "owner": "Eigenaar",
+    "visits": "Bezoeken"
+  },
+  "auth": {
+    "loginTitle": "Log in op uw account",
+    "registerTitle": "Maak een nieuw account aan",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "confirmPassword": "Bevestig wachtwoord",
+    "forgotPassword": "Wachtwoord vergeten",
+    "dontHaveAccount": "Heeft u nog geen account?",
+    "alreadyHaveAccount": "Heeft u al een account?",
+    "expertRegister": "Registreren als expert",
+    "becomeExpert": "Word een expert",
+    "fullName": "Volledige naam",
+    "phone": "Telefoon",
+    "address": "Adres"
+  },
+  "footer": {
+    "rights": "Alle rechten voorbehouden",
+    "terms": "Gebruiksvoorwaarden",
+    "privacy": "Privacybeleid",
+    "contact": "Contact",
+    "company": "Bedrijf",
+    "about": "Over ons",
+    "careers": "Carrières",
+    "services": "Diensten",
+    "homeRenovation": "Huisrenovatie",
+    "gardenDesign": "Tuinontwerp",
+    "specialProjects": "Speciale projecten",
+    "support": "Ondersteuning",
+    "helpCenter": "Helpcentrum"
+  },
+  "pages": {
+    "home": {
+      "title": "Transformeer uw ruimte met Renovatipoint",
+      "subtitle": "Creëer uw huis of bedrijf opnieuw met onze professionele diensten"
+    },
+    "about": {
+      "title": "Over ons",
+      "history": "Onze geschiedenis",
+      "mission": "Onze missie",
+      "vision": "Onze visie",
+      "team": "Ons team"
+    },
+    "contact": {
+      "title": "Neem contact op",
+      "subtitle": "Heeft u vragen? Neem contact met ons op.",
+      "form": {
+        "name": "Uw naam",
+        "email": "Uw e-mail",
+        "subject": "Onderwerp",
+        "message": "Uw bericht",
+        "send": "Bericht verzenden"
+      },
+      "success": "Uw bericht is succesvol verzonden. We nemen binnenkort contact met u op.",
+      "error": "Er is een fout opgetreden bij het verzenden van uw bericht. Probeer het later opnieuw.",
+      "info": {
+        "address": "Adres",
+        "phone": "Telefoon",
+        "email": "E-mail"
+      }
+    }
+  },
+  "services": {
+    "title": "Onze diensten",
+    "homeRenovation": "Huisrenovatie",
+    "gardenDesign": "Tuinontwerp",
+    "specialProjects": "Speciale projecten"
+  },
+  "profile": {
+    "personalInfo": "Persoonlijke informatie",
+    "accountSettings": "Accountinstellingen",
+    "notifications": "Meldingen",
+    "payments": "Betaalmethoden",
+    "changePassword": "Wachtwoord wijzigen",
+    "deleteAccount": "Account verwijderen",
+    "uploadPhoto": "Foto uploaden"
+  },
+  "ads": {
+    "createTitle": "Nieuwe advertentie maken",
+    "editTitle": "Advertentie bewerken",
+    "myAdsTitle": "Mijn advertenties",
+    "categories": "Categorieën",
+    "filters": "Filters",
+    "sort": "Sorteren",
+    "search": "Advertenties zoeken",
+    "form": {
+      "title": "Titel",
+      "category": "Categorie",
+      "description": "Beschrijving",
+      "price": "Prijs",
+      "location": "Locatie",
+      "images": "Afbeeldingen",
+      "phone": "Telefoon",
+      "contactInfo": "Contactgegevens",
+      "publish": "Publiceren",
+      "update": "Bijwerken"
+    },
+    "status": {
+      "active": "Actief",
+      "inactive": "Inactief",
+      "pending": "In behandeling",
+      "rejected": "Afgewezen"
+    },
+    "details": {
+      "contactSeller": "Contact opnemen met verkoper",
+      "postDate": "Publicatiedatum",
+      "views": "Weergaven",
+      "share": "Delen",
+      "report": "Rapporteren",
+      "similar": "Vergelijkbare advertenties"
+    }
+  },
+  "chat": {
+    "title": "Berichten",
+    "send": "Verzenden",
+    "newMessage": "Nieuw bericht",
+    "noMessages": "Nog geen berichten",
+    "startConversation": "Start een gesprek",
+    "typeMessage": "Typ uw bericht...",
+    "chatRooms": "Chatrooms",
+    "noChats": "Nog geen chats",
+    "lastMessage": "Laatste bericht"
+  }
+} 

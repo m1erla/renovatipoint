@@ -1,0 +1,178 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile",
+    "search": "Search",
+    "loading": "Loading...",
+    "notFound": "Page Not Found",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "submit": "Submit",
+    "language": "Language",
+    "theme": "Theme",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode"
+  },
+  "navbar": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "services": "Services",
+    "ads": "Ads",
+    "myAds": "My Ads",
+    "createAd": "Create Ad",
+    "requests": "Requests",
+    "chat": "Messages",
+    "help": "Help"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "ads": "Advertisements",
+    "storage": "Storage",
+    "welcome": "Welcome",
+    "stats": {
+      "totalUsers": "Total Users",
+      "activeAds": "Active Ads",
+      "storedFiles": "Stored Files",
+      "totalRevenue": "Total Revenue"
+    },
+    "activities": "Recent Activities",
+    "popularAds": "Popular Ads",
+    "noActivityData": "No activity data available",
+    "noAdData": "No ad data available",
+    "user": "User",
+    "action": "Action",
+    "date": "Date",
+    "ad": "Ad",
+    "owner": "Owner",
+    "visits": "Visits"
+  },
+  "auth": {
+    "loginTitle": "Login to Your Account",
+    "registerTitle": "Create a New Account",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "expertRegister": "Register as Expert",
+    "becomeExpert": "Become an Expert",
+    "fullName": "Full Name",
+    "phone": "Phone",
+    "address": "Address"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "contact": "Contact",
+    "company": "Company",
+    "about": "About Us",
+    "careers": "Careers",
+    "services": "Services",
+    "homeRenovation": "Home Renovation",
+    "gardenDesign": "Garden Design",
+    "specialProjects": "Special Projects",
+    "support": "Support",
+    "helpCenter": "Help Center"
+  },
+  "pages": {
+    "home": {
+      "title": "Transform your space with Renovatipoint",
+      "subtitle": "Recreate your home or business with our professional services"
+    },
+    "about": {
+      "title": "About Us",
+      "history": "Our History",
+      "mission": "Our Mission",
+      "vision": "Our Vision",
+      "team": "Our Team"
+    },
+    "contact": {
+      "title": "Get In Touch",
+      "subtitle": "Have questions? Contact us.",
+      "form": {
+        "name": "Your Name",
+        "email": "Your Email",
+        "subject": "Subject",
+        "message": "Your Message",
+        "send": "Send Message"
+      },
+      "success": "Your message has been sent successfully. We'll get back to you soon.",
+      "error": "An error occurred while sending your message. Please try again later.",
+      "info": {
+        "address": "Address",
+        "phone": "Phone",
+        "email": "Email"
+      }
+    }
+  },
+  "services": {
+    "title": "Our Services",
+    "homeRenovation": "Home Renovation",
+    "gardenDesign": "Garden Design",
+    "specialProjects": "Special Projects"
+  },
+  "profile": {
+    "personalInfo": "Personal Information",
+    "accountSettings": "Account Settings",
+    "notifications": "Notifications",
+    "payments": "Payment Methods",
+    "changePassword": "Change Password",
+    "deleteAccount": "Delete Account",
+    "uploadPhoto": "Upload Photo"
+  },
+  "ads": {
+    "createTitle": "Create New Ad",
+    "editTitle": "Edit Ad",
+    "myAdsTitle": "My Ads",
+    "categories": "Categories",
+    "filters": "Filters",
+    "sort": "Sort",
+    "search": "Search Ads",
+    "form": {
+      "title": "Title",
+      "category": "Category",
+      "description": "Description",
+      "price": "Price",
+      "location": "Location",
+      "images": "Images",
+      "phone": "Phone",
+      "contactInfo": "Contact Information",
+      "publish": "Publish",
+      "update": "Update"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "rejected": "Rejected"
+    },
+    "details": {
+      "contactSeller": "Contact Seller",
+      "postDate": "Post Date",
+      "views": "Views",
+      "share": "Share",
+      "report": "Report",
+      "similar": "Similar Ads"
+    }
+  },
+  "chat": {
+    "title": "Messaging",
+    "send": "Send",
+    "newMessage": "New Message",
+    "noMessages": "No messages yet",
+    "startConversation": "Start a conversation",
+    "typeMessage": "Type your message...",
+    "chatRooms": "Chat Rooms",
+    "noChats": "No chats yet",
+    "lastMessage": "Last message"
+  }
+} 
