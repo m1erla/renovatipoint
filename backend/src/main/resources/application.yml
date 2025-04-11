@@ -30,6 +30,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        temp:
+          use_jdbc_metadata_defaults: false
+        globally_quoted_identifiers: true
+        hbm2ddl:
+          auto: none
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   flyway:

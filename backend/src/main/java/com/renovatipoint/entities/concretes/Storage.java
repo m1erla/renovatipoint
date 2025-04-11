@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@Table(name = "storage", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "name"})})
+@Table(name = "storage", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
 @Entity
 @Builder
 @Getter
@@ -21,7 +21,7 @@ public class Storage {
     private String type;
 
     @Lob
-    @Column(name = "image_data", columnDefinition = "BYTEA")
+    @Column(name = "image_data", columnDefinition = "bytea")
     private byte[] imageData;
 
     private String url;
@@ -35,4 +35,3 @@ public class Storage {
     private Ads ads;
 
 }
-

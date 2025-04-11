@@ -10,6 +10,8 @@ import com.renovatipoint.dataAccess.abstracts.UserRepository;
 import com.renovatipoint.entities.concretes.Ads;
 import com.renovatipoint.entities.concretes.Storage;
 import com.renovatipoint.entities.concretes.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -37,10 +39,12 @@ public class StorageManager implements StorageService {
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads";
 
     private final StorageRepository storageRepository;
-
     private final ModelMapperService modelMapperService;
     private final AdsRepository adsRepository;
     private final UserRepository userRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public StorageManager(StorageRepository storageRepository, ModelMapperService modelMapperService,
@@ -91,19 +95,50 @@ public class StorageManager implements StorageService {
         List<String> fileNames = new ArrayList<>();
 
         for (MultipartFile file : files) {
-            String fileName = storeFile(file);
+            try {
+                String fileName = storeFile(file);
 
-            Storage storageData = Storage.builder()
-                    .name(fileName)
-                    .type(file.getContentType())
-                    .imageData(ImageUtils.compressImage(file.getBytes()))
-                    .url(UPLOAD_DIR)
-                    .user(user)
-                    .ads(ad)
-                    .build();
+                // Doğrudan byte array olarak sakla
+                byte[] imageBytes = file.getBytes();
 
-            storageRepository.save(storageData);
-            fileNames.add(fileName);
+                // OID sorununu önlemek için çok büyük dosyaları fiziksel olarak kaydet
+                if (imageBytes.length > 1_000_000) { // 1MB'dan büyükse
+                    // Sadece dosya referansını veritabanında sakla, dosyanın kendisi dosya
+                    // sisteminde
+                    Storage storageData = Storage.builder()
+                            .name(fileName)
+                            .type(file.getContentType())
+                            .url(UPLOAD_DIR)
+                            .user(user)
+                            .ads(ad)
+                            .build();
+
+                    storageRepository.save(storageData);
+                } else {
+                    // Küçük dosyaları veri tabanında sakla
+                    byte[] compressedImageData = ImageUtils.compressImage(imageBytes);
+
+                    Storage storageData = Storage.builder()
+                            .name(fileName)
+                            .type(file.getContentType())
+                            .imageData(compressedImageData)
+                            .url(UPLOAD_DIR)
+                            .user(user)
+                            .ads(ad)
+                            .build();
+
+                    storageRepository.save(storageData);
+                }
+
+                entityManager.flush();
+                entityManager.clear();
+
+                fileNames.add(fileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Hata durumunda işlemi atla ve devam et
+                continue;
+            }
         }
         return fileNames;
     }
