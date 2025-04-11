@@ -2,6 +2,8 @@ package com.renovatipoint.entities.concretes;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Data
 @Table(name = "storage", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
@@ -21,7 +23,8 @@ public class Storage {
     private String type;
 
     @Lob
-    @Column(name = "image_data", columnDefinition = "bytea")
+    @Column(name = "image_data")
+    @JdbcTypeCode(SqlTypes.BINARY) // Hibernate 6 için
     private byte[] imageData;
 
     private String url;

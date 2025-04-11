@@ -98,45 +98,26 @@ public class StorageManager implements StorageService {
             try {
                 String fileName = storeFile(file);
 
-                // Doğrudan byte array olarak sakla
-                byte[] imageBytes = file.getBytes();
+                // Dosyayı fiziksel olarak daima kaydet
+                Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName);
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-                // OID sorununu önlemek için çok büyük dosyaları fiziksel olarak kaydet
-                if (imageBytes.length > 1_000_000) { // 1MB'dan büyükse
-                    // Sadece dosya referansını veritabanında sakla, dosyanın kendisi dosya
-                    // sisteminde
-                    Storage storageData = Storage.builder()
-                            .name(fileName)
-                            .type(file.getContentType())
-                            .url(UPLOAD_DIR)
-                            .user(user)
-                            .ads(ad)
-                            .build();
+                // Veritabanına sadece dosya referansını kaydet, imageData kullanma
+                Storage storageData = Storage.builder()
+                        .name(fileName)
+                        .type(file.getContentType())
+                        .url(UPLOAD_DIR)
+                        .user(user)
+                        .ads(ad)
+                        .build();
 
-                    storageRepository.save(storageData);
-                } else {
-                    // Küçük dosyaları veri tabanında sakla
-                    byte[] compressedImageData = ImageUtils.compressImage(imageBytes);
-
-                    Storage storageData = Storage.builder()
-                            .name(fileName)
-                            .type(file.getContentType())
-                            .imageData(compressedImageData)
-                            .url(UPLOAD_DIR)
-                            .user(user)
-                            .ads(ad)
-                            .build();
-
-                    storageRepository.save(storageData);
-                }
-
+                storageRepository.save(storageData);
                 entityManager.flush();
                 entityManager.clear();
 
                 fileNames.add(fileName);
             } catch (Exception e) {
                 e.printStackTrace();
-                // Hata durumunda işlemi atla ve devam et
                 continue;
             }
         }
@@ -147,8 +128,15 @@ public class StorageManager implements StorageService {
     @Transactional
     public byte[] downloadImage(String fileName) throws IOException {
         Optional<Storage> dbImageData = storageRepository.findByName(fileName);
-        if (dbImageData != null) {
-            return ImageUtils.decompressImage(dbImageData.get().getImageData());
+        if (dbImageData.isPresent()) {
+            // Eğer imageData varsa kullan
+            if (dbImageData.get().getImageData() != null && dbImageData.get().getImageData().length > 0) {
+                return ImageUtils.decompressImage(dbImageData.get().getImageData());
+            } else {
+                // Yoksa dosya sisteminden oku
+                Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName);
+                return Files.readAllBytes(filePath);
+            }
         } else {
             throw new FileNotFoundException("File not found with name: " + fileName);
         }
