@@ -3,12 +3,15 @@ import { motion } from "framer-motion";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import HandymanIcon from "@mui/icons-material/Handyman";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
+import { useTranslation } from "react-i18next";
 
 const AboutUs = () => {
+  const { t } = useTranslation();
+
   const teamMembers = [
     {
       name: "Ahmet Yılmaz",
-      role: "Kurucu & CEO",
+      role: t("company.about.team.roles.ceo"),
       image: "https://randomuser.me/api/portraits/men/1.jpg",
       social: {
         linkedin: "#",
@@ -17,7 +20,7 @@ const AboutUs = () => {
     },
     {
       name: "Ayşe Demir",
-      role: "Baş Mimar",
+      role: t("company.about.team.roles.architect"),
       image: "https://randomuser.me/api/portraits/women/1.jpg",
       social: {
         linkedin: "#",
@@ -26,7 +29,7 @@ const AboutUs = () => {
     },
     {
       name: "Mehmet Kaya",
-      role: "Proje Müdürü",
+      role: t("company.about.team.roles.projectManager"),
       image: "https://randomuser.me/api/portraits/men/2.jpg",
       social: {
         linkedin: "#",
@@ -38,20 +41,18 @@ const AboutUs = () => {
   const features = [
     {
       icon: <EngineeringIcon className="w-8 h-8" />,
-      title: "Uzman Ekip",
-      description:
-        "Deneyimli ve profesyonel ekibimizle en kaliteli hizmeti sunuyoruz.",
+      title: t("company.about.features.expertTeam.title"),
+      description: t("company.about.features.expertTeam.description"),
     },
     {
       icon: <HandymanIcon className="w-8 h-8" />,
-      title: "Kaliteli İşçilik",
-      description: "Her projede en yüksek kalite standartlarını uyguluyoruz.",
+      title: t("company.about.features.quality.title"),
+      description: t("company.about.features.quality.description"),
     },
     {
       icon: <EmojiObjectsIcon className="w-8 h-8" />,
-      title: "Yenilikçi Çözümler",
-      description:
-        "Modern teknoloji ve yenilikçi yaklaşımlarla projelerinizi hayata geçiriyoruz.",
+      title: t("company.about.features.innovative.title"),
+      description: t("company.about.features.innovative.description"),
     },
   ];
 
@@ -77,7 +78,7 @@ const AboutUs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-[calc(100vh-4rem)] pt-16 md:pt-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/5 dark:to-secondary/5" />
@@ -89,13 +90,10 @@ const AboutUs = () => {
             className="text-center max-w-4xl mx-auto"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Hakkımızda
+              {t("company.about.title")}
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
-              Built Better olarak, ev ve bahçe projelerinizi hayata geçirirken
-              size en iyi hizmeti sunmayı hedefliyoruz. Uzman ekibimiz ve
-              kaliteli hizmet anlayışımızla hayallerinizi gerçeğe
-              dönüştürüyoruz.
+              {t("company.about.description")}
             </p>
           </motion.div>
         </div>
@@ -139,7 +137,7 @@ const AboutUs = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
           >
-            Ekibimiz
+            {t("company.about.team.title")}
           </motion.h2>
           <motion.div
             variants={containerVariants}
@@ -198,7 +196,9 @@ const AboutUs = () => {
               className="text-center"
             >
               <div className="text-5xl font-bold text-white mb-2">500+</div>
-              <div className="text-white/80">Tamamlanan Proje</div>
+              <div className="text-white/80">
+                {t("company.about.stats.completedProjects")}
+              </div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
@@ -207,7 +207,9 @@ const AboutUs = () => {
               className="text-center"
             >
               <div className="text-5xl font-bold text-white mb-2">50+</div>
-              <div className="text-white/80">Uzman Ekip</div>
+              <div className="text-white/80">
+                {t("company.about.stats.expertTeam")}
+              </div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
@@ -216,7 +218,9 @@ const AboutUs = () => {
               className="text-center"
             >
               <div className="text-5xl font-bold text-white mb-2">15+</div>
-              <div className="text-white/80">Yıllık Deneyim</div>
+              <div className="text-white/80">
+                {t("company.about.stats.yearsExperience")}
+              </div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
@@ -225,7 +229,9 @@ const AboutUs = () => {
               className="text-center"
             >
               <div className="text-5xl font-bold text-white mb-2">1000+</div>
-              <div className="text-white/80">Mutlu Müşteri</div>
+              <div className="text-white/80">
+                {t("company.about.stats.happyClients")}
+              </div>
             </motion.div>
           </div>
         </div>
@@ -241,17 +247,16 @@ const AboutUs = () => {
             className="text-center max-w-3xl mx-auto"
           >
             <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Projenizi Birlikte Gerçekleştirelim
+              {t("company.about.cta.title")}
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-              Hayalinizdeki projeyi gerçeğe dönüştürmek için bizimle iletişime
-              geçin.
+              {t("company.about.cta.description")}
             </p>
             <a
               href="/contact"
-              className="inline-block bg-primary hover:bg-primary/90 text-white font-semibold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105"
+              className="inline-block px-8 py-4 bg-primary text-white rounded-full font-semibold hover:bg-primary-dark transition-colors"
             >
-              İletişime Geç
+              {t("company.about.cta.button")}
             </a>
           </motion.div>
         </div>

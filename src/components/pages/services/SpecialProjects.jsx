@@ -16,9 +16,20 @@ import ApartmentIcon from "@mui/icons-material/Apartment";
 import BusinessIcon from "@mui/icons-material/Business";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import SchoolIcon from "@mui/icons-material/School";
+import { useTranslation } from "react-i18next";
 
 const SpecialProjects = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
+
+  const serviceKeys = ["pool", "smartHome", "attic"];
+  const expertiseKeys = [
+    "projectManagement",
+    "customDesign",
+    "qualityControl",
+    "sustainability",
+  ];
+  const completedProjectKeys = ["bodrumVilla", "istanbulPenthouse"];
 
   const services = [
     {
@@ -161,7 +172,10 @@ const SpecialProjects = () => {
             <Box
               component="img"
               src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-              alt="Özel projeler"
+              alt={t(
+                "pages.specialProjects.hero.alt",
+                "Special Projects Hero Image"
+              )}
               sx={{
                 width: "100%",
                 height: "100%",
@@ -181,11 +195,13 @@ const SpecialProjects = () => {
               }}
             >
               <Typography variant="h3" fontWeight="bold">
-                Özel Projeler
+                {t("pages.specialProjects.title", "Özel Projeler")}
               </Typography>
               <Typography variant="h6">
-                Hayalinizdeki özel mekânları profesyonel ekibimizle hayata
-                geçiriyoruz
+                {t(
+                  "pages.specialProjects.subtitle",
+                  "Hayalinizdeki özel mekânları profesyonel ekibimizle hayata geçiriyoruz"
+                )}
               </Typography>
             </Box>
           </Box>
@@ -197,14 +213,15 @@ const SpecialProjects = () => {
             paragraph
             sx={{ mb: 8, maxWidth: "900px", mx: "auto" }}
           >
-            Lüks konutlar, özel tasarım havuzlar, akıllı ev sistemleri ve
-            benzersiz renovasyon projeleri için özel çözümler sunuyoruz.
-            Hayalinizdeki yaşam alanını birlikte inşa edelim.
+            {t(
+              "pages.specialProjects.description",
+              "Lüks konutlar, özel tasarım havuzlar, akıllı ev sistemleri ve benzersiz renovasyon projeleri için özel çözümler sunuyoruz. Hayalinizdeki yaşam alanını birlikte inşa edelim."
+            )}
           </Typography>
 
           <Grid container spacing={4} sx={{ mb: 8 }}>
-            {services.map((service, index) => (
-              <Grid item xs={12} md={6} key={index}>
+            {serviceKeys.map((key, index) => (
+              <Grid item xs={12} md={4} key={key}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -225,8 +242,11 @@ const SpecialProjects = () => {
                     <CardMedia
                       component="img"
                       height="300"
-                      image={service.image}
-                      alt={service.title}
+                      image={t(
+                        `pages.specialProjects.services.${key}.image`,
+                        "/images/projects/default.jpg"
+                      )}
+                      alt={t(`pages.specialProjects.services.${key}.title`)}
                     />
                     <CardContent>
                       <Box
@@ -248,16 +268,16 @@ const SpecialProjects = () => {
                           <CheckCircleIcon />
                         </Box>
                         <Typography variant="h5" component="h2">
-                          {service.title}
+                          {t(`pages.specialProjects.services.${key}.title`)}
                         </Typography>
                       </Box>
                       <Typography variant="body1" paragraph>
-                        {service.description}
+                        {t(`pages.specialProjects.services.${key}.description`)}
                       </Typography>
                       <Box sx={{ mt: 2 }}>
-                        {service.features.map((feature, idx) => (
+                        {[1, 2, 3, 4].map((featureIndex) => (
                           <Typography
-                            key={idx}
+                            key={featureIndex}
                             variant="body2"
                             sx={{
                               display: "flex",
@@ -265,7 +285,10 @@ const SpecialProjects = () => {
                               mb: 1,
                             }}
                           >
-                            • {feature}
+                            •{" "}
+                            {t(
+                              `pages.specialProjects.services.${key}.features.${featureIndex}`
+                            )}
                           </Typography>
                         ))}
                       </Box>
@@ -283,10 +306,13 @@ const SpecialProjects = () => {
               gutterBottom
               sx={{ mb: 6, fontWeight: 700 }}
             >
-              Uzmanlık Alanlarımız
+              {t(
+                "pages.specialProjects.expertise.title",
+                "Uzmanlık Alanlarımız"
+              )}
             </Typography>
             <Grid container spacing={4}>
-              {expertise.map((item, index) => (
+              {expertiseKeys.map((key, index) => (
                 <Grid item xs={12} sm={6} md={3} key={index}>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -306,10 +332,12 @@ const SpecialProjects = () => {
                     >
                       <CardContent>
                         <Typography variant="h6" gutterBottom>
-                          {item.title}
+                          {t(`pages.specialProjects.expertise.${key}.title`)}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          {item.description}
+                          {t(
+                            `pages.specialProjects.expertise.${key}.description`
+                          )}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -328,11 +356,16 @@ const SpecialProjects = () => {
             }}
           >
             <Typography variant="h4" gutterBottom>
-              Projenizi Bizimle Paylaşın
+              {t(
+                "pages.specialProjects.cta1.title",
+                "Projenizi Bizimle Paylaşın"
+              )}
             </Typography>
             <Typography variant="body1" paragraph>
-              Özel projeleriniz için profesyonel çözümler sunalım. Uzman
-              ekibimiz sizinle görüşmek için hazır.
+              {t(
+                "pages.specialProjects.cta1.description",
+                "Özel projeleriniz için profesyonel çözümler sunalım. Uzman ekibimiz sizinle görüşmek için hazır."
+              )}
             </Typography>
             <Button
               variant="contained"
@@ -341,7 +374,7 @@ const SpecialProjects = () => {
               href="/contact"
               sx={{ mt: 2 }}
             >
-              Proje Teklifi Al
+              {t("pages.specialProjects.cta1.button", "Proje Teklifi Al")}
             </Button>
           </Box>
 
@@ -352,57 +385,41 @@ const SpecialProjects = () => {
               gutterBottom
               sx={{ mb: 6, fontWeight: 700 }}
             >
-              Tamamlanmış Projeler
+              {t(
+                "pages.specialProjects.completed.title",
+                "Tamamlanmış Projeler"
+              )}
             </Typography>
             <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card sx={{ borderRadius: 2, overflow: "hidden" }}>
-                    <CardMedia
-                      component="img"
-                      height="350"
-                      image="https://images.unsplash.com/photo-1600607687644-c7e47361a37d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                      alt="Bodrum Villa"
-                    />
-                    <CardContent>
-                      <Typography variant="h5" gutterBottom>
-                        Bodrum Villa Renovasyonu
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Bodrum'da bulunan 450m² villaya özel havuz, peyzaj ve iç
-                        mekan tasarımı
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card sx={{ borderRadius: 2, overflow: "hidden" }}>
-                    <CardMedia
-                      component="img"
-                      height="350"
-                      image="https://images.unsplash.com/photo-1600210491369-e753d80a41f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80"
-                      alt="İstanbul Penthouse"
-                    />
-                    <CardContent>
-                      <Typography variant="h5" gutterBottom>
-                        İstanbul Penthouse
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Nişantaşı'nda bulunan 300m² penthouse dairesine özel
-                        tasarım ve akıllı ev sistemleri
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </Grid>
+              {completedProjectKeys.map((key) => (
+                <Grid item xs={12} md={6} key={key}>
+                  <motion.div
+                    whileHover={{ scale: 1.03 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Card sx={{ borderRadius: 2, overflow: "hidden" }}>
+                      <CardMedia
+                        component="img"
+                        height="350"
+                        image={t(
+                          `pages.specialProjects.completed.${key}.image`
+                        )}
+                        alt={t(`pages.specialProjects.completed.${key}.title`)}
+                      />
+                      <CardContent>
+                        <Typography variant="h5" gutterBottom>
+                          {t(`pages.specialProjects.completed.${key}.title`)}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {t(
+                            `pages.specialProjects.completed.${key}.description`
+                          )}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))}
             </Grid>
           </Box>
 
@@ -432,10 +449,16 @@ const SpecialProjects = () => {
           >
             <Box sx={{ position: "relative", zIndex: 1, color: "white" }}>
               <Typography variant="h4" gutterBottom>
-                Ücretsiz Keşif İçin Bize Ulaşın
+                {t(
+                  "pages.specialProjects.cta2.title",
+                  "Ücretsiz Keşif İçin Bize Ulaşın"
+                )}
               </Typography>
               <Typography variant="body1" paragraph>
-                Özel projeniz için uzman ekibimiz yanınızda.
+                {t(
+                  "pages.specialProjects.cta2.description",
+                  "Özel projeniz için uzman ekibimiz yanınızda."
+                )}
               </Typography>
               <Button
                 variant="contained"
@@ -444,7 +467,7 @@ const SpecialProjects = () => {
                 href="/contact"
                 sx={{ mt: 2 }}
               >
-                İletişime Geç
+                {t("pages.specialProjects.cta2.button", "İletişime Geç")}
               </Button>
             </Box>
           </Box>

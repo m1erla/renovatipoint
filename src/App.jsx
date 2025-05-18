@@ -5,7 +5,7 @@ import { CssBaseline } from "@mui/material";
 import { Box } from "@mui/material";
 
 // Layout Components
-import Navbar from "./components/Shared/Navbar";
+import Navbar from "./components/layout/Navbar";
 import Footer from "./components/Shared/Footer";
 
 // Auth Components
@@ -61,6 +61,12 @@ import Dashboard from "./components/admin/dashboard/Dashboard";
 import UserList from "./components/admin/users/UserList";
 import AdminAdList from "./components/admin/ads/AdList";
 import StorageManagement from "./components/admin/storage/StorageManagement";
+import Settings from "./components/admin/settings/Settings";
+import Messages from "./components/admin/messages/Messages";
+import Payments from "./components/admin/payments/Payments";
+import Analytics from "./components/admin/analytics/Analytics";
+import Categories from "./components/admin/categories/Categories";
+import Services from "./components/admin/categories/Services";
 import AdminGuard from "./guards/AdminGuard";
 
 // Theme and Language
@@ -80,6 +86,16 @@ function App() {
               {/* Admin Routes */}
               <Route
                 path="/admin"
+                element={
+                  <AdminGuard>
+                    <AdminLayout>
+                      <Dashboard />
+                    </AdminLayout>
+                  </AdminGuard>
+                }
+              />
+              <Route
+                path="/admin/dashboard"
                 element={
                   <AdminGuard>
                     <AdminLayout>
@@ -114,6 +130,66 @@ function App() {
                   <AdminGuard>
                     <AdminLayout>
                       <StorageManagement />
+                    </AdminLayout>
+                  </AdminGuard>
+                }
+              />
+              <Route
+                path="/admin/messages"
+                element={
+                  <AdminGuard>
+                    <AdminLayout>
+                      <Messages />
+                    </AdminLayout>
+                  </AdminGuard>
+                }
+              />
+              <Route
+                path="/admin/analytics"
+                element={
+                  <AdminGuard>
+                    <AdminLayout>
+                      <Analytics />
+                    </AdminLayout>
+                  </AdminGuard>
+                }
+              />
+              <Route
+                path="/admin/payments"
+                element={
+                  <AdminGuard>
+                    <AdminLayout>
+                      <Payments />
+                    </AdminLayout>
+                  </AdminGuard>
+                }
+              />
+              <Route
+                path="/admin/settings"
+                element={
+                  <AdminGuard>
+                    <AdminLayout>
+                      <Settings />
+                    </AdminLayout>
+                  </AdminGuard>
+                }
+              />
+              <Route
+                path="/admin/categories"
+                element={
+                  <AdminGuard>
+                    <AdminLayout>
+                      <Categories />
+                    </AdminLayout>
+                  </AdminGuard>
+                }
+              />
+              <Route
+                path="/admin/services"
+                element={
+                  <AdminGuard>
+                    <AdminLayout>
+                      <Services />
                     </AdminLayout>
                   </AdminGuard>
                 }

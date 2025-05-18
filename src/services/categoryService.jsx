@@ -1,26 +1,42 @@
 import api from "../utils/api";
-import axios from "axios";
-
-// Public endpoints için ayrı bir axios instance
-const publicApi = axios.create({
-  baseURL: "http://localhost:8080",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
 
 class CategoryService {
-  getAllCategories() {
-    // Backend ile uyumlu endpoint
-    return publicApi.get("/api/v1/categories");
+  // Tüm kategorileri getir
+  async getAllCategories() {
+    try {
+      const response = await api.get("/api/v1/categories");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      throw error;
+    }
   }
 
-  getCategoryById(id) {
-    return publicApi.get(`/api/v1/categories/${id}`);
+  // ID'ye göre kategori getir
+  async getCategoryById(id) {
+    try {
+      const response = await api.get(`/api/v1/categories/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching category ${id}:`, error);
+      throw error;
+    }
   }
 
-  getCategoryExperts(categoryId) {
-    return publicApi.get(`/api/v1/categories/${categoryId}/jobTitles`);
+  // Kategoriye ait iş unvanlarını getir
+  async getCategoryJobTitles(categoryId) {
+    try {
+      const response = await api.get(
+        `/api/v1/categories/${categoryId}/jobTitles`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        `Error fetching job titles for category ${categoryId}:`,
+        error
+      );
+      throw error;
+    }
   }
 }
 

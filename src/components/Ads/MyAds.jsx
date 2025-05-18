@@ -31,6 +31,11 @@ function MyAds() {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
+  const handleImageError = (e) => {
+    e.target.onerror = null;
+    e.target.src = adService.DEFAULT_AD_IMAGE;
+  };
+
   const fetchAds = async () => {
     try {
       const userId = localStorage.getItem("userId");
@@ -41,20 +46,22 @@ function MyAds() {
       }
       const response = await adService.getAdsByUserId(userId);
 
-      // İlanları ve resimlerini yükle
       const adsWithImages = await Promise.all(
         response.map(async (ad) => {
           try {
             const images = await adService.getAdImages(ad.id);
             return {
               ...ad,
-              images: images,
+              images:
+                images && images.length > 0
+                  ? images
+                  : [{ url: adService.DEFAULT_AD_IMAGE }],
             };
           } catch (error) {
             console.warn(`Failed to load images for ad ${ad.id}:`, error);
             return {
               ...ad,
-              images: [],
+              images: [{ url: adService.DEFAULT_AD_IMAGE }],
             };
           }
         })
@@ -99,7 +106,6 @@ function MyAds() {
 
   const handleEditAd = (ad) => {
     try {
-      // Düzenleme için ilan verilerini hazırla
       const editData = {
         ...ad,
         categoryId: ad.category?.id || ad.categoryId,
@@ -145,7 +151,6 @@ function MyAds() {
       formData.append("categoryId", editingAd.categoryId || "");
       formData.append("serviceId", editingAd.serviceId || "");
 
-      // Mevcut resimleri koru
       if (editingAd.images && editingAd.images.length > 0) {
         editingAd.images.forEach((image, index) => {
           formData.append(`existingImages[${index}]`, image.id);
@@ -225,6 +230,7 @@ function MyAds() {
                       : adService.DEFAULT_AD_IMAGE
                   }
                   alt={ad.title}
+                  onError={handleImageError}
                   sx={{
                     objectFit: "cover",
                     borderBottom: "1px solid",
@@ -298,8 +304,9 @@ function MyAds() {
                           <Box
                             key={index}
                             component="img"
-                            src={image.url}
+                            src={image.url || adService.DEFAULT_AD_IMAGE}
                             alt={`Image ${index + 1}`}
+                            onError={handleImageError}
                             sx={{
                               width: 50,
                               height: 50,
@@ -368,7 +375,6 @@ function MyAds() {
             <Box
               sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 3 }}
             >
-              {/* Mevcut resimler */}
               {editingAd.images && editingAd.images.length > 0 && (
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="subtitle2" sx={{ mb: 1 }}>
@@ -385,8 +391,9 @@ function MyAds() {
                         }}
                       >
                         <img
-                          src={image.url}
+                          src={image.url || adService.DEFAULT_AD_IMAGE}
                           alt={`Ad image ${index + 1}`}
+                          onError={handleImageError}
                           style={{
                             width: "100%",
                             height: "100%",

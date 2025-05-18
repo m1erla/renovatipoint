@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { CloudIcon } from "lucide-react";
 import api from "../../utils/api";
+import { toast } from "react-toastify";
 
 function CreateAd() {
   const [title, setTitle] = useState("");
@@ -93,9 +94,11 @@ function CreateAd() {
     formData.append("serviceId", serviceId);
     formData.append("userId", localStorage.getItem("userId"));
 
-    images.forEach((image) => {
-      formData.append(`storages`, image);
-    });
+    if (images.length > 0) {
+      for (let i = 0; i < images.length; i++) {
+        formData.append("storages", images[i], images[i].name);
+      }
+    }
 
     try {
       const response = await api.post("/api/v1/ads/ad", formData, {
@@ -110,6 +113,9 @@ function CreateAd() {
       console.error(
         "Failed to create ad:",
         error.response ? error.response.data : error.message
+      );
+      toast.error(
+        error.response?.data || "İlan oluşturulurken bir hata oluştu."
       );
       setLoading(false);
     }

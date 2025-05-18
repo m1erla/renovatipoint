@@ -2,16 +2,13 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "http://localhost:8080",
-  timeout: 30000, // 30 seconds
   headers: {
     "Content-Type": "application/json",
   },
-  // Settings to prevent Bitdefender related issues
-  maxContentLength: 100000000, // 100MB
-  maxBodyLength: 100000000,
-  validateStatus: function (status) {
-    return status >= 200 && status < 500;
-  },
+  // validateStatus fonksiyonunu kaldırarak varsayılan davranışa dönüyoruz (sadece 2xx başarılı sayılır)
+  // validateStatus: function (status) {
+  //   return status >= 200 && status < 500;
+  // },
 });
 
 // Request interceptor
@@ -38,9 +35,10 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor
+// Response interceptor (hata yönetimi iyileştirildi)
 api.interceptors.response.use(
   (response) => {
+    // Başarılı yanıtlar için loglama (status 2xx)
     console.log("API Response Success:", {
       url: response.config.url,
       status: response.status,
@@ -49,56 +47,75 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    // Hata loglaması (tüm hatalar buraya düşecek)
     console.error("API Response Error:", {
       url: error.config?.url,
       status: error.response?.status,
       message: error.message,
       data: error.response?.data,
-      stack: error.stack,
+      stack: error.stack, // Geliştirme sırasında stack trace faydalı olabilir
     });
 
     // Timeout error check
     if (error.code === "ECONNABORTED") {
       console.error("Request timeout:", error);
-      return Promise.reject(new Error("Request timed out. Please try again."));
-    }
-
-    // Authentication error check
-    if (error.response?.status === 401) {
-      console.log("401 Error Detected:", {
-        path: window.location.pathname,
-        isLoginRequest: error.config.url.includes("/auth/authenticate"),
-      });
-
-      if (
-        !window.location.pathname.includes("/login") &&
-        !error.config.url.includes("/auth/authenticate")
-      ) {
-        console.log("Terminating session and redirecting to login");
-        localStorage.clear();
-        window.location.href = "/login";
-        return Promise.reject(new Error("Session expired"));
-      }
-    }
-
-    // Catch Bitdefender related errors
-    if (
-      error.message.includes("aborted by the software in your host machine")
-    ) {
-      console.error("Antivirus blocked the connection:", error);
+      // Kullanıcıya gösterilecek daha anlaşılır bir mesaj döndürebiliriz
       return Promise.reject(
         new Error(
-          "Antivirus software blocked the connection. Please check your security settings."
+          error.response?.data?.message ||
+            "İstek zaman aşımına uğradı. Lütfen tekrar deneyin."
         )
       );
     }
 
-    // General error message check
+    // Authentication error check (401)
+    if (error.response?.status === 401) {
+      console.log("401 Error Detected:", {
+        path: window.location.pathname,
+        isLoginRequest: error.config?.url?.includes("/auth/authenticate"),
+      });
+
+      // Login sayfasında değilsek ve istek login isteği değilse yönlendir
+      if (
+        !window.location.pathname.includes("/login") &&
+        !error.config?.url?.includes("/auth/authenticate")
+      ) {
+        console.log(
+          "Oturum sonlandırılıyor ve login sayfasına yönlendiriliyor"
+        );
+        localStorage.clear();
+        // window.location.href = "/login"; // Doğrudan yönlendirme yerine state yönetimi ile yapmak daha iyi olabilir
+        // Uygulamanızın yönlendirme (routing) mekanizmasına göre burayı güncelleyin.
+        // Örneğin: history.push('/login'); veya navigate('/login');
+        // Şimdilik hatayı fırlatarak component'in yakalamasını sağlıyoruz.
+        return Promise.reject(
+          new Error("Oturum süresi doldu. Lütfen tekrar giriş yapın.")
+        );
+      }
+      // Eğer login sayfasındaysa veya login isteğiyse, hatayı olduğu gibi bırak
+      // ki login formu hatayı işleyebilsin (örn. "geçersiz şifre")
+    }
+
+    // Catch Bitdefender related errors (Bu kontrol yerinde kalabilir)
+    if (
+      error.message?.includes("aborted by the software in your host machine")
+    ) {
+      console.error("Antivirus bağlantıyı engelledi:", error);
+      return Promise.reject(
+        new Error(
+          error.response?.data?.message ||
+            "Antivirüs yazılımı bağlantıyı engelledi. Lütfen güvenlik ayarlarınızı kontrol edin."
+        )
+      );
+    }
+
+    // Backend'den gelen genel hata mesajını kullan
     if (error.response?.data?.message) {
       return Promise.reject(new Error(error.response.data.message));
     }
 
-    return Promise.reject(error);
+    // Diğer tüm hatalar için genel bir mesaj veya Axios hatasını döndür
+    return Promise.reject(error); // Veya new Error("Bir hata oluştu.")
   }
 );
 

@@ -2,9 +2,8 @@ import api from "../utils/api";
 import { toast } from "react-toastify";
 import storageService from "./storageService";
 
-// Rastgele bir sayı ile Picsum'dan resim al
-const getRandomNumber = () => Math.floor(Math.random() * 1000) + 1;
-const DEFAULT_AD_IMAGE = `https://picsum.photos/id/${getRandomNumber()}/300/200`;
+// Use a static placeholder image from the public folder
+const DEFAULT_AD_IMAGE = "/images/placeholder-ad.png";
 
 const getAuthHeader = () => {
   const token = localStorage.getItem("accessToken");

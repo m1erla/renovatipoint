@@ -18,93 +18,33 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import SecurityIcon from "@mui/icons-material/Security";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import DoneIcon from "@mui/icons-material/Done";
+import { useTranslation } from "react-i18next";
 
 const TermsOfService = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
 
-  const sections = [
-    {
-      title: "Yasal Çerçeve",
-      icon: <GavelIcon sx={{ fontSize: 40 }} />,
-      content:
-        "Bu hizmet şartları, Built Better ile kullanıcılar arasındaki yasal ilişkiyi düzenler ve tarafların hak ve yükümlülüklerini belirler.",
-    },
-    {
-      title: "Ödeme Koşulları",
-      icon: <PaymentIcon sx={{ fontSize: 40 }} />,
-      content:
-        "Hizmet bedelleri, ödeme planları ve iade politikalarımız şeffaf bir şekilde belirlenir ve uygulanır.",
-    },
-    {
-      title: "Gizlilik ve Güvenlik",
-      icon: <SecurityIcon sx={{ fontSize: 40 }} />,
-      content:
-        "Kişisel verilerinizin korunması ve hizmet sürecindeki güvenlik önlemleri yasal mevzuata uygun şekilde sağlanır.",
-    },
-    {
-      title: "Hizmet Taahhüdü",
-      icon: <HandshakeIcon sx={{ fontSize: 40 }} />,
-      content:
-        "Sunduğumuz hizmetlerin kalitesi ve standartları konusunda net taahhütlerde bulunuyor ve bunları yerine getiriyoruz.",
-    },
+  const sectionKeys = [
+    "legalFramework",
+    "paymentTerms",
+    "privacySecurity",
+    "serviceCommitment",
+  ];
+  const termKeys = [
+    "generalProvisions",
+    "serviceTerms",
+    "paymentPolicy",
+    "responsibilities",
+    "intellectualProperty",
+    "disputeResolution",
   ];
 
-  const terms = [
-    {
-      title: "1. Genel Hükümler",
-      content: [
-        "1.1. Bu şartlar, Built Better platformunun kullanımını düzenler.",
-        "1.2. Platform üzerinden sunulan tüm hizmetler bu şartlara tabidir.",
-        "1.3. Kullanıcılar, hizmeti kullanarak bu şartları kabul etmiş sayılır.",
-        "1.4. Built Better, bu şartları önceden bildirmek kaydıyla değiştirme hakkını saklı tutar.",
-      ],
-    },
-    {
-      title: "2. Hizmet Şartları",
-      content: [
-        "2.1. Hizmetlerimiz profesyonel standartlarda sunulur.",
-        "2.2. Proje süreleri ve maliyetler önceden belirlenir.",
-        "2.3. Değişiklik talepleri ek maliyet gerektirebilir.",
-        "2.4. Kalite standartlarımız garanti kapsamındadır.",
-      ],
-    },
-    {
-      title: "3. Ödeme ve İade Politikası",
-      content: [
-        "3.1. Ödeme planı proje başlangıcında belirlenir.",
-        "3.2. Taksitli ödemelerde vade farkı uygulanabilir.",
-        "3.3. İptal ve iade koşulları sözleşmede belirtilir.",
-        "3.4. Geç ödemelerde yasal faiz uygulanır.",
-      ],
-    },
-    {
-      title: "4. Sorumluluklar",
-      content: [
-        "4.1. Proje sürecinde her iki tarafın sorumlulukları belirlenir.",
-        "4.2. Mücbir sebeplerde süre uzatımı yapılabilir.",
-        "4.3. Malzeme ve işçilik garantisi verilir.",
-        "4.4. İş güvenliği önlemleri tarafımızca sağlanır.",
-      ],
-    },
-    {
-      title: "5. Fikri Mülkiyet",
-      content: [
-        "5.1. Tasarım ve projeler şirketimize aittir.",
-        "5.2. Müşteri onaylı projeler üzerinde değişiklik yapılamaz.",
-        "5.3. Referans kullanım hakları saklıdır.",
-        "5.4. Proje görselleri izinsiz kullanılamaz.",
-      ],
-    },
-    {
-      title: "6. Anlaşmazlık Çözümü",
-      content: [
-        "6.1. Anlaşmazlıklar öncelikle görüşme yoluyla çözülür.",
-        "6.2. Arabuluculuk süreci uygulanabilir.",
-        "6.3. Yasal yollar son çare olarak kullanılır.",
-        "6.4. Yetkili mahkemeler sözleşmede belirtilir.",
-      ],
-    },
-  ];
+  const sectionIcons = {
+    legalFramework: <GavelIcon sx={{ fontSize: 40 }} />,
+    paymentTerms: <PaymentIcon sx={{ fontSize: 40 }} />,
+    privacySecurity: <SecurityIcon sx={{ fontSize: 40 }} />,
+    serviceCommitment: <HandshakeIcon sx={{ fontSize: 40 }} />,
+  };
 
   return (
     <Box sx={{ py: 8 }}>
@@ -127,13 +67,14 @@ const TermsOfService = () => {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                Kullanım Şartları
+                {t("pages.termsOfService.title", "Kullanım Şartları")}
               </Typography>
 
               <Typography variant="body1" paragraph sx={{ mb: 3 }}>
-                Renovatipoint hizmetlerini kullanmadan önce, lütfen bu kullanım
-                şartlarını dikkatlice okuyun. Platformumuzu kullanarak, bu
-                şartları kabul etmiş olursunuz.
+                {t(
+                  "pages.termsOfService.description",
+                  "Renovatipoint hizmetlerini kullanmadan önce, lütfen bu kullanım şartlarını dikkatlice okuyun. Platformumuzu kullanarak, bu şartları kabul etmiş olursunuz."
+                )}
               </Typography>
 
               <List>
@@ -141,13 +82,23 @@ const TermsOfService = () => {
                   <ListItemIcon>
                     <DoneIcon sx={{ color: theme.palette.primary.main }} />
                   </ListItemIcon>
-                  <ListItemText primary="Tüm içerikler telif hakkı ile korunmaktadır." />
+                  <ListItemText
+                    primary={t(
+                      "pages.termsOfService.listItem1",
+                      "Tüm içerikler telif hakkı ile korunmaktadır."
+                    )}
+                  />
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>
                     <DoneIcon sx={{ color: theme.palette.primary.main }} />
                   </ListItemIcon>
-                  <ListItemText primary="Hesap güvenliğinden kullanıcı sorumludur." />
+                  <ListItemText
+                    primary={t(
+                      "pages.termsOfService.listItem2",
+                      "Hesap güvenliğinden kullanıcı sorumludur."
+                    )}
+                  />
                 </ListItem>
               </List>
             </motion.div>
@@ -162,7 +113,10 @@ const TermsOfService = () => {
               <Box
                 component="img"
                 src="https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1600&q=80"
-                alt="Yasal anlaşma"
+                alt={t(
+                  "pages.termsOfService.hero.alt",
+                  "Legal Agreement Image"
+                )}
                 sx={{
                   width: "100%",
                   borderRadius: 4,
@@ -188,8 +142,8 @@ const TermsOfService = () => {
           >
             <CardContent sx={{ p: 4 }}>
               <Grid container spacing={4} sx={{ mb: 8 }}>
-                {sections.map((section, index) => (
-                  <Grid item xs={12} sm={6} md={3} key={index}>
+                {sectionKeys.map((key, index) => (
+                  <Grid item xs={12} sm={6} md={3} key={key}>
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -220,13 +174,13 @@ const TermsOfService = () => {
                               margin: "0 auto 16px",
                             }}
                           >
-                            {section.icon}
+                            {sectionIcons[key]}
                           </Box>
                           <Typography variant="h6" gutterBottom>
-                            {section.title}
+                            {t(`pages.termsOfService.sections.${key}.title`)}
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
-                            {section.content}
+                            {t(`pages.termsOfService.sections.${key}.content`)}
                           </Typography>
                         </CardContent>
                       </Card>
@@ -236,9 +190,9 @@ const TermsOfService = () => {
               </Grid>
 
               <Box>
-                {terms.map((term, index) => (
+                {termKeys.map((key, index) => (
                   <motion.div
-                    key={index}
+                    key={key}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.2 }}
@@ -246,10 +200,10 @@ const TermsOfService = () => {
                     <Card sx={{ mb: 4 }}>
                       <CardContent>
                         <Typography variant="h5" gutterBottom>
-                          {term.title}
+                          {t(`pages.termsOfService.terms.${key}.title`)}
                         </Typography>
                         <Box component="ul" sx={{ pl: 2 }}>
-                          {term.content.map((item, itemIndex) => (
+                          {[1, 2, 3, 4].map((itemIndex) => (
                             <Typography
                               key={itemIndex}
                               component="li"
@@ -257,7 +211,9 @@ const TermsOfService = () => {
                               color="text.secondary"
                               sx={{ mb: 1 }}
                             >
-                              {item}
+                              {t(
+                                `pages.termsOfService.terms.${key}.items.${itemIndex}`
+                              )}
                             </Typography>
                           ))}
                         </Box>
@@ -277,13 +233,14 @@ const TermsOfService = () => {
                 }}
               >
                 <Typography variant="h6" gutterBottom>
-                  Son Güncelleme: {new Date().toLocaleDateString()}
+                  {t("pages.termsOfService.lastUpdated", "Son Güncelleme")}:{" "}
+                  {new Date().toLocaleDateString()}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Bu hizmet şartları, yasal gereklilikler ve hizmet
-                  koşullarımızdaki değişiklikler doğrultusunda güncellenebilir.
-                  Önemli değişiklikler olması durumunda size bildirim
-                  yapılacaktır.
+                  {t(
+                    "pages.termsOfService.updateNotice",
+                    "Bu hizmet şartları, yasal gereklilikler ve hizmet koşullarımızdaki değişiklikler doğrultusunda güncellenebilir. Önemli değişiklikler olması durumunda size bildirim yapılacaktır."
+                  )}
                 </Typography>
               </Box>
             </CardContent>

@@ -1,702 +1,222 @@
 [
   {
     "id": 1,
-    "name": "Ev Temizliği",
-    "slug": "ev-temizligi",
-    "icon": "HomeIcon",
-    "description": "Profesyonel temizlik hizmetleri ile eviniz pırıl pırıl olsun.",
-    "shortDescription": "Eviniz için düzenli temizlik hizmetleri",
+    "name": "Tam Ev Tadilatı",
+    "slug": "tam-ev-tadilati",
+    "description": "Evinizin tamamını yenileme ve tadilat hizmetleri. Duvar yıkımları, oda genişletme, banyo/mutfak renovasyonu dahil.",
+    "price": 25000,
     "categoryId": 1,
-    "categoryName": "Ev Temizliği",
-    "expertCount": 45,
-    "image": "/images/services/home-cleaning.jpg",
-    "backgroundImage": "/images/backgrounds/home-cleaning-bg.jpg",
     "features": [
-      "Genel ev temizliği",
-      "Derin temizlik",
-      "Düzenli temizlik hizmetleri",
-      "Halı ve döşeme temizliği"
+      "Ücretsiz keşif ve fiyat teklifi",
+      "Profesyonel ekip ile hızlı uygulama",
+      "Kaliteli malzeme kullanımı",
+      "İş bitiminde detaylı temizlik",
+      "2 yıl işçilik garantisi"
     ],
-    "benefits": [
-      "Hijyenik yaşam alanı",
-      "Zaman tasarrufu",
-      "Profesyonel ekipmanlar",
-      "Çevre dostu temizlik ürünleri"
-    ],
+    "isPopular": true,
     "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
+    "orderCount": 145,
+    "rating": 4.8,
+    "image": "/images/services/full-home-renovation.jpg",
+    "createdAt": "2023-10-15T10:00:00.000Z",
+    "updatedAt": "2024-03-05T12:30:00.000Z"
   },
   {
     "id": 2,
-    "name": "Ofis Temizliği",
-    "slug": "ofis-temizligi",
-    "icon": "HomeIcon",
-    "description": "İş yeriniz için profesyonel temizlik hizmetleri.",
-    "shortDescription": "İş yeriniz için düzenli temizlik hizmetleri",
+    "name": "Banyo Yenileme",
+    "slug": "banyo-yenileme",
+    "description": "Banyonuzu baştan sona yenileyin. Fayans döşeme, duş kabini, lavabo ve tesisat yenileme işlemleri dahil.",
+    "price": 12000,
     "categoryId": 1,
-    "categoryName": "Ev Temizliği",
-    "expertCount": 38,
-    "image": "/images/services/office-cleaning.jpg",
-    "backgroundImage": "/images/backgrounds/office-cleaning-bg.jpg",
     "features": [
-      "Genel ofis temizliği",
-      "Derin temizlik",
-      "Düzenli temizlik hizmetleri",
-      "Halı ve döşeme temizliği"
+      "Ücretsiz 3D tasarım hizmeti",
+      "Kaliteli vitrifiye ürünler",
+      "Su ve nem yalıtımı",
+      "Modern fayans seçenekleri",
+      "1 yıl işçilik garantisi"
     ],
-    "benefits": [
-      "Profesyonel iş ortamı",
-      "Çalışan verimliliğinin artması",
-      "Profesyonel ekipmanlar",
-      "Çevre dostu temizlik ürünleri"
-    ],
+    "isPopular": true,
     "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
+    "orderCount": 210,
+    "rating": 4.7,
+    "image": "/images/services/bathroom-renovation.jpg",
+    "createdAt": "2023-10-15T10:15:00.000Z",
+    "updatedAt": "2024-03-05T12:35:00.000Z"
   },
   {
     "id": 3,
-    "name": "Halı Yıkama",
-    "slug": "hali-yikama",
-    "icon": "HomeIcon",
-    "description": "Halılarınız için profesyonel temizlik hizmetleri.",
-    "shortDescription": "Halılarınız için profesyonel temizlik hizmetleri",
+    "name": "Mutfak Renovasyonu",
+    "slug": "mutfak-renovasyonu",
+    "description": "Mutfağınızı modern ve fonksiyonel bir alana dönüştürün. Dolap yenileme, tezgah değişimi ve aydınlatma dahil.",
+    "price": 18000,
     "categoryId": 1,
-    "categoryName": "Ev Temizliği",
-    "expertCount": 32,
-    "image": "/images/services/carpet-cleaning.jpg",
-    "backgroundImage": "/images/backgrounds/carpet-cleaning-bg.jpg",
     "features": [
-      "Derin halı temizliği",
-      "Leke çıkarma",
-      "Koku giderme",
-      "Antibakteriyel temizlik"
+      "Ücretsiz tasarım danışmanlığı",
+      "Özel tasarım dolaplar",
+      "Granit veya kuvars tezgah seçenekleri",
+      "Modern ankastre cihaz montajı",
+      "2 yıl dolap garantisi"
     ],
-    "benefits": [
-      "Uzun ömürlü halılar",
-      "Hijyenik yaşam alanı",
-      "Profesyonel ekipmanlar",
-      "Çevre dostu temizlik ürünleri"
-    ],
+    "isPopular": true,
     "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
+    "orderCount": 180,
+    "rating": 4.9,
+    "image": "/images/services/kitchen-renovation.jpg",
+    "createdAt": "2023-10-15T10:30:00.000Z",
+    "updatedAt": "2024-03-05T12:40:00.000Z"
   },
   {
     "id": 4,
-    "name": "İç Cephe Boyama",
-    "slug": "ic-cephe-boyama",
-    "icon": "SwatchIcon",
-    "description": "Evinizin iç duvarları için profesyonel boyama hizmetleri.",
-    "shortDescription": "Evinizin iç duvarları için boyama hizmetleri",
-    "categoryId": 2,
-    "categoryName": "Boya & Badana",
-    "expertCount": 35,
-    "image": "/images/services/interior-painting.jpg",
-    "backgroundImage": "/images/backgrounds/interior-painting-bg.jpg",
+    "name": "Dış Cephe Boyama",
+    "slug": "dis-cephe-boyama",
+    "description": "Binanızın dış cephesini profesyonel ekibimizle yenileyin. Yüzey hazırlığı, astar ve son kat boya uygulaması.",
+    "price": 15000,
+    "categoryId": 3,
     "features": [
-      "Duvar boyama",
-      "Tavan boyama",
-      "Kapı ve pencere boyama",
-      "Dekoratif boyama"
+      "Ücretsiz keşif ve m² ölçümü",
+      "Isı yalıtımlı boya seçenekleri",
+      "Profesyonel uygulama ekibi",
+      "10 yıl renk solmama garantisi",
+      "İskele kurulumu dahil"
     ],
-    "benefits": [
-      "Yenilenmiş yaşam alanı",
-      "Kaliteli ve dayanıklı boya",
-      "Profesyonel ekipmanlar",
-      "Çevre dostu boya ürünleri"
-    ],
+    "isPopular": false,
     "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
+    "orderCount": 95,
+    "rating": 4.6,
+    "image": "/images/services/exterior-painting.jpg",
+    "createdAt": "2023-10-15T10:45:00.000Z",
+    "updatedAt": "2024-03-05T12:45:00.000Z"
   },
   {
     "id": 5,
-    "name": "Dış Cephe Boyama",
-    "slug": "dis-cephe-boyama",
-    "icon": "SwatchIcon",
-    "description": "Binanızın dış cephesi için profesyonel boyama hizmetleri.",
-    "shortDescription": "Binanızın dış cephesi için boyama hizmetleri",
-    "categoryId": 2,
-    "categoryName": "Boya & Badana",
-    "expertCount": 30,
-    "image": "/images/services/exterior-painting.jpg",
-    "backgroundImage": "/images/backgrounds/exterior-painting-bg.jpg",
+    "name": "İç Mekan Dekorasyon",
+    "slug": "ic-mekan-dekorasyon",
+    "description": "Evinizin iç mekanını profesyonel dekorasyon hizmetimizle yenileyin. Renk seçimi, mobilya düzeni ve aksesuar önerileri.",
+    "price": 5000,
+    "categoryId": 3,
     "features": [
-      "Dış cephe boyama",
-      "Bina mantolama",
-      "Cephe yenileme",
-      "Yalıtım"
+      "Kişisel tarz analizi",
+      "3D görselleştirme",
+      "Mobilya yerleşim planı",
+      "Renk uyumu danışmanlığı",
+      "Aydınlatma çözümleri"
     ],
-    "benefits": [
-      "Bina ömrünün uzaması",
-      "Enerji tasarrufu",
-      "Profesyonel ekipmanlar",
-      "Hava şartlarına dayanıklı boya"
-    ],
+    "isPopular": false,
     "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
+    "orderCount": 120,
+    "rating": 4.8,
+    "image": "/images/services/interior-decoration.jpg",
+    "createdAt": "2023-10-15T11:00:00.000Z",
+    "updatedAt": "2024-03-05T12:50:00.000Z"
   },
   {
     "id": 6,
-    "name": "Mutfak Yenileme",
-    "slug": "mutfak-yenileme",
-    "icon": "HomeModernIcon",
-    "description": "Mutfağınız için komple yenileme hizmetleri.",
-    "shortDescription": "Mutfağınız için komple yenileme hizmetleri",
-    "categoryId": 3,
-    "categoryName": "Tadilat & Yenileme",
-    "expertCount": 42,
-    "image": "/images/services/kitchen-renovation.jpg",
-    "backgroundImage": "/images/backgrounds/kitchen-renovation-bg.jpg",
+    "name": "Bahçe Peyzaj Tasarımı",
+    "slug": "bahce-peyzaj-tasarimi",
+    "description": "Bahçeniz için profesyonel peyzaj tasarımı ve uygulama hizmeti. Bitki seçimi, çim döşeme ve dekoratif öğeler dahil.",
+    "price": 8000,
+    "categoryId": 2,
     "features": [
-      "Mutfak dolabı yenileme",
-      "Tezgah değişimi",
-      "Zemin yenileme",
-      "Tesisat yenileme"
+      "Detaylı bahçe analizi",
+      "Mevsimsel bitki seçimi",
+      "Sulama sistemi kurulumu",
+      "Dekoratif taş ve ahşap uygulamaları",
+      "Dış mekan aydınlatma"
     ],
-    "benefits": [
-      "Modern ve fonksiyonel mutfak",
-      "Ev değerinin artması",
-      "Profesyonel tasarım",
-      "Kaliteli malzemeler"
-    ],
+    "isPopular": true,
     "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
+    "orderCount": 85,
+    "rating": 4.7,
+    "image": "/images/services/garden-landscape.jpg",
+    "createdAt": "2023-10-15T11:15:00.000Z",
+    "updatedAt": "2024-03-05T12:55:00.000Z"
   },
   {
     "id": 7,
-    "name": "Banyo Yenileme",
-    "slug": "banyo-yenileme",
-    "icon": "HomeModernIcon",
-    "description": "Banyonuz için komple yenileme hizmetleri.",
-    "shortDescription": "Banyonuz için komple yenileme hizmetleri",
-    "categoryId": 3,
-    "categoryName": "Tadilat & Yenileme",
-    "expertCount": 39,
-    "image": "/images/services/bathroom-renovation.jpg",
-    "backgroundImage": "/images/backgrounds/bathroom-renovation-bg.jpg",
+    "name": "Çim Alan Bakımı",
+    "slug": "cim-alan-bakimi",
+    "description": "Bahçenizin çim alanları için profesyonel bakım hizmeti. Biçme, gübreleme, havalandırma ve sulama sistemleri.",
+    "price": 2500,
+    "categoryId": 2,
     "features": [
-      "Banyo dolabı yenileme",
-      "Duş kabini değişimi",
-      "Fayans yenileme",
-      "Tesisat yenileme"
+      "Düzenli çim biçme",
+      "Gübreleme programı",
+      "Yabani ot kontrolü",
+      "Tohumlama ve canlandırma",
+      "Otomatik sulama sistemi kurulumu"
     ],
-    "benefits": [
-      "Modern ve konforlu banyo",
-      "Ev değerinin artması",
-      "Profesyonel tasarım",
-      "Kaliteli malzemeler"
-    ],
+    "isPopular": false,
     "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
+    "orderCount": 140,
+    "rating": 4.5,
+    "image": "/images/services/lawn-care.jpg",
+    "createdAt": "2023-10-15T11:30:00.000Z",
+    "updatedAt": "2024-03-05T13:00:00.000Z"
   },
   {
     "id": 8,
-    "name": "Peyzaj Tasarımı",
-    "slug": "peyzaj-tasarimi",
-    "icon": "PencilIcon",
-    "description": "Bahçeniz için profesyonel peyzaj tasarım hizmetleri.",
-    "shortDescription": "Bahçeniz için profesyonel peyzaj tasarım hizmetleri",
+    "name": "Elektrik Tesisatı Yenileme",
+    "slug": "elektrik-tesisati-yenileme",
+    "description": "Evinizin elektrik tesisatını tam kapsamlı yenileme hizmeti. Kablolama, sigorta panosu ve elektrik aksesuarları dahil.",
+    "price": 7500,
     "categoryId": 4,
-    "categoryName": "Bahçe Düzenleme",
-    "expertCount": 25,
-    "image": "/images/services/landscape-design.jpg",
-    "backgroundImage": "/images/backgrounds/landscape-design-bg.jpg",
     "features": [
-      "Bahçe tasarımı",
-      "Bitki seçimi ve yerleşimi",
-      "Çim alan tasarımı",
-      "Dekoratif havuz ve göletler"
+      "TSE standartlarına uygun malzeme",
+      "Projelendirme hizmeti",
+      "Profesyonel elektrik mühendisi denetimi",
+      "5 yıl sistem garantisi",
+      "24/7 teknik destek"
     ],
-    "benefits": [
-      "Estetik ve fonksiyonel dış mekan",
-      "Ev değerinin artması",
-      "Profesyonel tasarım",
-      "Doğal ve sürdürülebilir çözümler"
-    ],
+    "isPopular": false,
     "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
+    "orderCount": 110,
+    "rating": 4.8,
+    "image": "/images/services/electrical-renovation.jpg",
+    "createdAt": "2023-10-15T11:45:00.000Z",
+    "updatedAt": "2024-03-05T13:05:00.000Z"
   },
   {
     "id": 9,
-    "name": "Sulama Sistemleri",
-    "slug": "sulama-sistemleri",
-    "icon": "PencilIcon",
-    "description": "Bahçeniz için otomatik sulama sistemi kurulumu.",
-    "shortDescription": "Bahçeniz için otomatik sulama sistemi kurulumu",
-    "categoryId": 4,
-    "categoryName": "Bahçe Düzenleme",
-    "expertCount": 22,
-    "image": "/images/services/irrigation-systems.jpg",
-    "backgroundImage": "/images/backgrounds/irrigation-systems-bg.jpg",
+    "name": "Su Tesisatı Yenileme",
+    "slug": "su-tesisati-yenileme",
+    "description": "Evinizin su tesisatını yenileme hizmeti. Borular, musluklar, bataryalar ve gider sistemleri dahil.",
+    "price": 6800,
+    "categoryId": 5,
     "features": [
-      "Otomatik sulama sistemleri",
-      "Damlama sulama",
-      "Yağmurlama sistemleri",
-      "Su tasarrufu çözümleri"
+      "PPR boru kullanımı",
+      "Kaçak tespiti ve onarımı",
+      "Su basıncı optimizasyonu",
+      "Kaliteli armatür montajı",
+      "3 yıl işçilik garantisi"
     ],
-    "benefits": [
-      "Su tasarrufu",
-      "Bitkilerin sağlıklı gelişimi",
-      "Profesyonel kurulum",
-      "Bakım kolaylığı"
-    ],
+    "isPopular": false,
     "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
+    "orderCount": 95,
+    "rating": 4.6,
+    "image": "/images/services/plumbing-renovation.jpg",
+    "createdAt": "2023-10-15T12:00:00.000Z",
+    "updatedAt": "2024-03-05T13:10:00.000Z"
   },
   {
     "id": 10,
-    "name": "Elektrik Tesisatı Kurulumu",
-    "slug": "elektrik-tesisati-kurulumu",
-    "icon": "BoltIcon",
-    "description": "Yeni elektrik tesisatı kurulum hizmetleri.",
-    "shortDescription": "Yeni elektrik tesisatı kurulum hizmetleri",
-    "categoryId": 5,
-    "categoryName": "Elektrik Tesisatı",
-    "expertCount": 36,
-    "image": "/images/services/electrical-installation.jpg",
-    "backgroundImage": "/images/backgrounds/electrical-installation-bg.jpg",
-    "features": [
-      "Yeni bina elektrik tesisatı",
-      "Tadilat elektrik tesisatı",
-      "Sigorta panosu kurulumu",
-      "Aydınlatma sistemleri"
-    ],
-    "benefits": [
-      "Güvenli elektrik tesisatı",
-      "Enerji tasarrufu",
-      "Profesyonel kurulum",
-      "Standartlara uygun tesisat"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 11,
-    "name": "Elektrik Tesisatı Onarım",
-    "slug": "elektrik-tesisati-onarim",
-    "icon": "BoltIcon",
-    "description": "Mevcut elektrik tesisatı onarım hizmetleri.",
-    "shortDescription": "Mevcut elektrik tesisatı onarım hizmetleri",
-    "categoryId": 5,
-    "categoryName": "Elektrik Tesisatı",
-    "expertCount": 34,
-    "image": "/images/services/electrical-repair.jpg",
-    "backgroundImage": "/images/backgrounds/electrical-repair-bg.jpg",
-    "features": [
-      "Arıza tespiti",
-      "Priz ve anahtar değişimi",
-      "Kablo onarımı",
-      "Sigorta değişimi"
-    ],
-    "benefits": [
-      "Güvenli elektrik tesisatı",
-      "Hızlı müdahale",
-      "Profesyonel onarım",
-      "Uygun fiyatlı çözümler"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 12,
-    "name": "Su Tesisatı Kurulumu",
-    "slug": "su-tesisati-kurulumu",
-    "icon": "BeakerIcon",
-    "description": "Yeni su tesisatı kurulum hizmetleri.",
-    "shortDescription": "Yeni su tesisatı kurulum hizmetleri",
-    "categoryId": 6,
-    "categoryName": "Su Tesisatı",
-    "expertCount": 31,
-    "image": "/images/services/plumbing-installation.jpg",
-    "backgroundImage": "/images/backgrounds/plumbing-installation-bg.jpg",
-    "features": [
-      "Yeni bina su tesisatı",
-      "Tadilat su tesisatı",
-      "Banyo ve mutfak tesisatı",
-      "Su filtresi kurulumu"
-    ],
-    "benefits": [
-      "Güvenli su tesisatı",
-      "Su tasarrufu",
-      "Profesyonel kurulum",
-      "Standartlara uygun tesisat"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 13,
-    "name": "Su Tesisatı Onarım",
-    "slug": "su-tesisati-onarim",
-    "icon": "BeakerIcon",
-    "description": "Mevcut su tesisatı onarım hizmetleri.",
-    "shortDescription": "Mevcut su tesisatı onarım hizmetleri",
-    "categoryId": 6,
-    "categoryName": "Su Tesisatı",
-    "expertCount": 33,
-    "image": "/images/services/plumbing-repair.jpg",
-    "backgroundImage": "/images/backgrounds/plumbing-repair-bg.jpg",
-    "features": [
-      "Su kaçağı tespiti",
-      "Lavabo ve batarya onarımı",
-      "Tıkanıklık açma",
-      "Boru değişimi"
-    ],
-    "benefits": [
-      "Güvenli su tesisatı",
-      "Hızlı müdahale",
-      "Profesyonel onarım",
-      "Uygun fiyatlı çözümler"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 14,
-    "name": "Buzdolabı Tamiri",
-    "slug": "buzdolabi-tamiri",
-    "icon": "ComputerDesktopIcon",
-    "description": "Buzdolabınız için profesyonel tamir hizmetleri.",
-    "shortDescription": "Buzdolabınız için profesyonel tamir hizmetleri",
+    "name": "Özel Marangozluk Hizmetleri",
+    "slug": "ozel-marangozluk-hizmetleri",
+    "description": "Özel tasarım mobilya ve ahşap işleri için profesyonel marangozluk hizmeti. Dolap, raf, masa, kitaplık yapımı.",
+    "price": 4500,
     "categoryId": 7,
-    "categoryName": "Beyaz Eşya Tamiri",
-    "expertCount": 28,
-    "image": "/images/services/refrigerator-repair.jpg",
-    "backgroundImage": "/images/backgrounds/refrigerator-repair-bg.jpg",
     "features": [
-      "Arıza tespiti",
-      "Parça değişimi",
-      "Gaz dolumu",
-      "Bakım hizmetleri"
+      "Özel tasarım hizmeti",
+      "Kaliteli ahşap malzeme seçenekleri",
+      "Profesyonel cilalama ve boyama",
+      "Montaj dahil",
+      "2 yıl ürün garantisi"
     ],
-    "benefits": [
-      "Uzun ömürlü kullanım",
-      "Enerji tasarrufu",
-      "Profesyonel tamir",
-      "Uygun fiyatlı çözümler"
-    ],
+    "isPopular": true,
     "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 15,
-    "name": "Çamaşır Makinesi Tamiri",
-    "slug": "camasir-makinesi-tamiri",
-    "icon": "ComputerDesktopIcon",
-    "description": "Çamaşır makineniz için profesyonel tamir hizmetleri.",
-    "shortDescription": "Çamaşır makineniz için profesyonel tamir hizmetleri",
-    "categoryId": 7,
-    "categoryName": "Beyaz Eşya Tamiri",
-    "expertCount": 27,
-    "image": "/images/services/washing-machine-repair.jpg",
-    "backgroundImage": "/images/backgrounds/washing-machine-repair-bg.jpg",
-    "features": [
-      "Arıza tespiti",
-      "Parça değişimi",
-      "Elektronik kart tamiri",
-      "Bakım hizmetleri"
-    ],
-    "benefits": [
-      "Uzun ömürlü kullanım",
-      "Su ve enerji tasarrufu",
-      "Profesyonel tamir",
-      "Uygun fiyatlı çözümler"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 16,
-    "name": "Alarm Sistemi Kurulumu",
-    "slug": "alarm-sistemi-kurulumu",
-    "icon": "ShieldCheckIcon",
-    "description": "Ev ve iş yeri için alarm sistemi kurulum hizmetleri.",
-    "shortDescription": "Ev ve iş yeri için alarm sistemi kurulum hizmetleri",
-    "categoryId": 8,
-    "categoryName": "Güvenlik Sistemleri",
-    "expertCount": 22,
-    "image": "/images/services/alarm-installation.jpg",
-    "backgroundImage": "/images/backgrounds/alarm-installation-bg.jpg",
-    "features": [
-      "Hırsız alarm sistemleri",
-      "Yangın alarm sistemleri",
-      "Acil durum butonları",
-      "Mobil uygulama ile kontrol"
-    ],
-    "benefits": [
-      "Güvenli yaşam alanı",
-      "7/24 izleme",
-      "Profesyonel kurulum",
-      "Uzaktan erişim imkanı"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 17,
-    "name": "Kamera Sistemi Kurulumu",
-    "slug": "kamera-sistemi-kurulumu",
-    "icon": "ShieldCheckIcon",
-    "description": "Ev ve iş yeri için kamera sistemi kurulum hizmetleri.",
-    "shortDescription": "Ev ve iş yeri için kamera sistemi kurulum hizmetleri",
-    "categoryId": 8,
-    "categoryName": "Güvenlik Sistemleri",
-    "expertCount": 21,
-    "image": "/images/services/camera-installation.jpg",
-    "backgroundImage": "/images/backgrounds/camera-installation-bg.jpg",
-    "features": [
-      "İç mekan kameraları",
-      "Dış mekan kameraları",
-      "Kayıt sistemleri",
-      "Mobil uygulama ile izleme"
-    ],
-    "benefits": [
-      "Güvenli yaşam alanı",
-      "7/24 izleme",
-      "Profesyonel kurulum",
-      "Uzaktan erişim imkanı"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 18,
-    "name": "Mobilya Montajı",
-    "slug": "mobilya-montaji",
-    "icon": "SofaIcon",
-    "description": "Yeni mobilyalarınız için profesyonel montaj hizmetleri.",
-    "shortDescription": "Yeni mobilyalarınız için profesyonel montaj hizmetleri",
-    "categoryId": 9,
-    "categoryName": "Mobilya Montaj/Tamir",
-    "expertCount": 26,
-    "image": "/images/services/furniture-assembly.jpg",
-    "backgroundImage": "/images/backgrounds/furniture-assembly-bg.jpg",
-    "features": [
-      "Dolap montajı",
-      "Yatak montajı",
-      "Masa ve sandalye montajı",
-      "Raf ve aksesuar montajı"
-    ],
-    "benefits": [
-      "Profesyonel montaj",
-      "Zaman tasarrufu",
-      "Güvenli kullanım",
-      "Uygun fiyatlı hizmet"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 19,
-    "name": "Mobilya Tamiri",
-    "slug": "mobilya-tamiri",
-    "icon": "SquaresPlusIcon",
-    "description": "Mobilyalarınız için profesyonel tamir hizmetleri.",
-    "shortDescription": "Mobilyalarınız için profesyonel tamir hizmetleri",
-    "categoryId": 9,
-    "categoryName": "Mobilya Montaj/Tamir",
-    "expertCount": 24,
-    "image": "/images/services/furniture-repair.jpg",
-    "backgroundImage": "/images/backgrounds/furniture-repair-bg.jpg",
-    "features": [
-      "Kırık mobilya tamiri",
-      "Dolap mekanizması değişimi",
-      "Mobilya boyama",
-      "Döşeme değişimi"
-    ],
-    "benefits": [
-      "Profesyonel tamir",
-      "Uzun ömürlü kullanım",
-      "Eski mobilyalara yeni görünüm",
-      "Uygun fiyatlı hizmet"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 20,
-    "name": "Ev Taşıma",
-    "slug": "ev-tasima",
-    "icon": "TruckIcon",
-    "description": "Ev eşyalarınız için profesyonel taşıma hizmetleri.",
-    "shortDescription": "Ev eşyalarınız için profesyonel taşıma hizmetleri",
-    "categoryId": 10,
-    "categoryName": "Nakliyat",
-    "expertCount": 25,
-    "image": "/images/services/home-moving.jpg",
-    "backgroundImage": "/images/backgrounds/home-moving-bg.jpg",
-    "features": [
-      "Ev eşyası taşıma",
-      "Paketleme hizmetleri",
-      "Montaj ve demontaj",
-      "Asansörlü taşıma"
-    ],
-    "benefits": [
-      "Güvenli taşıma",
-      "Profesyonel ekip",
-      "Sigortalı taşıma",
-      "Hızlı ve güvenilir hizmet"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 21,
-    "name": "Ofis Taşıma",
-    "slug": "ofis-tasima",
-    "icon": "TruckIcon",
-    "description": "Ofis eşyalarınız için profesyonel taşıma hizmetleri.",
-    "shortDescription": "Ofis eşyalarınız için profesyonel taşıma hizmetleri",
-    "categoryId": 10,
-    "categoryName": "Nakliyat",
-    "expertCount": 22,
-    "image": "/images/services/office-moving.jpg",
-    "backgroundImage": "/images/backgrounds/office-moving-bg.jpg",
-    "features": [
-      "Ofis eşyası taşıma",
-      "IT ekipmanı taşıma",
-      "Arşiv taşıma",
-      "Hafta sonu taşıma"
-    ],
-    "benefits": [
-      "Minimum iş kaybı",
-      "Profesyonel ekip",
-      "Sigortalı taşıma",
-      "Hızlı ve güvenilir hizmet"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 22,
-    "name": "Klima Montajı",
-    "slug": "klima-montaji",
-    "icon": "FireIcon",
-    "description": "Klima cihazlarınız için profesyonel montaj hizmetleri.",
-    "shortDescription": "Klima cihazlarınız için profesyonel montaj hizmetleri",
-    "categoryId": 11,
-    "categoryName": "Isıtma & Soğutma",
-    "expertCount": 30,
-    "image": "/images/services/ac-installation.jpg",
-    "backgroundImage": "/images/backgrounds/ac-installation-bg.jpg",
-    "features": [
-      "Split klima montajı",
-      "Merkezi klima montajı",
-      "Bakır boru tesisatı",
-      "Elektrik tesisatı"
-    ],
-    "benefits": [
-      "Profesyonel montaj",
-      "Enerji tasarrufu",
-      "Uzun ömürlü kullanım",
-      "Standartlara uygun kurulum"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 23,
-    "name": "Klima Bakım/Onarım",
-    "slug": "klima-bakim-onarim",
-    "icon": "FireIcon",
-    "description": "Klima cihazlarınız için profesyonel bakım ve onarım hizmetleri.",
-    "shortDescription": "Klima cihazlarınız için profesyonel bakım ve onarım hizmetleri",
-    "categoryId": 11,
-    "categoryName": "Isıtma & Soğutma",
-    "expertCount": 28,
-    "image": "/images/services/ac-repair.jpg",
-    "backgroundImage": "/images/backgrounds/ac-repair-bg.jpg",
-    "features": [
-      "Filtrelerin temizlenmesi",
-      "Gaz dolumu",
-      "Arıza tespiti",
-      "Parça değişimi"
-    ],
-    "benefits": [
-      "Profesyonel bakım",
-      "Enerji tasarrufu",
-      "Uzun ömürlü kullanım",
-      "Sağlıklı hava sirkülasyonu"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 24,
-    "name": "Televizyon Tamiri",
-    "slug": "televizyon-tamiri",
-    "icon": "DevicePhoneMobileIcon",
-    "description": "Televizyon cihazlarınız için profesyonel tamir hizmetleri.",
-    "shortDescription": "Televizyon cihazlarınız için profesyonel tamir hizmetleri",
-    "categoryId": 12,
-    "categoryName": "Elektronik Cihaz Tamiri",
-    "expertCount": 24,
-    "image": "/images/services/tv-repair.jpg",
-    "backgroundImage": "/images/backgrounds/tv-repair-bg.jpg",
-    "features": [
-      "LCD/LED TV tamiri",
-      "Smart TV yazılım sorunları",
-      "Ekran değişimi",
-      "Anakart tamiri"
-    ],
-    "benefits": [
-      "Profesyonel tamir",
-      "Uzun ömürlü kullanım",
-      "Uygun fiyatlı hizmet",
-      "Yerinde servis imkanı"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
-  },
-  {
-    "id": 25,
-    "name": "Bilgisayar/Laptop Tamiri",
-    "slug": "bilgisayar-laptop-tamiri",
-    "icon": "DevicePhoneMobileIcon",
-    "description": "Bilgisayar ve laptop cihazlarınız için profesyonel tamir hizmetleri.",
-    "shortDescription": "Bilgisayar ve laptop cihazlarınız için profesyonel tamir hizmetleri",
-    "categoryId": 12,
-    "categoryName": "Elektronik Cihaz Tamiri",
-    "expertCount": 25,
-    "image": "/images/services/computer-repair.jpg",
-    "backgroundImage": "/images/backgrounds/computer-repair-bg.jpg",
-    "features": [
-      "Donanım sorunları",
-      "Yazılım sorunları",
-      "Veri kurtarma",
-      "Parça değişimi"
-    ],
-    "benefits": [
-      "Profesyonel tamir",
-      "Uzun ömürlü kullanım",
-      "Uygun fiyatlı hizmet",
-      "Yerinde servis imkanı"
-    ],
-    "isActive": true,
-    "createdAt": "2023-10-01T10:00:00Z",
-    "updatedAt": "2023-10-01T10:00:00Z"
+    "orderCount": 130,
+    "rating": 4.9,
+    "image": "/images/services/custom-carpentry.jpg",
+    "createdAt": "2023-10-15T12:15:00.000Z",
+    "updatedAt": "2024-03-05T13:15:00.000Z"
   }
 ] 

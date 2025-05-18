@@ -12,67 +12,18 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useTranslation } from "react-i18next";
 
 const HomeRenovation = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
 
-  const services = [
-    {
-      title: "İç Mekan Renovasyonu",
-      description:
-        "Evinizin iç mekanlarını modern ve fonksiyonel bir şekilde yeniliyoruz.",
-      image:
-        "https://images.unsplash.com/photo-1615875605825-5eb9bb5d52ac?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      features: [
-        "Mutfak yenileme",
-        "Banyo renovasyonu",
-        "Zemin döşeme",
-        "Duvar kaplama",
-      ],
-    },
-    {
-      title: "Dış Cephe Yenileme",
-      description: "Binanızın dış görünümünü yenileyerek değerini artırıyoruz.",
-      image:
-        "https://images.unsplash.com/photo-1448630360428-65456885c650?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2067&q=80",
-      features: ["Cephe kaplama", "Yalıtım", "Boya işleri", "Çatı onarımı"],
-    },
-    {
-      title: "Yapısal İyileştirmeler",
-      description:
-        "Binanızın yapısal sorunlarını çözüyor, güvenliğini artırıyoruz.",
-      image:
-        "https://images.unsplash.com/photo-1541855492-581f618f69a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      features: [
-        "Deprem güçlendirme",
-        "Temel sağlamlaştırma",
-        "Çatlak onarımı",
-        "Nem yalıtımı",
-      ],
-    },
-  ];
-
-  const processSteps = [
-    {
-      title: "Keşif ve Planlama",
-      description:
-        "Uzman ekibimiz mekanınızı ziyaret ederek detaylı bir keşif yapar ve ihtiyaçlarınızı belirler.",
-    },
-    {
-      title: "Tasarım ve Teklif",
-      description:
-        "İhtiyaçlarınıza özel tasarım ve bütçe planı hazırlanır, size detaylı bir teklif sunulur.",
-    },
-    {
-      title: "Uygulama",
-      description:
-        "Profesyonel ekibimiz, belirlenen plan doğrultusunda renovasyon işlemlerini gerçekleştirir.",
-    },
-    {
-      title: "Kalite Kontrol",
-      description:
-        "Tüm işlemler tamamlandıktan sonra detaylı bir kalite kontrol yapılır ve size teslim edilir.",
-    },
+  const serviceKeys = ["interior", "exterior", "structural"];
+  const processStepKeys = [
+    "discovery",
+    "design",
+    "implementation",
+    "qualityControl",
   ];
 
   return (
@@ -97,7 +48,10 @@ const HomeRenovation = () => {
             <Box
               component="img"
               src="https://images.unsplash.com/photo-1523413363574-c30aa70d4a30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-              alt="Ev renovasyonu"
+              alt={t(
+                "pages.homeRenovation.hero.alt",
+                "Home Renovation Hero Image"
+              )}
               sx={{
                 width: "100%",
                 height: "100%",
@@ -117,10 +71,13 @@ const HomeRenovation = () => {
               }}
             >
               <Typography variant="h3" fontWeight="bold">
-                Ev Renovasyonu
+                {t("pages.homeRenovation.title", "Ev Renovasyonu")}
               </Typography>
               <Typography variant="h6">
-                Yaşam alanlarınızı yeniliyor, hayalinizdeki eve dönüştürüyoruz
+                {t(
+                  "pages.homeRenovation.subtitle",
+                  "Yaşam alanlarınızı yeniliyor, hayalinizdeki eve dönüştürüyoruz"
+                )}
               </Typography>
             </Box>
           </Box>
@@ -132,14 +89,14 @@ const HomeRenovation = () => {
             paragraph
             sx={{ mb: 8, maxWidth: "800px", mx: "auto" }}
           >
-            Profesyonel ekibimiz ve kaliteli malzemelerimizle evinize değer
-            katıyoruz. İç mekan renovasyonundan dış cephe çalışmalarına, yapısal
-            iyileştirmelerden dekoratif dokunuşlara kadar eviniz için tüm
-            ihtiyaçlarınızı karşılıyoruz.
+            {t(
+              "pages.homeRenovation.description",
+              "Profesyonel ekibimiz ve kaliteli malzemelerimizle evinize değer katıyoruz. İç mekan renovasyonundan dış cephe çalışmalarına, yapısal iyileştirmelerden dekoratif dokunuşlara kadar eviniz için tüm ihtiyaçlarınızı karşılıyoruz."
+            )}
           </Typography>
 
           <Grid container spacing={4} sx={{ mb: 8 }}>
-            {services.map((service, index) => (
+            {serviceKeys.map((key, index) => (
               <Grid item xs={12} md={4} key={index}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -161,20 +118,23 @@ const HomeRenovation = () => {
                     <CardMedia
                       component="img"
                       height="200"
-                      image={service.image}
-                      alt={service.title}
+                      image={t(
+                        `pages.homeRenovation.services.${key}.image`,
+                        "/images/services/default.jpg"
+                      )}
+                      alt={t(`pages.homeRenovation.services.${key}.title`)}
                     />
                     <CardContent sx={{ flexGrow: 1 }}>
                       <Typography variant="h5" component="h2" gutterBottom>
-                        {service.title}
+                        {t(`pages.homeRenovation.services.${key}.title`)}
                       </Typography>
                       <Typography variant="body1" paragraph>
-                        {service.description}
+                        {t(`pages.homeRenovation.services.${key}.description`)}
                       </Typography>
                       <Box>
-                        {service.features.map((feature, idx) => (
+                        {[1, 2, 3, 4].map((featureIndex) => (
                           <Box
-                            key={idx}
+                            key={featureIndex}
                             sx={{
                               display: "flex",
                               alignItems: "center",
@@ -184,7 +144,11 @@ const HomeRenovation = () => {
                             <CheckCircleIcon
                               sx={{ mr: 1, color: "primary.main" }}
                             />
-                            <Typography variant="body2">{feature}</Typography>
+                            <Typography variant="body2">
+                              {t(
+                                `pages.homeRenovation.services.${key}.features.${featureIndex}`
+                              )}
+                            </Typography>
                           </Box>
                         ))}
                       </Box>
@@ -202,10 +166,10 @@ const HomeRenovation = () => {
               gutterBottom
               sx={{ mb: 6, fontWeight: 700 }}
             >
-              Çalışma Sürecimiz
+              {t("pages.homeRenovation.process.title", "Çalışma Sürecimiz")}
             </Typography>
             <Grid container spacing={4}>
-              {processSteps.map((step, index) => (
+              {processStepKeys.map((key, index) => (
                 <Grid item xs={12} sm={6} md={3} key={index}>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -236,10 +200,10 @@ const HomeRenovation = () => {
                           {index + 1}
                         </Typography>
                         <Typography variant="h6" gutterBottom>
-                          {step.title}
+                          {t(`pages.homeRenovation.process.${key}.title`)}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          {step.description}
+                          {t(`pages.homeRenovation.process.${key}.description`)}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -254,7 +218,7 @@ const HomeRenovation = () => {
               textAlign: "center",
               p: 6,
               backgroundImage:
-                "url(https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80)",
+                "url(https://images.unsplash.com/photo-1586023492-581f618f69a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80)",
               backgroundSize: "cover",
               backgroundPosition: "center",
               borderRadius: 2,
@@ -275,11 +239,16 @@ const HomeRenovation = () => {
           >
             <Box sx={{ position: "relative", zIndex: 1, color: "white" }}>
               <Typography variant="h4" gutterBottom>
-                Ücretsiz Keşif İçin Bize Ulaşın
+                {t(
+                  "pages.homeRenovation.cta.title",
+                  "Ücretsiz Keşif İçin Bize Ulaşın"
+                )}
               </Typography>
               <Typography variant="body1" paragraph>
-                Uzman ekibimiz projenizi değerlendirip size özel çözümler sunmak
-                için hazır.
+                {t(
+                  "pages.homeRenovation.cta.description",
+                  "Uzman ekibimiz projenizi değerlendirip size özel çözümler sunmak için hazır."
+                )}
               </Typography>
               <Button
                 variant="contained"
@@ -288,7 +257,7 @@ const HomeRenovation = () => {
                 href="/contact"
                 sx={{ mt: 2 }}
               >
-                İletişime Geç
+                {t("pages.homeRenovation.cta.button", "İletişime Geç")}
               </Button>
             </Box>
           </Box>

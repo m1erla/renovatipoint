@@ -1,94 +1,14 @@
 // src/components/Shared/Footer.js
 
 import React from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Typography,
-  Link as MuiLink,
-  IconButton,
-  styled,
-  useTheme,
-} from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import { useTranslation } from "react-i18next";
 import { useCustomTheme } from "../../context/ThemeContext";
 
-const StyledFooter = styled(Box)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === "dark" ? "#111827" : theme.palette.background.paper,
-  borderTop: `1px solid ${
-    theme.palette.mode === "dark"
-      ? "rgba(255, 255, 255, 0.1)"
-      : theme.palette.divider
-  }`,
-  padding: (isAuthPage) => (isAuthPage ? "16px 0" : "48px 0 24px 0"),
-  width: "100%",
-  marginTop: "auto",
-  position: "relative",
-  bottom: 0,
-  left: 0,
-  right: 0,
-  zIndex: 10,
-}));
-
-const FooterTitle = styled(Typography)(({ theme }) => ({
-  color: theme.palette.mode === "dark" ? "#fff" : theme.palette.text.primary,
-  fontWeight: 700,
-  marginBottom: "24px",
-  fontSize: "1.1rem",
-}));
-
-const FooterLink = styled(MuiLink)(({ theme }) => ({
-  color:
-    theme.palette.mode === "dark"
-      ? "rgba(255, 255, 255, 0.7)"
-      : theme.palette.text.secondary,
-  textDecoration: "none",
-  fontSize: "0.95rem",
-  transition: "all 0.3s ease",
-  display: "block",
-  marginBottom: "12px",
-  "&:hover": {
-    color: theme.palette.primary.main,
-    transform: "translateX(5px)",
-  },
-}));
-
-const SocialButton = styled(IconButton)(({ theme }) => ({
-  color:
-    theme.palette.mode === "dark"
-      ? "rgba(255, 255, 255, 0.7)"
-      : theme.palette.text.secondary,
-  transition: "all 0.3s ease",
-  "&:hover": {
-    color: theme.palette.primary.main,
-    transform: "translateY(-3px)",
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? "rgba(255, 255, 255, 0.1)"
-        : "rgba(0, 0, 0, 0.05)",
-  },
-}));
-
-const Logo = styled(Link)(({ theme }) => ({
-  textDecoration: "none",
-  color: theme.palette.mode === "dark" ? "#fff" : theme.palette.text.primary,
-  fontSize: "1.5rem",
-  fontWeight: 800,
-  letterSpacing: "-0.03em",
-  display: "flex",
-  alignItems: "center",
-  gap: "8px",
-  marginBottom: "16px",
-}));
-
 function Footer() {
-  const { theme } = useCustomTheme();
+  const { t } = useTranslation();
+  const { mode } = useCustomTheme();
+  const isDarkMode = mode === "dark";
   const location = useLocation();
 
   const isAuthPage = ["/login", "/register", "/expert-register"].includes(
@@ -96,134 +16,210 @@ function Footer() {
   );
 
   return (
-    <StyledFooter
-      isAuthPage={isAuthPage}
-      sx={{
-        backgroundColor: isAuthPage
-          ? "transparent"
-          : theme.palette.background.paper,
-        borderTop: isAuthPage ? "none" : `1px solid ${theme.palette.divider}`,
-      }}
+    <footer
+      className={`${
+        isAuthPage
+          ? "py-4 bg-transparent"
+          : "pt-16 pb-8 bg-white dark:bg-gray-900"
+      } border-t border-gray-200 dark:border-gray-800 w-full mt-auto relative z-10`}
     >
       {!isAuthPage ? (
-        <Container maxWidth="lg">
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
-              <Logo to="/">
-                <Box
-                  component="span"
-                  sx={{
-                    background: theme.palette.background.gradient,
-                    borderRadius: "8px",
-                    padding: "4px 8px",
-                    color: "white",
-                    marginRight: "4px",
-                  }}
-                >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Logo ve Açıklama - aşağı kaydırıldı */}
+            <div className="col-span-1 md:col-span-2 lg:col-span-1 mt-8 md:mt-0 order-1 md:order-first">
+              <Link to="/" className="inline-flex items-center no-underline">
+                <div className="bg-gradient-to-r from-primary to-primary/80 text-white font-bold p-2 rounded-lg mr-2">
                   BB
-                </Box>
-                Built Better
-              </Logo>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: theme.palette.text.secondary,
-                  mb: 3,
-                  maxWidth: "300px",
-                }}
-              >
-                We bring your home and garden projects to life with our expert
-                team and quality service.
-              </Typography>
-              <Box sx={{ display: "flex", gap: 1 }}>
-                <SocialButton>
-                  <FacebookIcon />
-                </SocialButton>
-                <SocialButton>
-                  <TwitterIcon />
-                </SocialButton>
-                <SocialButton>
-                  <InstagramIcon />
-                </SocialButton>
-                <SocialButton>
-                  <LinkedInIcon />
-                </SocialButton>
-              </Box>
-            </Grid>
+                </div>
+                <span className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
+                  Built Better
+                </span>
+              </Link>
+              <p className="mt-4 text-gray-600 dark:text-gray-400 max-w-xs">
+                {t("home.whyUs.description")}
+              </p>
+              <div className="flex space-x-4 mt-6">
+                <a
+                  href="#"
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-all transform hover:-translate-y-1"
+                  aria-label="Facebook"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-all transform hover:-translate-y-1"
+                  aria-label="Twitter"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-all transform hover:-translate-y-1"
+                  aria-label="Instagram"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-all transform hover:-translate-y-1"
+                  aria-label="LinkedIn"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
 
-            <Grid item xs={12} sm={6} md={2}>
-              <FooterTitle variant="h6">Company</FooterTitle>
-              <FooterLink component={Link} to="/about">
-                About Us
-              </FooterLink>
-              <FooterLink component={Link} to="/careers">
-                Careers
-              </FooterLink>
-              <FooterLink component={Link} to="/contact">
-                Contact Us
-              </FooterLink>
-            </Grid>
+            {/* Company */}
+            <div className="order-2">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                {t("company.about.title").split(" ")[0]}
+              </h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link
+                    to="/about"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {t("nav.about")}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/careers"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {t("company.careers.hero.title")}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/contact"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {t("nav.contact")}
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-            <Grid item xs={12} sm={6} md={3}>
-              <FooterTitle variant="h6">Services</FooterTitle>
-              <FooterLink component={Link} to="/services/home-renovation">
-                Home Renovation
-              </FooterLink>
-              <FooterLink component={Link} to="/services/garden-design">
-                Garden Design
-              </FooterLink>
-              <FooterLink component={Link} to="/services/special-projects">
-                Special Projects
-              </FooterLink>
-            </Grid>
+            {/* Services */}
+            <div className="order-3">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                {t("nav.services")}
+              </h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link
+                    to="/services/home-renovation"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {t("company.about.team.roles.architect")}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/services/garden-design"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {t("company.careers.positions.landscapeArchitect.title")}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/services/special-projects"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {t("pages.serviceDetail.similarServices.title")}
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-            <Grid item xs={12} sm={6} md={3}>
-              <FooterTitle variant="h6">Support</FooterTitle>
-              <FooterLink component={Link} to="/help">
-                Help Center
-              </FooterLink>
-              <FooterLink component={Link} to="/privacy">
-                Privacy Policy
-              </FooterLink>
-              <FooterLink component={Link} to="/terms">
-                Terms of Service
-              </FooterLink>
-            </Grid>
-          </Grid>
-          <Box
-            sx={{
-              borderTop: `1px solid ${theme.palette.divider}`,
-              mt: 4,
-              pt: 2,
-              textAlign: "center",
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{ color: theme.palette.text.tertiary }}
-            >
-              © {new Date().getFullYear()} Built Better. All rights reserved.
-            </Typography>
-          </Box>
-        </Container>
+            {/* Support */}
+            <div className="order-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                {t("support.helpCenter.title")}
+              </h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link
+                    to="/help"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {t("support.helpCenter.title")}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/privacy"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {t("support.helpCenter.categories.security")}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/terms"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {t("pages.serviceDetail.tabs.faq")}
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-200 dark:border-gray-800 mt-12 pt-6 text-center">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              © {new Date().getFullYear()} Built Better.{" "}
+              {t("admin.messages.tabs.all")} {t("admin.services.table.name")}.
+            </p>
+          </div>
+        </div>
       ) : (
-        <Container maxWidth="lg">
-          <Box
-            sx={{
-              py: 2,
-              textAlign: "center",
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{ color: theme.palette.text.secondary }}
-            >
-              © {new Date().getFullYear()} Built Better. All rights reserved.
-            </Typography>
-          </Box>
-        </Container>
+        <div className="container mx-auto px-4">
+          <div className="py-2 text-center">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              © {new Date().getFullYear()} Built Better.{" "}
+              {t("admin.messages.tabs.all")} {t("admin.services.table.name")}.
+            </p>
+          </div>
+        </div>
       )}
-    </StyledFooter>
+    </footer>
   );
 }
 

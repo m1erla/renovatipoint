@@ -1,13 +1,297 @@
 {
-  "common": {
-    "welcome": "Hoş Geldiniz",
+  "nav": {
+    "home": "Anasayfa",
+    "services": "Hizmetler",
+    "experts": "Uzmanlar",
+    "about": "Hakkımızda",
+    "contact": "İletişim",
     "login": "Giriş Yap",
     "register": "Kayıt Ol",
+    "expertRegister": "Uzman Olarak Kayıt Ol",
+    "ads": "İlanlar",
+    "profile": "Profil"
+  },
+  "home": {
+    "hero": {
+      "title": "Profesyonel hizmetlerin doğru adresi",
+      "subtitle": "Ev, ofis ve bahçe için tüm hizmetleri uzman ekiplerimizle sağlıyoruz.",
+      "cta": "Başlayın"
+    },
+    "categories": {
+      "title": "Hizmet Kategorilerimiz",
+      "expertCount": "{{count}} Uzman",
+      "viewDetails": "Detayları Gör"
+    },
+    "services": {
+      "featured": "Öne Çıkan Hizmetler"
+    },
+    "whyUs": {
+      "title": "Neden Biz?",
+      "description": "Güvenilir, uygun fiyatlı ve profesyonel hizmet anlayışı ile özel çözümler üretiyoruz.",
+      "stats": {
+        "title": "İstatistiklerimiz",
+        "experts": "Uzman",
+        "projects": "Proje",
+        "clients": "Müşteri",
+        "satisfaction": "Memnuniyet"
+      },
+      "features": {
+        "title": "Özelliklerimiz",
+        "quality": "Kaliteli Hizmet",
+        "qualityDesc": "Garanti edilen kaliteli hizmet",
+        "support": "7/24 Destek",
+        "supportDesc": "Destek ekibimiz her zaman yanınızda",
+        "experience": "Deneyimli Ekip",
+        "experienceDesc": "Alanında uzman ve deneyimli profesyoneller",
+        "price": "Uygun Fiyat",
+        "priceDesc": "Herkes için erişilebilir hizmetler"
+      },
+      "joinCta": "Uzman Ol"
+    }
+  },
+  "admin": {
+    "panel": "Yönetici Paneli",
+    "dashboard": "Kontrol Paneli",
+    "analytics": "Analitik",
+    "users": "Kullanıcılar",
+    "messages": {
+      "title": "Mesajlar",
+      "description": "Kullanıcılar ve uzmanlar arasındaki iletişimi yönetin",
+      "searchPlaceholder": "Mesajlarda ara...",
+      "refreshButton": "Yenile",
+      "filterButton": "Filtrele",
+      "expertChip": "Uzman",
+      "reportedChip": "Bildirildi",
+      "reportedChipShort": "Bildirildi",
+      "unreadIndicator": "Okunmamış mesaj",
+      "noMessagesFoundTitle": "Mesaj Bulunamadı",
+      "noMessagesFoundDescription": "Filtreleri veya arama kriterlerini değiştirmeyi deneyin",
+      "selectMessagePromptTitle": "Bir mesaj seçin",
+      "selectMessagePromptDescription": "Detayları görmek için listeden bir mesaj seçin",
+      "confirmDelete": "Bu mesajı silmek istediğinizden emin misiniz?",
+      "recipientLabel": "Kime: {{recipient}}",
+      "tabs": {
+        "all": "Tüm Mesajlar",
+        "unread": "Okunmamış",
+        "reported": "Bildirilenler"
+      },
+      "filterOptions": {
+        "allTime": "Tüm Zamanlar",
+        "today": "Bugün",
+        "thisWeek": "Bu Hafta",
+        "thisMonth": "Bu Ay"
+      },
+      "actions": {
+        "markAsRead": "Okundu olarak işaretle",
+        "report": "Bildir",
+        "unreport": "Bildiriyi Kaldır",
+        "delete": "Sil",
+        "moreActions": "Daha Fazla Eylem"
+      },
+      "errors": {
+        "fetch": "Mesajlar getirilemedi",
+        "refresh": "Mesajlar yenilenemedi"
+      }
+    },
+    "payments": {
+      "title": "Ödemeleri Yönet",
+      "searchPlaceholder": "ID, kullanıcı veya açıklamaya göre ara...",
+      "statusFilterLabel": "Duruma Göre Filtrele",
+      "allStatuses": "Tüm Durumlar",
+      "tabs": {
+        "all": "Tüm Ödemeler",
+        "completed": "Tamamlandı",
+        "pending": "Beklemede",
+        "failed": "Başarısız",
+        "refunded": "İade Edildi"
+      },
+      "table": {
+        "id": "Ödeme ID",
+        "user": "Kullanıcı",
+        "amount": "Tutar",
+        "status": "Durum",
+        "date": "Tarih",
+        "method": "Yöntem",
+        "actions": "Eylemler"
+      },
+      "status": {
+        "completed": "Tamamlandı",
+        "pending": "Beklemede",
+        "failed": "Başarısız",
+        "refunded": "İade Edildi"
+      },
+      "paymentMethods": {
+        "credit_card": "Kredi Kartı",
+        "bank_transfer": "Banka Havalesi",
+        "paypal": "PayPal",
+        "unknown": "Bilinmiyor"
+      },
+      "dialog": {
+        "title": "Ödeme Detayları",
+        "paymentId": "Ödeme ID",
+        "userId": "Kullanıcı ID",
+        "userName": "Kullanıcı Adı",
+        "amount": "Tutar",
+        "currency": "Para Birimi",
+        "description": "Açıklama",
+        "status": "Durum",
+        "paymentMethod": "Ödeme Yöntemi",
+        "createdAt": "Oluşturulma Zamanı",
+        "processedAt": "İşlenme Zamanı",
+        "refundedAt": "İade Zamanı",
+        "failReason": "Başarısızlık Nedeni",
+        "closeButton": "Kapat"
+      },
+      "actions": {
+        "viewDetails": "Detayları Görüntüle",
+        "downloadInvoice": "Faturayı İndir",
+        "deletePayment": "Ödemeyi Sil"
+      },
+      "toastFetchError": "Ödemeler getirilirken hata oluştu.",
+      "toastDeleteSuccess": "Ödeme başarıyla silindi!",
+      "toastDeleteError": "Ödeme silinirken hata oluştu.",
+      "noPayments": "Hiç ödeme bulunamadı.",
+      "noSearchResults": "Arama veya filtrelerinizle eşleşen ödeme bulunamadı."
+    },
+    "categories": {
+      "title": "Kategorileri Yönet",
+      "searchPlaceholder": "Kategorilerde ara...",
+      "addButton": "Yeni Kategori Ekle",
+      "filterButton": "Filtrele",
+      "refreshButton": "Yenile",
+      "editButton": "Düzenle",
+      "deleteButton": "Sil",
+      "statusActive": "Aktif",
+      "statusInactive": "Pasif",
+      "dialogAddTitle": "Yeni Kategori Ekle",
+      "dialogEditTitle": "Kategoriyi Düzenle",
+      "dialogFieldName": "Kategori Adı",
+      "dialogFieldSlug": "Kısa İsim (Slug)",
+      "dialogFieldSlugHelp": "URL dostu tanımlayıcı (otomatik oluşturulur)",
+      "dialogFieldDescription": "Açıklama",
+      "dialogFieldIcon": "Simge",
+      "dialogFieldImage": "Resim URL'si",
+      "dialogFieldImageHelp": "Kategori resmi için isteğe bağlı URL",
+      "dialogFieldBgImage": "Arka Plan Resmi URL'si",
+      "dialogFieldBgImageHelp": "Arka plan resmi için isteğe bağlı URL",
+      "dialogFieldIsActive": "Aktif mi",
+      "dialogCloseButton": "Kapat",
+      "dialogSaveButton": "Kaydet",
+      "dialogUpdateButton": "Güncelle",
+      "deleteConfirmTitle": "Silme İşlemini Onayla",
+      "deleteConfirmText": "Bu kategoriyi silmek istediğinizden emin misiniz?",
+      "deleteConfirmButton": "Sil",
+      "deleteCancelButton": "İptal",
+      "noCategories": "Hiç kategori bulunamadı.",
+      "noSearchResults": "Aramanızla eşleşen kategori bulunamadı.",
+      "addFirstCategory": "Başlamak için ilk kategorinizi ekleyin.",
+      "card": {
+        "expertsCount": "{{count}} Uzman",
+        "servicesCount": "{{count}} Hizmet"
+      },
+      "icon": {
+        "CategoryIcon": "Varsayılan Kategori",
+        "HomeIcon": "Ev",
+        "SwatchIcon": "Renk Paleti",
+        "HomeModernIcon": "Modern Ev",
+        "PencilIcon": "Kalem",
+        "BoltIcon": "Şimşek",
+        "BeakerIcon": "Beher",
+        "ComputerDesktopIcon": "Bilgisayar",
+        "ShieldCheckIcon": "Kalkan",
+        "SquaresPlusIcon": "Kareler",
+        "TruckIcon": "Kamyon",
+        "FireIcon": "Ateş",
+        "DevicePhoneMobileIcon": "Mobil"
+      },
+      "toastCreateSuccess": "Kategori başarıyla oluşturuldu!",
+      "toastUpdateSuccess": "Kategori başarıyla güncellendi!",
+      "toastDeleteSuccess": "Kategori başarıyla silindi!",
+      "toastFetchError": "Kategoriler getirilirken hata oluştu.",
+      "toastCreateError": "Kategori oluşturulurken hata oluştu.",
+      "toastUpdateError": "Kategori güncellenirken hata oluştu.",
+      "toastDeleteError": "Kategori silinirken hata oluştu.",
+      "elektrikIsleri": "Elektrik İşleri",
+      "tamirOnarim": "Tamir & Onarım",
+      "ykmVeTemizlik": "Yıkım & Temizlik",
+      "sonKontrollerVeTeslim": "Son Kontroller & Teslim"
+    },
+    "services": {
+      "title": "Hizmetleri Yönet",
+      "searchPlaceholder": "Hizmetlerde ara...",
+      "addButton": "Yeni Hizmet Ekle",
+      "filterButton": "Filtrele",
+      "refreshButton": "Yenile",
+      "editButton": "Düzenle",
+      "deleteButton": "Sil",
+      "previewButton": "Önizleme",
+      "statusActive": "Aktif",
+      "statusInactive": "Pasif",
+      "popularYes": "Evet",
+      "popularNo": "Hayır",
+      "allCategories": "Tüm Kategoriler",
+      "table": {
+        "name": "Ad",
+        "category": "Kategori",
+        "price": "Fiyat",
+        "status": "Durum",
+        "popular": "Popüler",
+        "actions": "Eylemler",
+        "createdAt": "Oluşturulma Tarihi"
+      },
+      "dialogAddTitle": "Yeni Hizmet Ekle",
+      "dialogEditTitle": "Hizmeti Düzenle",
+      "dialogFieldName": "Hizmet Adı",
+      "dialogFieldSlug": "Kısa İsim (Slug)",
+      "dialogFieldSlugHelp": "URL dostu tanımlayıcı (otomatik oluşturulur)",
+      "dialogFieldDescription": "Açıklama",
+      "dialogFieldPrice": "Fiyat",
+      "dialogFieldCategory": "Kategori",
+      "dialogFieldFeatures": "Özellikler",
+      "dialogFieldFeaturesHelp": "Virgülle ayrılmış özellikler listesi",
+      "dialogFieldImage": "Resim URL'si",
+      "dialogFieldImageHelp": "Hizmet resmi için isteğe bağlı URL",
+      "dialogFieldIsPopular": "Popüler mi",
+      "dialogFieldIsActive": "Aktif mi",
+      "dialogCloseButton": "Kapat",
+      "dialogSaveButton": "Kaydet",
+      "dialogUpdateButton": "Güncelle",
+      "deleteConfirmTitle": "Silme İşlemini Onayla",
+      "deleteConfirmText": "Bu hizmeti silmek istediğinizden emin misiniz?",
+      "deleteConfirmButton": "Sil",
+      "deleteCancelButton": "İptal",
+      "noServices": "Hiç hizmet bulunamadı.",
+      "noSearchResults": "Arama veya filtrelerinizle eşleşen hizmet bulunamadı.",
+      "addFirstService": "Başlamak için ilk hizmetinizi ekleyin.",
+      "toastCreateSuccess": "Hizmet başarıyla oluşturuldu!",
+      "toastUpdateSuccess": "Hizmet başarıyla güncellendi!",
+      "toastDeleteSuccess": "Hizmet başarıyla silindi!",
+      "toastFetchError": "Hizmetler getirilirken hata oluştu.",
+      "toastFetchCategoriesError": "Kategoriler getirilirken hata oluştu.",
+      "toastCreateError": "Hizmet oluşturulurken hata oluştu.",
+      "toastUpdateError": "Hizmet güncellenirken hata oluştu.",
+      "toastDeleteError": "Hizmet silinirken hata oluştu.",
+      "elektrikArizaTespiti": "Elektrik Arıza Tespiti",
+      "insaatAlaniTemizleme": "İnşaat Alanı Temizleme",
+      "insaatAtigiTemizleme": "İnşaat Atığı Temizleme",
+      "insaatSonrasiTemizlikDetayli": "İnşaat sonrası temizlik: İnşaat atıklarının toplanması, genel temizlik, detaylı inşaat sonrası temizlik",
+      "eksiklikGidermeVeRotuslar": "Eksiklik giderme ve rötuşlar: Hatalı işlerin düzeltilmesi, eksik işlerin tamamlanması, son dokunuşlar",
+      "sonKontrollerVeDenetimler": "Son kontroller ve denetimler: Bina denetimleri, tesisat denetimleri, dekorasyon denetimleri",
+      "insaatTeslimiVeBelgeler": "İnşaat teslimi ve belgeler: Anahtar teslimi, oturma izni alınması, garanti belgelerinin teslimi"
+    },
     "logout": "Çıkış Yap",
+    "storage": "Depolama",
+    "settings": "Ayarlar"
+  },
+  "common": {
+    "logout": "Çıkış Yap",
+    "backToHome": "Anasayfaya Dön",
+    "changeTheme": "Açık/Koyu Modu Değiştir",
+    "welcome": "Hoşgeldiniz",
     "profile": "Profil",
     "search": "Ara",
     "loading": "Yükleniyor...",
-    "notFound": "Sayfa Bulunamadı",
+    "notFound": "Sayfa bulunamadı",
     "save": "Kaydet",
     "cancel": "İptal",
     "edit": "Düzenle",
@@ -16,109 +300,33 @@
     "language": "Dil",
     "theme": "Tema",
     "darkMode": "Karanlık Mod",
-    "lightMode": "Aydınlık Mod"
-  },
-  "navbar": {
-    "home": "Ana Sayfa",
-    "about": "Hakkımızda",
-    "contact": "İletişim",
-    "services": "Hizmetler",
-    "ads": "İlanlar",
-    "myAds": "İlanlarım",
-    "createAd": "İlan Oluştur",
-    "requests": "İstekler",
-    "chat": "Mesajlar",
-    "help": "Yardım"
-  },
-  "admin": {
-    "dashboard": "Gösterge Paneli",
-    "users": "Kullanıcılar",
-    "ads": "İlanlar",
-    "storage": "Depolama",
-    "welcome": "Hoş geldiniz",
-    "stats": {
-      "totalUsers": "Toplam Kullanıcı",
-      "activeAds": "Aktif İlanlar",
-      "storedFiles": "Depolanan Dosyalar",
-      "totalRevenue": "Toplam Kazanç"
+    "lightMode": "Aydınlık Mod",
+    "retry": "Tekrar Dene",
+    "close": "Kapat",
+    "changeLanguage": "Dili Değiştir",
+    "openSettings": "Ayarları Aç",
+    "notifications": "Bildirimler",
+    "formValidation": {
+      "requiredFields": "Lütfen tüm zorunlu alanları doldurun."
     },
-    "activities": "Son Aktiviteler",
-    "popularAds": "Popüler İlanlar",
-    "noActivityData": "Aktivite verisi şu anda mevcut değil",
-    "noAdData": "İlan verisi şu anda mevcut değil",
-    "user": "Kullanıcı",
-    "action": "İşlem",
-    "date": "Tarih",
-    "ad": "İlan",
-    "owner": "Sahip",
-    "visits": "Ziyaret"
+    "expertProfile": {
+      "title": "Uzman Profili",
+      "experience": "Yıllık Deneyim",
+      "completedJobs": "Tamamlanan İşler",
+      "rating": "Değerlendirme",
+      "reviews": "Yorumlar"
+    },
+    "closeDialog": "Dialogu Kapat",
+    "cancelButton": "İptal",
+    "saveButton": "Kaydet",
+    "saving": "Kaydediliyor...",
+    "accept": "Kabul Et",
+    "reject": "Reddet",
+    "error": "Hata",
+    "invalidDate": "Geçersiz Tarih"
   },
   "auth": {
-    "loginTitle": "Hesabınıza Giriş Yapın",
-    "registerTitle": "Yeni Hesap Oluşturun",
-    "email": "E-posta",
-    "password": "Şifre",
-    "confirmPassword": "Şifreyi Onayla",
-    "forgotPassword": "Şifremi Unuttum",
-    "dontHaveAccount": "Hesabınız yok mu?",
-    "alreadyHaveAccount": "Zaten hesabınız var mı?",
-    "expertRegister": "Uzman Olarak Kaydol",
-    "becomeExpert": "Uzman Olun",
-    "fullName": "Ad Soyad",
-    "phone": "Telefon",
-    "address": "Adres"
-  },
-  "footer": {
-    "rights": "Tüm hakları saklıdır",
-    "terms": "Kullanım Koşulları",
-    "privacy": "Gizlilik Politikası",
-    "contact": "İletişim",
-    "company": "Şirket",
-    "about": "Hakkımızda",
-    "careers": "Kariyer",
-    "services": "Hizmetler",
-    "homeRenovation": "Ev Yenileme",
-    "gardenDesign": "Bahçe Tasarımı",
-    "specialProjects": "Özel Projeler",
-    "support": "Destek",
-    "helpCenter": "Yardım Merkezi"
-  },
-  "pages": {
-    "home": {
-      "title": "Renovatipoint ile hayalinizdeki mekana kavuşun",
-      "subtitle": "Profesyonel hizmetlerimizle evinizi ya da iş yerinizi baştan yaratın"
-    },
-    "about": {
-      "title": "Hakkımızda",
-      "history": "Tarihçemiz",
-      "mission": "Misyonumuz",
-      "vision": "Vizyonumuz",
-      "team": "Ekibimiz"
-    },
-    "contact": {
-      "title": "İletişime Geçin",
-      "subtitle": "Sorularınız mı var? Bize ulaşın.",
-      "form": {
-        "name": "Adınız",
-        "email": "E-posta Adresiniz",
-        "subject": "Konu",
-        "message": "Mesajınız",
-        "send": "Mesaj Gönder"
-      },
-      "success": "Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.",
-      "error": "Mesajınız gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
-      "info": {
-        "address": "Adres",
-        "phone": "Telefon",
-        "email": "E-posta"
-      }
-    }
-  },
-  "services": {
-    "title": "Hizmetlerimiz",
-    "homeRenovation": "Ev Yenileme",
-    "gardenDesign": "Bahçe Tasarımı",
-    "specialProjects": "Özel Projeler"
+    "expertRegister": "Uzman Olarak Kayıt Ol"
   },
   "profile": {
     "personalInfo": "Kişisel Bilgiler",
@@ -127,7 +335,789 @@
     "payments": "Ödeme Yöntemleri",
     "changePassword": "Şifre Değiştir",
     "deleteAccount": "Hesabı Sil",
-    "uploadPhoto": "Fotoğraf Yükle"
+    "uploadPhoto": "Fotoğraf Yükle",
+    "errors": {
+      "loadProfileFailed": "Profil bilgileri yüklenemedi.",
+      "updateProfileFailed": "Profil güncellenemedi.",
+      "userNotFound": "Kullanıcı bulunamadı.",
+      "unauthorized": "Yetkisiz işlem.",
+      "imageUpdateFailed": "Profil resmi güncellenemedi.",
+      "loadAdImagesFailed": "İlan resimleri yüklenemedi.",
+      "userNotFoundMessage": "Kullanıcı profili bulunamadı.",
+      "loadAdsFailed": "İlanlar yüklenemedi.",
+      "loadChatsFailed": "Sohbet odaları yüklenemedi.",
+      "loadRequestsFailed": "İstekler getirilemedi."
+    },
+    "edit": {
+      "dialogTitle": "Profili Düzenle",
+      "uploadPhoto": "Yeni Fotoğraf Yükle",
+      "firstNameLabel": "Ad",
+      "lastNameLabel": "Soyad",
+      "phoneLabel": "Telefon",
+      "jobTitleLabel": "İş Ünvanı",
+      "jobTitlePlaceholder": "İş ünvanınızı seçin",
+      "aboutLabel": "Hakkımda",
+      "editButtonLabel": "Profili Düzenle",
+      "success": "Profil başarıyla güncellendi.",
+      "addressLabel": "Adres",
+      "postCodeLabel": "Posta Kodu"
+    },
+    "tabs": {
+      "ads": "İlanlarım",
+      "chats": "Sohbetlerim",
+      "requests": "İsteklerim"
+    },
+    "ads": {
+      "title": "İlanlarım",
+      "createNewButton": "Yeni İlan Oluştur",
+      "editButtonLabel": "Düzenle",
+      "emptyState": {
+        "title": "İlan Bulunamadı",
+        "message": "Henüz hiç ilan oluşturmadınız. Yeni bir tane oluşturarak başlayın!",
+        "createFirstButton": "İlk İlanı Oluştur"
+      },
+      "invalidAd": "Geçersiz ilan verisi."
+    },
+    "chats": {
+      "title": "Sohbetlerim",
+      "emptyState": {
+        "title": "Sohbet Bulunamadı",
+        "message": "Henüz aktif bir sohbetiniz yok."
+      },
+      "chatCardAriaLabel": "İlan hakkında sohbeti aç: {{title}}",
+      "expertLabel": "Uzman",
+      "lastActivityLabel": "Son Aktivite",
+      "lastMessageLabel": "Son Mesaj",
+      "goToChatButton": "Sohbete Git"
+    },
+    "requests": {
+      "title": "Hizmet İsteklerim",
+      "emptyState": {
+        "title": "İstek Bulunamadı",
+        "message": "Henüz hizmet isteği almadınız."
+      },
+      "requestCardAriaLabel": "Şununla ilgili istek detaylarını görüntüle: {{title}}",
+      "requesterLabel": "İsteyen",
+      "dateLabel": "Tarih",
+      "statusLabel": "Durum",
+      "acceptSuccess": "İstek başarıyla kabul edildi.",
+      "rejectSuccess": "İstek başarıyla reddedildi.",
+      "errors": {
+        "acceptFailed": "İstek kabul edilemedi.",
+        "rejectFailed": "İstek reddedilemedi."
+      },
+      "expertLabel": "Uzman",
+      "goToChatButton": "Sohbete Git"
+    },
+    "adEdit": {
+      "dialogTitle": "İlanı Düzenle",
+      "selectCategoryPlaceholder": "Kategori Seçiniz",
+      "selectServicePlaceholder": "Hizmet Seçiniz",
+      "serviceLabel": "Hizmet",
+      "imagesTitle": "İlan Resimleri",
+      "validation": {
+        "categoryRequired": "Kategori zorunludur.",
+        "serviceRequired": "Hizmet zorunludur."
+      },
+      "success": "İlan başarıyla güncellendi.",
+      "errors": {
+        "invalidData": "Geçersiz ilan verisi sağlandı.",
+        "updateFailed": "İlan güncellenemedi."
+      },
+      "titleLabel": "Başlık",
+      "descriptionLabel": "Açıklama",
+      "categoryLabel": "Kategori"
+    }
+  },
+  "navbar": {
+    "home": "Anasayfa",
+    "ads": "İlanlar"
+  },
+  "company": {
+    "about": {
+      "title": "Built Better Hakkında",
+      "description": "2020'den beri kalite ve yenilikçilikle güven inşa ediyoruz",
+      "team": {
+        "title": "Ekibimizle Tanışın",
+        "roles": {
+          "ceo": "CEO ve Kurucu",
+          "architect": "Baş Mimar",
+          "projectManager": "Proje Yöneticisi"
+        }
+      },
+      "features": {
+        "expertTeam": {
+          "title": "Uzman Ekip",
+          "description": "Ekibimiz, yılların deneyimine sahip yüksek vasıflı profesyonellerden oluşmaktadır"
+        },
+        "quality": {
+          "title": "Önce Kalite",
+          "description": "Kaliteden asla ödün vermeyiz, her zaman en iyi sonuçları garanti ederiz"
+        },
+        "innovative": {
+          "title": "Yenilikçi Çözümler",
+          "description": "Sorunları çözmek için en son teknolojiyi ve yenilikçi yaklaşımları kullanıyoruz"
+        }
+      },
+      "stats": {
+        "completedProjects": "Tamamlanan Projeler",
+        "expertTeam": "Uzman Ekip Üyeleri",
+        "yearsExperience": "Yıllık Deneyim",
+        "happyClients": "Mutlu Müşteriler"
+      },
+      "cta": {
+        "title": "Mekanınızı Dönüştürmeye Hazır Mısınız?",
+        "description": "Vizyonunuzu hayata geçirmek için birlikte çalışalım",
+        "button": "Şimdi Başlayın"
+      }
+    },
+    "careers": {
+      "hero": {
+        "title": "Ekibimize Katılın",
+        "description": "Built Better'ın bir parçası olun ve başarı hikayemize katkıda bulunun",
+        "alt": "Built Better'da kariyer fırsatları"
+      },
+      "description": "Büyüyen ekibimize katılacak yetenekli profesyoneller arıyoruz. Aşağıdaki açık pozisyonlarımıza göz atın.",
+      "positions": {
+        "seniorInterior": {
+          "title": "Kıdemli İç Mimar",
+          "description": "Yenilikçi iç mekan projelerine liderlik edin ve tasarlayın",
+          "requirements": "5+ yıl iç mimari deneyimi, tasarım yazılımlarında yetkinlik"
+        },
+        "projectManager": {
+          "title": "Proje Yöneticisi",
+          "description": "Tadilat projelerini yönetin ve koordine edin",
+          "requirements": "İnşaat/tadilat proje yönetiminde 3+ yıl deneyim"
+        },
+        "landscapeArchitect": {
+          "title": "Peyzaj Mimarı",
+          "description": "Dış mekanları tasarlayın ve yönetin",
+          "requirements": "Peyzaj mimarlığında 3+ yıl deneyim"
+        }
+      },
+      "locations": {
+        "istanbul": "İstanbul",
+        "ankara": "Ankara",
+        "izmir": "İzmir"
+      },
+      "types": {
+        "fullTime": "Tam Zamanlı"
+      },
+      "apply": "Şimdi Başvur",
+      "form": {
+        "title": "Başvuru Formu",
+        "firstName": "Ad",
+        "lastName": "Soyad",
+        "email": "E-posta",
+        "phone": "Telefon",
+        "experience": "Yıllık Deneyim",
+        "message": "Ön Yazı",
+        "submit": "Başvuruyu Gönder"
+      }
+    },
+    "contact": {
+      "title": "Bize Ulaşın",
+      "description": "Sorularınız mı var? Bizimle iletişime geçin.",
+      "address": "Adres",
+      "address.line1": "123 Ana Cadde",
+      "address.line2": "Herhangi bir şehir, Türkiye 12345",
+      "phone": "Telefon",
+      "phone.number1": "+90 (555) 123-4567",
+      "phone.number2": "+90 (555) 987-6543",
+      "email": "E-posta",
+      "email.address1": "info@builtbetter.com",
+      "email.address2": "destek@builtbetter.com",
+      "form": {
+        "title": "Bize mesaj gönderin",
+        "name": "Adınız",
+        "email": "E-posta Adresiniz",
+        "subject": "Konu",
+        "message": "Mesajınız",
+        "send": "Mesajı Gönder"
+      },
+      "map": {
+        "alt": "İletişim Haritası Konumu"
+      }
+    }
+  },
+  "support": {
+    "helpCenter": {
+      "title": "Yardım Merkezi",
+      "description": "Bugün size nasıl yardımcı olabiliriz?",
+      "searchPlaceholder": "Yardım için ara...",
+      "categories": {
+        "general": "Genel Sorular",
+        "services": "Hizmetlerimiz",
+        "payment": "Ödeme ve Fiyatlandırma",
+        "security": "Güvenlik ve Gizlilik"
+      },
+      "faqs": {
+        "title": "Sıkça Sorulan Sorular",
+        "description": "Sıkça sorulan soruların yanıtlarını bulun.",
+        "general": {
+          "title": "Genel Sorular",
+          "items": [
+            {
+              "question": "Built Better nasıl çalışır?",
+              "answer": "Built Better sizi nitelikli profesyonellerle buluşturur..."
+            },
+            {
+              "question": "Built Better bölgemde mevcut mu?",
+              "answer": "Şu anda büyük şehirlerde faaliyet gösteriyoruz..."
+            }
+          ]
+        },
+        "services": {
+          "title": "Hizmetlerimiz",
+          "items": [
+            {
+              "question": "Hangi hizmetleri sunuyorsunuz?",
+              "answer": "Geniş bir yelpazede ev geliştirme hizmetleri sunuyoruz..."
+            },
+            {
+              "question": "Uzmanlarınız nasıl inceleniyor?",
+              "answer": "Tüm uzmanlar sıkı özgeçmiş kontrollerinden geçer..."
+            }
+          ]
+        },
+        "payment": {
+          "title": "Ödeme ve Fiyatlandırma",
+          "items": [
+            {
+              "question": "Hizmetler ne kadar tutar?",
+              "answer": "Fiyatlandırma hizmete göre değişir..."
+            },
+            {
+              "question": "Hangi ödeme yöntemlerini kabul ediyorsunuz?",
+              "answer": "Tüm büyük kredi kartlarını kabul ediyoruz..."
+            }
+          ]
+        },
+        "security": {
+          "title": "Güvenlik ve Gizlilik",
+          "items": [
+            {
+              "question": "Kişisel verilerim nasıl korunuyor?",
+              "answer": "Endüstri standardı şifreleme kullanıyoruz..."
+            },
+            {
+              "question": "Hizmetleriniz garantili mi?",
+              "answer": "Evet, tüm hizmetler memnuniyet garantisiyle gelir."
+            }
+          ]
+        }
+      }
+    }
+  },
+  "pages": {
+    "categoryDetail": {
+      "cta": {
+        "title": "Hemen bir {{name}} hizmeti talep edin",
+        "description": "Profesyonel uzmanlarımızla size özel çözümler",
+        "button": "Bu Hizmeti Talep Etmek İstiyorum"
+      },
+      "experts": "{{count}} Uzman",
+      "services": "{{count}} Hizmet",
+      "noServices": "Bu kategoride henüz mevcut hizmet bulunmamaktadır.",
+      "notFound": {
+        "title": "Kategori Bulunamadı",
+        "description": "Aradığınız kategori bulunamadı veya kaldırılmış olabilir."
+      },
+      "features": {
+        "title": "Kategori Özellikleri"
+      }
+    },
+    "serviceDetail": {
+      "notFound": {
+        "title": "Hizmet Bulunamadı",
+        "description": "Aradığınız hizmet bulunamadı veya kaldırılmış olabilir."
+      },
+      "price": "Başlangıç fiyatı {{price}}€",
+      "duration": "{{duration}}",
+      "requestService": "Hizmet Talep Et",
+      "overview": {
+        "title": "Hizmet Detayları",
+        "description": "Hizmet Açıklaması",
+        "features": "Özellikler",
+        "requirements": "Gereksinimler",
+        "notIncluded": "Neler Dahil Değil"
+      },
+      "included": {
+        "title": "Hizmete Dahil Olanlar"
+      },
+      "tabs": {
+        "overview": "Genel Bakış",
+        "packages": "Paketler",
+        "process": "Süreç",
+        "faqs": "SSS",
+        "experts": "Uzmanlar",
+        "reviews": "Yorumlar",
+        "faq": "SSS"
+      },
+      "process": {
+        "title": "Hizmet Süreci"
+      },
+      "faqs": {
+        "title": "Sıkça Sorulan Sorular"
+      },
+      "summary": {
+        "title": "Hizmet Özeti",
+        "price": "Fiyat",
+        "duration": "Süre",
+        "category": "Kategori"
+      },
+      "similarServices": {
+        "title": "Benzer Hizmetler",
+        "viewDetails": "Detayları Gör",
+        "expertCount": "{{count}}+ Uzman"
+      },
+      "testimonials": {
+        "title": "Müşteri Yorumları"
+      },
+      "descriptionTitle": "Hizmet Açıklaması",
+      "selectPackage": "Paket Seç",
+      "contactExpert": "Uzmanla İletişime Geç",
+      "features": "Özellikler",
+      "requirements": "Gereksinimler",
+      "location": "Hizmet Konumu: {{location}}",
+      "expertProfile": {
+        "title": "Uzman Profili",
+        "experience": "Yıllık Deneyim",
+        "completedJobs": "Tamamlanan İşler",
+        "rating": "Değerlendirme",
+        "reviews": "Yorumlar"
+      }
+    },
+    "unauthorized": {
+      "title": "Yetkisiz Erişim",
+      "description": "Bu sayfayı görüntüleme izniniz yok.",
+      "button": "Geri Dön"
+    },
+    "requestList": {
+      "title": "İstekler",
+      "description": "İsteklerinizi ve uzmanlarla iletişiminizi yönetin",
+      "noRequests": "İstek bulunamadı",
+      "status": {
+        "pending": "Beklemede",
+        "accepted": "Kabul Edildi",
+        "rejected": "Reddedildi",
+        "completed": "Tamamlandı",
+        "cancelled": "İptal Edildi"
+      },
+      "actions": {
+        "accept": "Kabul Et",
+        "reject": "Reddet",
+        "complete": "Tamamla",
+        "cancel": "İptal Et",
+        "details": "Detayları Görüntüle",
+        "goToChat": "Sohbet Odasına Git"
+      },
+      "dialog": {
+        "title": "İstek Detayları #{{id}}",
+        "status": "Durum",
+        "createdAt": "Oluşturulma Zamanı"
+      },
+      "errors": {
+        "fetchFailed": "İstekler getirilemedi. Lütfen tekrar deneyin.",
+        "acceptFailed": "İstek kabul edilemedi. Lütfen tekrar deneyin.",
+        "rejectFailed": "İstek reddedilemedi. Lütfen tekrar deneyin.",
+        "completeFailed": "İstek tamamlanamadı. Lütfen tekrar deneyin.",
+        "cancelFailed": "İstek iptal edilemedi. Lütfen tekrar deneyin.",
+        "chatRoomFailed": "Sohbet odası ID'si alınamadı. Lütfen tekrar deneyin."
+      }
+    },
+    "pendingRequests": {
+      "title": "Bekleyen İstekler",
+      "noRequests": "Bekleyen istek yok",
+      "accept": "Kabul Et",
+      "reject": "Reddet"
+    },
+    "homeRenovation": {
+      "title": "Ev Tadilatı",
+      "subtitle": "Yaşam alanlarınızı yeniliyor, hayallerinizdeki eve dönüştürüyoruz",
+      "description": "Profesyonel ekibimiz ve kaliteli malzemelerimizle evinize değer katıyoruz. İç mekan tadilatından dış cephe çalışmalarına, yapısal iyileştirmelerden dekoratif dokunuşlara kadar tüm ev ihtiyaçlarınızı karşılıyoruz.",
+      "hero": {
+        "alt": "Ev Tadilatı Kahraman Görseli"
+      },
+      "services": {
+        "interior": {
+          "title": "İç Mekan Tadilatı",
+          "description": "İç mekanlarınızı modern ve fonksiyonel hale getiriyoruz.",
+          "image": "https://images.unsplash.com/photo-1615875605825-5eb9bb5d52ac?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+          "features": {
+            "1": "Mutfak Tadilatı",
+            "2": "Banyo Tadilatı",
+            "3": "Zemin Döşeme",
+            "4": "Duvar Kaplamaları"
+          }
+        },
+        "exterior": {
+          "title": "Dış Cephe Tadilatı",
+          "description": "Binanızın dış görünümünü yeniliyor, değerini artırıyoruz.",
+          "image": "https://images.unsplash.com/photo-1448630360428-65456885c650?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2067&q=80",
+          "features": {
+            "1": "Dış Cephe Kaplama",
+            "2": "Yalıtım",
+            "3": "Boya",
+            "4": "Çatı Tamiri"
+          }
+        },
+        "structural": {
+          "title": "Yapısal İyileştirmeler",
+          "description": "Binanızın yapısal sorunlarını çözüyor, güvenliğini artırıyoruz.",
+          "image": "https://images.unsplash.com/photo-1541855492-581f618f69a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+          "features": {
+            "1": "Deprem Güçlendirme",
+            "2": "Temel Sağlamlaştırma",
+            "3": "Çatlak Onarımı",
+            "4": "Su Yalıtımı"
+          }
+        }
+      },
+      "process": {
+        "title": "Çalışma Sürecimiz",
+        "discovery": {
+          "title": "Keşif ve Planlama",
+          "description": "Uzman ekibimiz yerinde inceleme yapar, ihtiyaçlarınızı belirler."
+        },
+        "design": {
+          "title": "Tasarım ve Teklif",
+          "description": "Size özel tasarım ve bütçe planı hazırlanır, detaylı teklif sunulur."
+        },
+        "implementation": {
+          "title": "Uygulama",
+          "description": "Profesyonel ekibimiz belirlenen plana göre tadilat çalışmalarını yürütür."
+        },
+        "qualityControl": {
+          "title": "Kalite Kontrol",
+          "description": "Tüm işlemler tamamlandıktan sonra detaylı kalite kontrolü yapılır ve teslim edilir."
+        }
+      },
+      "cta": {
+        "title": "Ücretsiz Keşif İçin Bize Ulaşın",
+        "description": "Uzman ekibimiz projenizi değerlendirmek ve özel çözümler sunmak için hazır.",
+        "button": "Bize Ulaşın"
+      }
+    },
+    "gardenDesign": {
+      "title": "Bahçe Tasarımı",
+      "subtitle": "Doğanın güzelliğini evinize taşıyan profesyonel peyzaj çözümleri",
+      "description": "Deneyimli peyzaj mimarlarımız ve yetenekli bahçıvanlarımızla, bahçenizi dört mevsim kullanılabilir bir yaşam alanına dönüştürmek için özel çözümler sunuyoruz.",
+      "hero": {
+        "alt": "Bahçe Tasarımı Kahraman Görseli"
+      },
+      "services": {
+        "landscaping": {
+          "title": "Peyzaj Düzenleme",
+          "description": "Bahçenizi profesyonel bir şekilde yeniden tasarlıyoruz.",
+          "image": "https://images.unsplash.com/photo-1551410224-699683e15636?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2064&q=80",
+          "features": {
+            "1": "Bahçe Planlama",
+            "2": "Bitki Seçimi ve Yerleşimi",
+            "3": "Peyzaj Aydınlatması",
+            "4": "Dekoratif Taş Döşeme"
+          }
+        },
+        "irrigation": {
+          "title": "Sulama Sistemleri",
+          "description": "Otomatik sulama sistemleri ile bahçenizi her zaman yeşil tutuyoruz.",
+          "image": "https://images.unsplash.com/photo-1623510593430-2fb4c2da5881?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+          "features": {
+            "1": "Otomatik Sulama Sistemleri",
+            "2": "Damlama Sulama",
+            "3": "Fıskiye Sistemleri",
+            "4": "Su Tasarrufu Çözümleri"
+          }
+        },
+        "furniture": {
+          "title": "Bahçe Mobilyaları",
+          "description": "Bahçenizi fonksiyonel ve estetik mobilyalarla donatıyoruz.",
+          "image": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+          "features": {
+            "1": "Dış Mekan Mobilyaları",
+            "2": "Veranda ve Teras Tasarımı",
+            "3": "Kamelya ve Pergola Yapımı",
+            "4": "Bahçe Oturma Grupları"
+          }
+        }
+      },
+      "benefits": {
+        "title": "Neden Bizi Seçmelisiniz?",
+        "sustainable": {
+          "title": "Sürdürülebilir Tasarım",
+          "description": "Çevre dostu malzemeler ve su tasarrufu sistemleri kullanarak sürdürülebilir bahçeler tasarlıyoruz."
+        },
+        "allSeasons": {
+          "title": "Dört Mevsim Kullanım",
+          "description": "Her mevsim güzel görünen ve kullanılabilen bahçeler için özel bitkiler seçiyoruz."
+        },
+        "easyMaintenance": {
+          "title": "Kolay Bakım",
+          "description": "Akıllı sistemler ve doğru bitki seçimi ile bakımı kolay bahçeler yaratıyoruz."
+        },
+        "valueIncrease": {
+          "title": "Değer Artışı",
+          "description": "Profesyonel peyzaj düzenlemesi ile mülkünüzün değerini artırıyoruz."
+        }
+      },
+      "cta": {
+        "title": "Bahçeniz İçin Ücretsiz Keşif",
+        "description": "Uzmanlarımız bahçenizin potansiyelini keşfetmenize yardımcı olmaya hazır.",
+        "button": "Randevu Al"
+      }
+    },
+    "specialProjects": {
+      "title": "Özel Projeler",
+      "subtitle": "Profesyonel ekibimizle hayalinizdeki mekanları hayata geçiriyoruz",
+      "description": "Lüks konutlar, özel tasarım havuzlar, akıllı ev sistemleri ve benzersiz tadilat projeleri için size özel çözümler sunuyoruz. Hayalinizdeki yaşam alanını birlikte yaratalım.",
+      "hero": {
+        "alt": "Özel Projeler Kahraman Görseli"
+      },
+      "services": {
+        "pool": {
+          "title": "Özel Havuz Yapımı",
+          "description": "Lüks ve size özel tasarlanmış havuzlarla yaşam alanınıza değer katıyoruz.",
+          "image": "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+          "features": {
+            "1": "Özel Üretim Havuzlar",
+            "2": "Şelaleler ve Su Özellikleri",
+            "3": "Güneşlenme Terasları",
+            "4": "Özel Aydınlatma Sistemleri"
+          }
+        },
+        "smartHome": {
+          "title": "Akıllı Ev Sistemleri",
+          "description": "Evinizdeki tüm cihazları kontrol etmenizi sağlayan entegre akıllı ev sistemleri.",
+          "image": "https://images.unsplash.com/photo-1558002038-1055953ce55c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+          "features": {
+            "1": "Ses ve Işık Kontrolü",
+            "2": "Güvenlik Sistemleri",
+            "3": "İklimlendirme Kontrolü",
+            "4": "Mobil Uygulama Kontrolü"
+          }
+        },
+        "attic": {
+          "title": "Özel Çatı Katı Tasarımı",
+          "description": "Kullanılmayan çatı katlarını fonksiyonel yaşam alanlarına dönüştürüyoruz.",
+          "image": "https://images.unsplash.com/photo-1600585152220-90363fe7e115?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+          "features": {
+            "1": "Çatı Katı Dönüşümü",
+            "2": "Özel Mobilya Tasarımı",
+            "3": "Çatı Pencereleri",
+            "4": "Çatı Terası Tasarımı"
+          }
+        }
+      },
+      "expertise": {
+        "title": "Uzmanlık Alanlarımız",
+        "projectManagement": {
+          "title": "Proje Yönetimi",
+          "description": "Deneyimli proje yöneticilerimizle süreçleri profesyonelce yönetiyoruz."
+        },
+        "customDesign": {
+          "title": "Özel Tasarım",
+          "description": "Her projeye özel, benzersiz ve fonksiyonel tasarımlar geliştiriyoruz."
+        },
+        "qualityControl": {
+          "title": "Kalite Kontrol",
+          "description": "Uluslararası standartlarda kalite kontrol süreçleri uyguluyoruz."
+        },
+        "sustainability": {
+          "title": "Sürdürülebilirlik",
+          "description": "Çevre dostu malzemeler ve enerji verimli çözümler sunuyoruz."
+        }
+      },
+      "cta1": {
+        "title": "Projenizi Bizimle Paylaşın",
+        "description": "Özel projeleriniz için profesyonel çözümler sunalım. Uzman ekibimiz sizinle görüşmeye hazır.",
+        "button": "Proje Teklifi İste"
+      },
+      "completed": {
+        "title": "Tamamlanmış Projeler",
+        "bodrumVilla": {
+          "title": "Bodrum Villa Tadilatı",
+          "description": "Bodrum'da 450m² villa için özel havuz, peyzaj ve iç mimari tasarımı",
+          "image": "https://images.unsplash.com/photo-1600607687644-c7e47361a37d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+        },
+        "istanbulPenthouse": {
+          "title": "İstanbul Penthouse Daire",
+          "description": "Nişantaşı'nda 300m² penthouse daire için özel tasarım ve akıllı ev sistemleri",
+          "image": "https://images.unsplash.com/photo-1600210491369-e753d80a41f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80"
+        }
+      },
+      "cta2": {
+        "title": "Ücretsiz Keşif İçin Bize Ulaşın",
+        "description": "Özel projeniz için uzman ekibimiz size yardımcı olmaya hazır.",
+        "button": "Bize Ulaşın"
+      }
+    },
+    "privacyPolicy": {
+      "title": "Gizlilik Politikası",
+      "commitment": "Renovatipoint olarak gizliliğinizi korumayı taahhüt ediyoruz.",
+      "description": "Bu gizlilik politikası, hizmetlerimizi kullandığınızda kişisel bilgilerinizin nasıl toplandığını, kullanıldığını ve korunduğunu açıklamaktadır.",
+      "hero": {
+        "alt": "Veri Güvenliği Görseli"
+      },
+      "sections": {
+        "dataSecurity": {
+          "title": "Veri Güvenliği",
+          "content": "Kişisel verileriniz endüstri standardı güvenlik protokolleri ve şifreleme teknolojileri kullanılarak korunmaktadır. Veri güvenliğiniz bizim için önceliktir."
+        },
+        "privacyCommitment": {
+          "title": "Gizlilik Taahhüdü",
+          "content": "Müşterilerimizin gizliliğine saygı duyuyor ve kişisel bilgilerini üçüncü taraflarla paylaşmıyoruz. Verileriniz yalnızca hizmet kalitemizi artırmak için kullanılır."
+        },
+        "kvkkCompliance": {
+          "title": "KVKK Uyumu",
+          "content": "Kişisel Verilerin Korunması Kanunu (KVKK) kapsamındaki tüm yasal gerekliliklere uyuyor ve verilerinizi buna göre işliyoruz."
+        },
+        "dataUsage": {
+          "title": "Veri Kullanımı",
+          "content": "Toplanan veriler hizmet kalitemizi iyileştirmek, yasal yükümlülüklerimizi yerine getirmek ve size daha iyi bir deneyim sunmak için kullanılır."
+        }
+      },
+      "policies": {
+        "collectedInfo": {
+          "title": "1. Toplanan Bilgiler",
+          "items": {
+            "1": "Ad, soyad ve iletişim bilgileri",
+            "2": "Proje detayları ve tercihleri",
+            "3": "Ödeme bilgileri",
+            "4": "Hizmet kullanım verileri"
+          }
+        },
+        "infoUsage": {
+          "title": "2. Bilgilerin Kullanımı",
+          "items": {
+            "1": "Hizmet sunumu ve iyileştirme",
+            "2": "İletişim ve bilgilendirme",
+            "3": "Yasal yükümlülükler",
+            "4": "Hizmet kalitesi analizi"
+          }
+        },
+        "infoSecurity": {
+          "title": "3. Bilgi Güvenliği",
+          "items": {
+            "1": "SSL şifreleme teknolojisi",
+            "2": "Güvenli veri depolama",
+            "3": "Düzenli güvenlik denetimleri",
+            "4": "Erişim kontrolü ve yetkilendirme"
+          }
+        },
+        "yourRights": {
+          "title": "4. Haklarınız",
+          "items": {
+            "1": "Bilgiye erişim hakkı",
+            "2": "Düzeltme ve silme talebi",
+            "3": "İşlemeye itiraz hakkı",
+            "4": "Veri taşınabilirliği hakkı"
+          }
+        }
+      },
+      "lastUpdated": "Son Güncelleme",
+      "updateNotice": "Bu gizlilik politikası, yasal gerekliliklere ve hizmet koşullarımızdaki değişikliklere göre güncellenebilir. Önemli değişikliklerde size bilgi verilecektir."
+    },
+    "termsOfService": {
+      "title": "Hizmet Şartları",
+      "description": "Renovatipoint hizmetlerini kullanmadan önce lütfen bu hizmet şartlarını dikkatlice okuyun. Platformumuzu kullanarak bu şartları kabul etmiş olursunuz.",
+      "listItem1": "Tüm içeriklerin telif hakkı saklıdır.",
+      "listItem2": "Kullanıcı hesap güvenliğinden sorumludur.",
+      "hero": {
+        "alt": "Yasal Sözleşme Görseli"
+      },
+      "sections": {
+        "legalFramework": {
+          "title": "Yasal Çerçeve",
+          "content": "Bu hizmet şartları, Built Better ile kullanıcılar arasındaki yasal ilişkiyi düzenler ve tarafların hak ve yükümlülüklerini belirler."
+        },
+        "paymentTerms": {
+          "title": "Ödeme Koşulları",
+          "content": "Hizmet bedelleri, ödeme takvimleri ve iade politikamız şeffaf bir şekilde belirlenir ve uygulanır."
+        },
+        "privacySecurity": {
+          "title": "Gizlilik ve Güvenlik",
+          "content": "Kişisel verilerinizin korunması ve hizmet sürecindeki güvenlik önlemleri yasal düzenlemelere uygun olarak garanti edilir."
+        },
+        "serviceCommitment": {
+          "title": "Hizmet Taahhüdü",
+          "content": "Hizmetlerimizin kalitesi ve standartları konusunda net taahhütlerde bulunur ve bunlara uyarız."
+        }
+      },
+      "terms": {
+        "generalProvisions": {
+          "title": "1. Genel Hükümler",
+          "items": {
+            "1": "1.1. Bu şartlar Built Better platformunun kullanımını düzenler.",
+            "2": "1.2. Platform üzerinden sunulan tüm hizmetler bu şartlara tabidir.",
+            "3": "1.3. Hizmeti kullanarak kullanıcılar bu şartları kabul etmiş sayılır.",
+            "4": "1.4. Built Better, bildirimde bulunarak bu şartları değiştirme hakkını saklı tutar."
+          }
+        },
+        "serviceTerms": {
+          "title": "2. Hizmet Koşulları",
+          "items": {
+            "1": "2.1. Hizmetlerimiz profesyonel standartlara uygun olarak sunulur.",
+            "2": "2.2. Proje süresi ve maliyetleri önceden belirlenir.",
+            "3": "2.3. Değişiklik talepleri ek ücrete tabi olabilir.",
+            "4": "2.4. Kalite standartlarımız garanti altındadır."
+          }
+        },
+        "paymentPolicy": {
+          "title": "3. Ödeme ve İade Politikası",
+          "items": {
+            "1": "3.1. Ödeme takvimi proje başında belirlenir.",
+            "2": "3.2. Taksitli ödemelerde vade farkı uygulanabilir.",
+            "3": "3.3. İptal ve iade koşulları sözleşmede belirtilir.",
+            "4": "3.4. Geciken ödemelerde yasal faiz uygulanır."
+          }
+        },
+        "responsibilities": {
+          "title": "4. Sorumluluklar",
+          "items": {
+            "1": "4.1. Proje sürecindeki her iki tarafın sorumlulukları belirtilmiştir.",
+            "2": "4.2. Mücbir sebepler durumunda süre uzatımı yapılabilir.",
+            "3": "4.3. Malzeme ve işçilik garantisi verilir.",
+            "4": "4.4. İş güvenliği tedbirleri tarafımızca sağlanır."
+          }
+        },
+        "intellectualProperty": {
+          "title": "5. Fikri Mülkiyet",
+          "items": {
+            "1": "5.1. Tasarım ve projeler şirketimize aittir.",
+            "2": "5.2. Müşteri tarafından onaylanan projelerde değişiklik yapılamaz.",
+            "3": "5.3. Referans kullanım hakları saklıdır.",
+            "4": "5.4. Proje görselleri izinsiz kullanılamaz."
+          }
+        },
+        "disputeResolution": {
+          "title": "6. Uyuşmazlık Çözümü",
+          "items": {
+            "1": "6.1. Uyuşmazlıklar öncelikle müzakere yoluyla çözülür.",
+            "2": "6.2. Arabuluculuk prosedürü uygulanabilir.",
+            "3": "6.3. Yasal yollara son çare olarak başvurulur.",
+            "4": "6.4. Yetkili mahkemeler sözleşmede belirtilmiştir."
+          }
+        }
+      },
+      "lastUpdated": "Son Güncelleme",
+      "updateNotice": "Bu hizmet şartları, yasal gerekliliklere ve hizmet koşullarımızdaki değişikliklere göre güncellenebilir. Önemli değişikliklerde size bilgi verilecektir."
+    }
+  },
+  "errors": {
+    "errorTitle": "Bir Hata Oluştu",
+    "fetchDataError": "Veri alınırken bir hata oluştu.",
+    "invalidCategoryId": "Geçersiz kategori ID",
+    "invalidServiceId": "Geçersiz hizmet ID",
+    "networkError": "Ağ hatası. Lütfen bağlantınızı kontrol edin.",
+    "serverError": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
+    "accessDenied": "Erişim Reddedildi. Bu kaynağa erişim izniniz yok.",
+    "unknownCategory": "Bilinmeyen Kategori",
+    "unknownService": "Bilinmeyen Hizmet",
+    "pageNotFound": "Sayfa Bulunamadı",
+    "somethingWentWrong": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+    "formValidation": "Lütfen formu kontrol edip tekrar deneyin.",
+    "requiredField": "Bu alan zorunludur",
+    "invalidEmail": "Lütfen geçerli bir e-posta adresi girin"
   },
   "ads": {
     "createTitle": "Yeni İlan Oluştur",
@@ -135,7 +1125,7 @@
     "myAdsTitle": "İlanlarım",
     "categories": "Kategoriler",
     "filters": "Filtreler",
-    "sort": "Sıralama",
+    "sort": "Sırala",
     "search": "İlan Ara",
     "form": {
       "title": "Başlık",
@@ -143,7 +1133,7 @@
       "description": "Açıklama",
       "price": "Fiyat",
       "location": "Konum",
-      "images": "Görseller",
+      "images": "Resimler",
       "phone": "Telefon",
       "contactInfo": "İletişim Bilgileri",
       "publish": "Yayınla",
@@ -152,27 +1142,232 @@
     "status": {
       "active": "Aktif",
       "inactive": "Pasif",
-      "pending": "Onay Bekliyor",
+      "pending": "Beklemede",
       "rejected": "Reddedildi"
     },
     "details": {
-      "contactSeller": "Satıcı ile İletişime Geç",
+      "contactSeller": "Satıcıyla İletişime Geç",
       "postDate": "Yayın Tarihi",
-      "views": "Görüntüleme",
+      "views": "Görüntülenme",
       "share": "Paylaş",
-      "report": "Şikayet Et",
+      "report": "Bildir",
       "similar": "Benzer İlanlar"
+    },
+    "list": {
+      "errors": {
+        "fetchFailed": "İlanlar yüklenirken bir hata oluştu. Lütfen tekrar deneyin."
+      },
+      "header": {
+        "title": "İlanları",
+        "discoverHighlight": "Keşfedin",
+        "subtitle": "Size uygun hizmet ve uzmanları bulun, projelerinizi hayata geçirin"
+      },
+      "searchPlaceholder": "İlan ara...",
+      "allCategories": "Tüm Kategoriler",
+      "errorTitle": "Hata",
+      "noAds": {
+        "title": "İlan Bulunamadı",
+        "message": "Arama kriterlerinize uygun ilan bulunamadı. Farklı anahtar kelimeler deneyebilir veya filtreleri değiştirebilirsiniz."
+      },
+      "viewDetailsButton": "İlanı İncele",
+      "expertOnlyNote": "Not: Sadece uzman hesapları başvuru yapabilir",
+      "loginButton": "Giriş Yap",
+      "loginNote": "İlanlara başvurmak için giriş yapmalısınız"
     }
   },
   "chat": {
-    "title": "Mesajlaşma",
+    "title": "Mesajlar",
     "send": "Gönder",
     "newMessage": "Yeni Mesaj",
     "noMessages": "Henüz mesaj yok",
     "startConversation": "Bir konuşma başlatın",
     "typeMessage": "Mesajınızı yazın...",
-    "chatRooms": "Mesaj Odaları",
-    "noChats": "Henüz bir sohbet yok",
+    "chatRooms": "Sohbet Odaları",
+    "noChats": "Henüz sohbet yok",
     "lastMessage": "Son mesaj"
+  },
+  "jobTitles": {
+    "elektrikci": "Elektrikçi",
+    "icMimar": "İç Mimar"
+  },
+  "categories": {
+    "disCevreDuzenlemesi": "Dış Çevre Düzenlemesi",
+    "sonKontrollerVeTeslim": "Son Kontroller ve Teslim",
+    "duvarIsleri": "Duvar İşleri",
+    "bakimVeOnarim": "Bakım ve Onarım",
+    "yikimVeTemizlik": "Yıkım ve Temizlik",
+    "yapisalOnarimlar": "Yapısal Onarımlar",
+    "izolasyonVeYalitim": "İzolasyon ve Yalıtım",
+    "sivaIslemleri": "Sıva İşlemleri",
+    "boyamaIslemleri": "Boyama İşlemleri",
+    "duvarKagidiUygulamasi": "Duvar Kağıdı Uygulaması",
+    "bahceIsleriVeAcikHava": "Bahçe İşleri ve Açık Hava",
+    "boyaIsleri": "Boya İşleri",
+    "icDekorasyon": "İç Dekorasyon"
+  },
+  "services": {
+    "yapiTesisatDekorasyonDenetimleriServis": "Yapı, Tesisat ve Dekorasyon Denetimleri",
+    "bahceUzmani1": "Bahçe Uzmanı 1"
+  },
+  "requestStatus": {
+    "pending": "Beklemede",
+    "accepted": "Kabul Edildi",
+    "rejected": "Reddedildi",
+    "completed": "Tamamlandı",
+    "cancelled": "İptal Edildi"
+  },
+  "toasts": {
+    "sessionExpired": "Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.",
+    "genericError": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin."
+  },
+  "expertProfile": {
+    "errors": {
+      "loadFailed": "Profil bilgileri yüklenemedi. Lütfen daha sonra tekrar deneyin.",
+      "updateFailed": "Profil güncellenirken hata oluştu.",
+      "notFound": "Uzman bilgileri bulunamadı.",
+      "sessionExpired": "Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın.",
+      "userNotFound": "Kullanıcı bulunamadı.",
+      "loadAdsFailed": "İlanlar yüklenemedi.",
+      "loadRequestsFailed": "İstekler getirilemedi.",
+      "loadChatsFailed": "Sohbet odaları yüklenemedi.",
+      "loadPortfolioFailed": "Portfolyo projeleri yüklenemedi.",
+      "imageUpdateFailed": "Profil resmi güncellenemedi.",
+      "loadJobTitlesFailed": "İş unvanları yüklenemedi.",
+      "loadFailedSpecific": "Uzman profili detayları yüklenemedi.",
+      "expertIdNotFound": "Uzman ID bulunamadı. İşlem yapılamıyor.",
+      "loadFailed": "Uzman profili yüklenemedi.",
+      "loadRequestsFailed": "İstekler yüklenemedi.",
+      "loadChatsFailed": "Sohbet odaları yüklenemedi.",
+      "loadPortfolioFailed": "Portföy projeleri yüklenemedi.",
+      "updateFailedUnexpected": "Profil güncellenirken beklenmedik bir hata oluştu.",
+      "updateFailed": "Uzman profili güncellenemedi.",
+      "imageUpdateFailed": "Profil resmi güncellenemedi.",
+      "notFoundMessage": "Uzman profili bulunamadı.",
+      "acceptFailedResponse": "Beklenmeyen yanıt nedeniyle istek kabul edilemedi.",
+      "acceptFailed": "İstek kabul edilemedi.",
+      "loadPaymentInfoFailed": "Ödeme bilgileri yüklenemedi.",
+      "deletePaymentMethodFailed": "Ödeme yöntemi kaldırılamadı."
+    },
+    "edit": {
+      "editButtonLabel": "Profili Düzenle",
+      "uploadPhoto": "Yeni Fotoğraf Yükle",
+      "success": "Profil başarıyla güncellendi!",
+      "imageUpdateSuccess": "Profil resmi başarıyla güncellendi!"
+    },
+    "header": {
+      "role": "Uzman",
+      "reviews": "Yorumlar",
+      "balanceLabel": "Mevcut Bakiye"
+    },
+    "tabs": {
+      "adsRequests": "İstekler",
+      "chats": "Sohbetler",
+      "portfolio": "Portfolyo",
+      "invoices": "Faturalar",
+      "paymentMethods": "Ödeme Yöntemleri"
+    },
+    "ads": {
+      "title": "İlanlarım",
+      "createNewButton": "Yeni İlan Oluştur",
+      "emptyState": {
+        "title": "Henüz İlan Yok",
+        "message": "Henüz hiç ilan oluşturmadınız. İlk ilanınızı oluşturmak için \"Yeni İlan Oluştur\" düğmesine tıklayın."
+      }
+    },
+    "requests": {
+      "title": "Bekleyen İstekler",
+      "emptyState": {
+        "title": "İstek Bulunamadı",
+        "message": "Şu anda bekleyen istek bulunmamaktadır. İlanlarınıza gelen istekler burada listelenecektir."
+      },
+      "acceptSuccess": "İstek başarıyla kabul edildi.",
+      "errors": {
+        "acceptFailed": "İstek kabul edilemedi."
+      }
+    },
+    "chats": {
+      "title": "Sohbetler",
+      "emptyState": {
+        "title": "Henüz Sohbet Yok",
+        "message": "Henüz bir konuşma başlatmadınız."
+      },
+      "chatCard": {
+        "userLabel": "Kullanıcı:",
+        "lastActivityLabel": "Son Aktivite:"
+      }
+    },
+    "portfolio": {
+      "title": "Portfolyo",
+      "addProjectButton": "Proje Ekle",
+      "emptyState": {
+        "title": "Henüz Proje Yok",
+        "message": "Portfolyonuza henüz hiç proje eklemediniz. İlk projenizi eklemek için \"Proje Ekle\" düğmesine tıklayın."
+      },
+      "completionDateLabel": "Tamamlandı: {{date}}"
+    },
+    "invoices": {
+      "title": "Faturalar",
+      "description": "Geçmiş faturalarınızı inceleyin ve indirin.",
+      "errors": {
+        "loadFailed": "Faturalar yüklenemedi.",
+        "downloadFailed": "Fatura indirilemedi."
+      },
+      "toast": {
+        "downloadSuccess": "Fatura başarıyla indirildi."
+      },
+      "invoiceTable": {
+        "invoiceNumber": "Fatura No",
+        "date": "Tarih",
+        "amount": "Tutar",
+        "status": "Durum",
+        "actions": "İşlemler"
+      }
+    },
+    "paymentMethods": {
+      "title": "Ödeme Yöntemleri",
+      "confirmDelete": "Bu ödeme yöntemini kaldırmak istediğinizden emin misiniz?",
+      "errors": {
+        "setupFailed": "Ödeme kurulumu başlatılamadı.",
+        "loadFailed": "Ödeme yöntemleri yüklenemedi.",
+        "deleteFailed": "Ödeme yöntemi kaldırılamadı."
+      },
+      "toast": {
+        "deleteSuccess": "Ödeme yöntemi başarıyla kaldırıldı."
+      },
+      "paymentMethodSection": {
+        "accountStatusLabel": "Stripe Hesap Durumu",
+        "noStripeAccount": "Henüz bağlı Stripe hesabı yok.",
+        "setupTitle": "Ödeme Yöntemlerini Ayarla",
+        "setupCardPayouts": "Kartla Ödeme Almak İçin Ayarla (Stripe)",
+        "setupSepaTransfer": "SEPA Banka Transferi İçin Ayarla",
+        "setupNote": "Müşterilerden ödeme almak için Stripe kurulumunu kullanın. Doğrudan banka havaleleri için (varsa) SEPA kurulumunu kullanın.",
+        "connectedMethodsTitle": "Bağlı Ödeme Yöntemleri",
+        "noMethods": "Henüz bağlı ödeme yönteminiz yok."
+      }
+    },
+    "editDialog": {
+      "title": "Profili Düzenle",
+      "firstNameLabel": "Ad",
+      "lastNameLabel": "Soyad",
+      "companyNameLabel": "Şirket Adı",
+      "chamberOfCommerceLabel": "Ticaret Odası Numarası",
+      "jobTitleLabel": "İş Ünvanı",
+      "phoneLabel": "Telefon",
+      "addressLabel": "Adres",
+      "postCodeLabel": "Posta Kodu"
+    },
+    "addProjectDialog": {
+      "title": "Yeni Proje Ekle",
+      "projectTitleLabel": "Proje Başlığı",
+      "descriptionLabel": "Açıklama",
+      "imageUrlLabel": "Görsel URL'si",
+      "imageFileLabel": "Görsel Dosyası",
+      "completionDateLabel": "Tamamlanma Tarihi",
+      "createButton": "Proje Oluştur",
+      "toast": {
+        "success": "Proje başarıyla eklendi!",
+        "error": "Proje eklenirken bir hata oluştu."
+      }
+    }
   }
 } 

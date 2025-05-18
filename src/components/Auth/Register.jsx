@@ -12,7 +12,6 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [jobTitleName, setJobTitleName] = useState("");
   const [postCode, setPostCode] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -48,12 +47,12 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 px-4 py-12">
+    <div className="min-h-[calc(100vh-4rem)] pt-16 md:pt-20 flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 px-4 py-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-xl"
+        className="w-full max-w-xl my-8"
       >
         <div className="mb-8 text-center">
           <motion.div
@@ -195,23 +194,6 @@ function Register() {
                   required
                   className="block w-full px-4 py-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   placeholder="Posta kodunuz"
-                />
-              </motion.div>
-
-              <motion.div
-                whileTap={{ scale: 0.995 }}
-                className="relative md:col-span-2"
-              >
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  İş Unvanı
-                </label>
-                <input
-                  type="text"
-                  value={jobTitleName}
-                  onChange={(e) => setJobTitleName(e.target.value)}
-                  required
-                  className="block w-full px-4 py-3 rounded-lg border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  placeholder="İş unvanınız"
                 />
               </motion.div>
             </div>

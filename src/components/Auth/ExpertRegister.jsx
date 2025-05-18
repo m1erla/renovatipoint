@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { getJobTitles } from "../../services/jobTitleService";
+import { jobTitleService } from "../../services/jobTitleService";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
@@ -28,7 +28,7 @@ function ExpertRegister() {
   useEffect(() => {
     const fetchJobTitles = async () => {
       try {
-        const titles = await getJobTitles();
+        const titles = await jobTitleService.getAllJobTitles();
         setJobTitles(titles);
       } catch (error) {
         console.error("Failed to fetch job titles:", error);
@@ -98,12 +98,12 @@ function ExpertRegister() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 px-4 py-12">
+    <div className="min-h-[calc(100vh-4rem)] pt-16 md:pt-20 flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 px-4 py-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-2xl"
+        className="w-full max-w-2xl my-8"
       >
         <div className="mb-8 text-center">
           <motion.div

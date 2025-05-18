@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import api from "../../utils/api";
+import { toast } from "react-toastify";
 import {
   HomeIcon,
   HomeModernIcon,
@@ -17,8 +20,14 @@ import {
   FireIcon,
   DevicePhoneMobileIcon,
 } from "@heroicons/react/24/outline";
-import categoriesData from "../../data/categories/categories.json";
-import servicesData from "../../data/services/services.json";
+import { categoryService } from "../../services/categoryService";
+import { serviceService } from "../../services/serviceService";
+import {
+  addSlugsToItems,
+  slugify,
+  slugToTranslationKey,
+} from "../../utils/slugify";
+import { getTranslationKeyFromTurkishName } from "../../utils/translationHelper";
 
 // Icon bileşenleri
 const iconComponents = {
@@ -42,50 +51,100 @@ const getIcon = (iconName) => {
 };
 
 const CategoryDetail = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [category, setCategory] = useState(null);
   const [categoryServices, setCategoryServices] = useState([]);
-  const [detailedCategoryData, setDetailedCategoryData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Ana kategori verisini al
-    const categoryId = parseInt(id);
-    const foundCategory = categoriesData.find((cat) => cat.id === categoryId);
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      setCategory(null);
+      setCategoryServices([]);
+      const categoryId = parseInt(id);
 
-    if (foundCategory) {
-      setCategory(foundCategory);
+      if (isNaN(categoryId)) {
+        setError(t("errors.invalidCategoryId"));
+        setLoading(false);
+        return;
+      }
 
-      // Bu kategorideki hizmetleri bul
-      const services = servicesData.filter(
-        (service) => service.categoryId === categoryId
-      );
-      setCategoryServices(services);
-
-      // Daha detaylı kategori verisi için dosya yüklemeyi dene (varsa)
       try {
-        // Kategori slug'ı üzerinden detaylı veri dosyasını dinamik olarak import et
-        import(`../../data/categories/${foundCategory.slug}.json`)
-          .then((module) => {
-            setDetailedCategoryData(module.default);
-          })
-          .catch(() => {
-            // Detaylı veri dosyası bulunamadıysa sessizce devam et
-            console.log("Detailed category data not found");
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      } catch (error) {
-        console.error("Error loading detailed category data:", error);
+        // Kategori ve kategoriye ait hizmetleri çek
+        const [categoryData, servicesData] = await Promise.all([
+          categoryService.getCategoryById(categoryId),
+          serviceService.getServicesByCategory(categoryId),
+        ]);
+
+        // Kategori verisini işle
+        if (categoryData) {
+          if (!categoryData.slug) {
+            setCategory({
+              ...categoryData,
+              slug: slugify(categoryData.name),
+            });
+          } else {
+            setCategory(categoryData);
+          }
+
+          // Debug: Çeviri anahtarı oluşturma ve kullanımını kontrol et
+          if (categoryData.name) {
+            const translationKey = getTranslationKeyFromTurkishName(
+              categoryData.name,
+              "category"
+            );
+            console.log("Kategori Adı:", categoryData.name);
+            console.log("Oluşturulan Çeviri Anahtarı:", translationKey);
+            console.log("Çeviri Sonucu:", t(translationKey));
+          }
+        } else {
+          throw new Error("Category not found in API response");
+        }
+
+        // Servis verilerini işle
+        if (servicesData && Array.isArray(servicesData)) {
+          const servicesWithSlugs = addSlugsToItems(servicesData);
+          setCategoryServices(servicesWithSlugs);
+
+          // Debug: İlk servisi örnek olarak kontrol et
+          if (servicesWithSlugs.length > 0 && servicesWithSlugs[0].name) {
+            const serviceName = servicesWithSlugs[0].name;
+            const serviceTranslationKey = getTranslationKeyFromTurkishName(
+              serviceName,
+              "service"
+            );
+            console.log("İlk Servis Adı:", serviceName);
+            console.log("Servis Çeviri Anahtarı:", serviceTranslationKey);
+            console.log("Servis Çeviri Sonucu:", t(serviceTranslationKey));
+          }
+        } else {
+          console.warn(
+            "Services data is not in expected format:",
+            servicesData
+          );
+          setCategoryServices([]);
+        }
+      } catch (err) {
+        console.error("Error fetching category data:", err);
+        if (err.response && err.response.status === 404) {
+          setError(t("pages.categoryDetail.notFound.title"));
+          toast.error(t("pages.categoryDetail.notFound.title"));
+        } else {
+          setError(t("errors.fetchDataError"));
+          toast.error(t("errors.fetchDataError"));
+        }
+        setCategory(null);
+      } finally {
         setLoading(false);
       }
-    } else {
-      console.error("Category not found");
-      setLoading(false);
-    }
-  }, [id]);
+    };
+
+    fetchData();
+  }, [id, t]);
 
   const handleServiceClick = (serviceId) => {
     navigate(`/servis/${serviceId}`);
@@ -93,29 +152,35 @@ const CategoryDetail = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/30">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
   }
 
-  if (!category) {
+  if (error || !category) {
     return (
       <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-3xl font-bold mb-4">Kategori Bulunamadı</h1>
-        <p className="mb-8">Üzgünüz, aradığınız kategori bulunamadı.</p>
+        <h1 className="text-3xl font-bold mb-4">
+          {error
+            ? t("errors.errorTitle")
+            : t("pages.categoryDetail.notFound.title")}
+        </h1>
+        <p className="mb-8">
+          {error || t("pages.categoryDetail.notFound.description")}
+        </p>
         <Link
           to="/"
           className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
         >
-          <HomeIcon className="w-5 h-5 mr-2" /> Ana Sayfaya Dön
+          <HomeIcon className="w-5 h-5 mr-2" />
+          {t("common.backToHome")}
         </Link>
       </div>
     );
   }
 
-  // Detaylı veri varsa onu kullan, yoksa normal kategori verisini kullan
-  const displayCategory = detailedCategoryData || category;
+  const displayCategory = category;
 
   return (
     <div className="min-h-screen bg-background dark:bg-gray-900">
@@ -127,7 +192,9 @@ const CategoryDetail = () => {
               displayCategory.backgroundImage ||
               "/images/backgrounds/default-bg.jpg"
             }
-            alt={displayCategory.name}
+            alt={t(
+              getTranslationKeyFromTurkishName(displayCategory.name, "category")
+            )}
             className="w-full h-full object-cover mix-blend-overlay"
           />
         </div>
@@ -139,7 +206,17 @@ const CategoryDetail = () => {
               transition={{ duration: 0.5 }}
               className="text-4xl md:text-6xl font-bold mb-6"
             >
-              {displayCategory.name}
+              {getTranslationKeyFromTurkishName(
+                displayCategory.name,
+                "category"
+              )
+                ? t(
+                    getTranslationKeyFromTurkishName(
+                      displayCategory.name,
+                      "category"
+                    )
+                  )
+                : displayCategory.name}
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -156,11 +233,15 @@ const CategoryDetail = () => {
               className="flex justify-center items-center mb-4"
             >
               <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-primary/20 text-white">
-                {displayCategory.expertCount} Uzman
+                {t("pages.categoryDetail.experts", {
+                  count: displayCategory.expertCount,
+                })}
               </span>
               <span className="mx-2">•</span>
               <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-primary/20 text-white">
-                {displayCategory.serviceCount} Hizmet
+                {t("pages.categoryDetail.services", {
+                  count: displayCategory.serviceCount,
+                })}
               </span>
             </motion.div>
           </div>
@@ -195,7 +276,7 @@ const CategoryDetail = () => {
               viewport={{ once: true }}
               className="text-3xl font-bold text-center mb-16 text-foreground dark:text-white"
             >
-              Neden Bizi Tercih Etmelisiniz
+              {t("pages.categoryDetail.features.title")}
             </motion.h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -230,54 +311,69 @@ const CategoryDetail = () => {
             viewport={{ once: true }}
             className="text-3xl font-bold text-center mb-16 text-foreground dark:text-white"
           >
-            {displayCategory.name} Hizmetlerimiz
+            {t("pages.categoryDetail.services")}
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {categoryServices.map((service, index) => (
-              <motion.div
-                key={service.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                onClick={() => handleServiceClick(service.id)}
-                className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-border dark:border-gray-700"
-              >
-                <div className="relative h-52 overflow-hidden">
-                  <img
-                    src={service.image || `/images/services/default.jpg`}
-                    alt={service.name}
-                    className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="flex items-start mb-4">
-                    <div className="p-3 rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground mr-4">
-                      {getIcon(service.icon)}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold mb-2 text-foreground dark:text-white">
-                        {service.name}
-                      </h3>
-                      <p className="text-muted-foreground dark:text-gray-300 mb-4 line-clamp-2">
-                        {service.description}
-                      </p>
+          {categoryServices.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {categoryServices.map((service, index) => (
+                <motion.div
+                  key={service.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  onClick={() => handleServiceClick(service.id)}
+                  className="block bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition-transform duration-300 hover:scale-105 border border-border dark:border-gray-700"
+                >
+                  {service.image && (
+                    <img
+                      src={service.image}
+                      alt={t(
+                        getTranslationKeyFromTurkishName(
+                          service.name,
+                          "service"
+                        )
+                      )}
+                      className="w-full h-48 object-cover"
+                    />
+                  )}
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-3 text-foreground dark:text-white">
+                      {t(
+                        getTranslationKeyFromTurkishName(
+                          service.name,
+                          "service"
+                        )
+                      )}
+                    </h3>
+                    <p className="text-muted-foreground dark:text-gray-300 mb-4">
+                      {service.shortDescription}
+                    </p>
+                    <div className="flex justify-between items-center text-sm text-muted-foreground dark:text-gray-400">
+                      <span>
+                        {service.startingPrice
+                          ? t("pages.serviceDetail.price", {
+                              price: service.startingPrice,
+                            })
+                          : t("pages.serviceDetail.price", {
+                              price: service.price,
+                            })}
+                      </span>
+                      <span className="inline-flex items-center">
+                        {t("home.categories.viewDetails")}
+                        <ChevronRightIcon className="w-4 h-4 ml-1" />
+                      </span>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center mt-4">
-                    <span className="text-sm text-muted-foreground dark:text-gray-400">
-                      {service.expertCount} Uzman
-                    </span>
-                    <span className="inline-flex items-center text-primary dark:text-primary-foreground text-sm font-medium">
-                      Detayları Gör{" "}
-                      <ChevronRightIcon className="w-4 h-4 ml-1" />
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-muted-foreground dark:text-gray-400">
+              {t("pages.categoryDetail.noServices")}
+            </div>
+          )}
         </div>
       </section>
 
@@ -291,7 +387,7 @@ const CategoryDetail = () => {
               viewport={{ once: true }}
               className="text-3xl font-bold text-center mb-16 text-foreground dark:text-white"
             >
-              Müşteri Yorumları
+              {t("pages.serviceDetail.testimonials.title")}
             </motion.h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -342,7 +438,7 @@ const CategoryDetail = () => {
               viewport={{ once: true }}
               className="text-3xl font-bold text-center mb-16 text-foreground dark:text-white"
             >
-              Sıkça Sorulan Sorular
+              {t("pages.serviceDetail.faqs.title")}
             </motion.h2>
 
             <div className="max-w-3xl mx-auto space-y-6">
@@ -377,7 +473,19 @@ const CategoryDetail = () => {
             viewport={{ once: true }}
             className="text-3xl font-bold mb-6 text-foreground dark:text-white"
           >
-            {displayCategory.name} İhtiyacınız İçin Hemen Başlayın
+            {t("pages.categoryDetail.cta.title", {
+              name: getTranslationKeyFromTurkishName(
+                displayCategory.name,
+                "category"
+              )
+                ? t(
+                    getTranslationKeyFromTurkishName(
+                      displayCategory.name,
+                      "category"
+                    )
+                  )
+                : displayCategory.name,
+            })}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -386,7 +494,7 @@ const CategoryDetail = () => {
             transition={{ delay: 0.1 }}
             className="text-lg mb-8 max-w-2xl mx-auto text-muted-foreground dark:text-gray-300"
           >
-            Profesyonel uzmanlarımız en kısa sürede size ulaşsın
+            {t("pages.categoryDetail.cta.description")}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -400,7 +508,7 @@ const CategoryDetail = () => {
               to="/register"
               className="inline-flex items-center px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-primary/50"
             >
-              Hemen Başla
+              {t("pages.categoryDetail.cta.button")}
             </Link>
           </motion.div>
         </div>

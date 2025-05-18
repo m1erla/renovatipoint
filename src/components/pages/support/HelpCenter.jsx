@@ -20,29 +20,31 @@ import HelpIcon from "@mui/icons-material/Help";
 import BuildIcon from "@mui/icons-material/Build";
 import PaymentIcon from "@mui/icons-material/Payment";
 import SecurityIcon from "@mui/icons-material/Security";
+import { useTranslation } from "react-i18next";
 
 const HelpCenter = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
 
   const categories = [
     {
-      title: "Genel Sorular",
+      title: t("support.helpCenter.categories.general"),
       icon: <HelpIcon sx={{ fontSize: 40 }} />,
       color: theme.palette.primary.main,
     },
     {
-      title: "Hizmetlerimiz",
+      title: t("support.helpCenter.categories.services"),
       icon: <BuildIcon sx={{ fontSize: 40 }} />,
       color: theme.palette.secondary.main,
     },
     {
-      title: "Ödeme ve Fiyatlandırma",
+      title: t("support.helpCenter.categories.payment"),
       icon: <PaymentIcon sx={{ fontSize: 40 }} />,
       color: theme.palette.success.main,
     },
     {
-      title: "Güvenlik ve Gizlilik",
+      title: t("support.helpCenter.categories.security"),
       icon: <SecurityIcon sx={{ fontSize: 40 }} />,
       color: theme.palette.error.main,
     },
@@ -50,62 +52,54 @@ const HelpCenter = () => {
 
   const faqs = [
     {
-      category: "Genel Sorular",
+      category: t("support.helpCenter.categories.general"),
       questions: [
         {
-          question: "Built Better nedir?",
-          answer:
-            "Built Better, ev ve bahçe renovasyon projeleriniz için profesyonel çözümler sunan bir platformdur. Uzman ekibimiz ve kaliteli hizmet anlayışımızla projelerinizi hayata geçiriyoruz.",
+          question: t("support.helpCenter.faqs.general.items.0.question"),
+          answer: t("support.helpCenter.faqs.general.items.0.answer"),
         },
         {
-          question: "Nasıl hizmet alabilirim?",
-          answer:
-            "İletişim sayfamızdan bize ulaşabilir veya direkt olarak proje teklifi alabilirsiniz. Uzman ekibimiz sizinle iletişime geçerek ihtiyaçlarınızı değerlendirecektir.",
+          question: t("support.helpCenter.faqs.general.items.1.question"),
+          answer: t("support.helpCenter.faqs.general.items.1.answer"),
         },
       ],
     },
     {
-      category: "Hizmetlerimiz",
+      category: t("support.helpCenter.categories.services"),
       questions: [
         {
-          question: "Hangi hizmetleri sunuyorsunuz?",
-          answer:
-            "Ev renovasyonu, bahçe tasarımı, özel projeler gibi çeşitli alanlarda hizmet veriyoruz. Detaylı bilgi için hizmetler sayfamızı ziyaret edebilirsiniz.",
+          question: t("support.helpCenter.faqs.services.items.0.question"),
+          answer: t("support.helpCenter.faqs.services.items.0.answer"),
         },
         {
-          question: "Proje süreci nasıl işliyor?",
-          answer:
-            "Keşif, planlama, tasarım ve uygulama aşamalarından oluşan profesyonel bir süreç yönetimi uyguluyoruz. Her aşamada sizinle iletişim halinde oluyoruz.",
+          question: t("support.helpCenter.faqs.services.items.1.question"),
+          answer: t("support.helpCenter.faqs.services.items.1.answer"),
         },
       ],
     },
     {
-      category: "Ödeme ve Fiyatlandırma",
+      category: t("support.helpCenter.categories.payment"),
       questions: [
         {
-          question: "Fiyatlandırma nasıl belirleniyor?",
-          answer:
-            "Projenin kapsamı, kullanılacak malzemeler ve işçilik gereksinimleri doğrultusunda özel fiyatlandırma yapıyoruz. Ücretsiz keşif sonrası detaylı teklif sunuyoruz.",
+          question: t("support.helpCenter.faqs.payment.items.0.question"),
+          answer: t("support.helpCenter.faqs.payment.items.0.answer"),
         },
         {
-          question: "Ödeme seçenekleri nelerdir?",
-          answer:
-            "Nakit, kredi kartı ve taksit seçeneklerimiz mevcuttur. Ayrıca kurumsal müşterilerimiz için özel ödeme planları sunuyoruz.",
+          question: t("support.helpCenter.faqs.payment.items.1.question"),
+          answer: t("support.helpCenter.faqs.payment.items.1.answer"),
         },
       ],
     },
     {
-      category: "Güvenlik ve Gizlilik",
+      category: t("support.helpCenter.categories.security"),
       questions: [
         {
-          question: "Kişisel verilerim nasıl korunuyor?",
-          answer:
-            "KVKK kapsamında tüm kişisel verileriniz güvenle saklanmaktadır. Detaylı bilgi için gizlilik politikamızı inceleyebilirsiniz.",
+          question: t("support.helpCenter.faqs.security.items.0.question"),
+          answer: t("support.helpCenter.faqs.security.items.0.answer"),
         },
         {
-          question: "Hizmet garantiniz var mı?",
-          answer:
-            "Tüm hizmetlerimiz garanti kapsamındadır. İşçilik ve malzeme kalitesi için belirli sürelerle garanti veriyoruz.",
+          question: t("support.helpCenter.faqs.security.items.1.question"),
+          answer: t("support.helpCenter.faqs.security.items.1.answer"),
         },
       ],
     },
@@ -140,7 +134,7 @@ const HelpCenter = () => {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                Yardım Merkezi
+                {t("support.helpCenter.title")}
               </Typography>
 
               <Typography
@@ -149,8 +143,7 @@ const HelpCenter = () => {
                 paragraph
                 sx={{ mb: 4 }}
               >
-                Sorularınızı yanıtlıyor, projeleriniz için size yardımcı
-                oluyoruz.
+                {t("support.helpCenter.description")}
               </Typography>
 
               <Box
@@ -163,7 +156,7 @@ const HelpCenter = () => {
               >
                 <TextField
                   fullWidth
-                  placeholder="Sorunuzu yazın..."
+                  placeholder={t("support.helpCenter.searchPlaceholder")}
                   variant="outlined"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -202,7 +195,7 @@ const HelpCenter = () => {
               <Box
                 component="img"
                 src="https://images.unsplash.com/photo-1560438718-eb61ede255eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1600&q=80"
-                alt="Destek ekibimiz"
+                alt={t("support.helpCenter.title")}
                 sx={{
                   width: "100%",
                   borderRadius: 4,
@@ -230,7 +223,7 @@ const HelpCenter = () => {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Yardım Merkezi
+            {t("support.helpCenter.faqs.title")}
           </Typography>
 
           <Typography
@@ -240,122 +233,47 @@ const HelpCenter = () => {
             paragraph
             sx={{ mb: 8, maxWidth: "800px", mx: "auto" }}
           >
-            Sıkça sorulan sorular ve yardımcı kaynaklar ile size destek olmaktan
-            mutluluk duyuyoruz.
+            {t("support.helpCenter.faqs.description")}
           </Typography>
 
           <Box sx={{ mb: 8 }}>
             <TextField
               fullWidth
               variant="outlined"
-              placeholder="Sorularınızı arayın..."
+              placeholder={t("support.helpCenter.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <SearchIcon sx={{ mr: 1, color: "text.secondary" }} />
-                ),
-              }}
-              sx={{ maxWidth: "600px", mx: "auto", display: "block" }}
+              sx={{ mb: 4 }}
             />
-          </Box>
 
-          <Grid container spacing={4} sx={{ mb: 8 }}>
-            {categories.map((category, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
+            {filteredFaqs.map((category, index) => (
+              <Box key={index} sx={{ mb: 4 }}>
+                <Typography
+                  variant="h4"
+                  gutterBottom
+                  sx={{
+                    fontWeight: 600,
+                    color: theme.palette.primary.main,
+                  }}
                 >
-                  <Card
-                    sx={{
-                      height: "100%",
-                      textAlign: "center",
-                      "&:hover": {
-                        transform: "translateY(-5px)",
-                        transition: "transform 0.3s ease-in-out",
-                        boxShadow: theme.shadows[4],
-                      },
-                    }}
-                  >
-                    <CardContent>
-                      <Box
-                        sx={{
-                          width: 80,
-                          height: 80,
-                          borderRadius: "50%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          backgroundColor: `${category.color}20`,
-                          color: category.color,
-                          margin: "0 auto 16px",
-                        }}
-                      >
-                        {category.icon}
-                      </Box>
-                      <Typography variant="h6" gutterBottom>
-                        {category.title}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </Grid>
+                  {category.category}
+                </Typography>
+                {category.questions.map((faq, faqIndex) => (
+                  <Accordion key={faqIndex} sx={{ mb: 2 }}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls={`panel${faqIndex}-content`}
+                      id={`panel${faqIndex}-header`}
+                    >
+                      <Typography>{faq.question}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Typography>{faq.answer}</Typography>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+              </Box>
             ))}
-          </Grid>
-
-          <Box>
-            {filteredFaqs.map(
-              (category, index) =>
-                category.questions.length > 0 && (
-                  <Box key={index} sx={{ mb: 4 }}>
-                    <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                      {category.category}
-                    </Typography>
-                    {category.questions.map((faq, faqIndex) => (
-                      <Accordion key={faqIndex} sx={{ mb: 2 }}>
-                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                          <Typography variant="subtitle1">
-                            {faq.question}
-                          </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Typography variant="body1" color="text.secondary">
-                            {faq.answer}
-                          </Typography>
-                        </AccordionDetails>
-                      </Accordion>
-                    ))}
-                  </Box>
-                )
-            )}
-          </Box>
-
-          <Box
-            sx={{
-              textAlign: "center",
-              mt: 8,
-              p: 4,
-              backgroundColor: theme.palette.background.paper,
-              borderRadius: 2,
-            }}
-          >
-            <Typography variant="h4" gutterBottom>
-              Sorunuzu Bulamadınız mı?
-            </Typography>
-            <Typography variant="body1" paragraph>
-              Müşteri hizmetleri ekibimiz size yardımcı olmak için hazır.
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              href="/contact"
-              sx={{ mt: 2 }}
-            >
-              Bize Ulaşın
-            </Button>
           </Box>
         </motion.div>
       </Container>

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import api from "../../utils/api"; // API utility import edildi
+import { toast } from "react-toastify"; // Hata mesajları için
 import {
   HomeIcon,
   HomeModernIcon,
@@ -19,8 +22,14 @@ import {
   DevicePhoneMobileIcon,
   ClockIcon,
 } from "@heroicons/react/24/outline";
-import servicesData from "../../data/services/services.json";
-import categoriesData from "../../data/categories/categories.json";
+import { serviceService } from "../../services/serviceService";
+import { categoryService } from "../../services/categoryService";
+import {
+  addSlugsToItems,
+  slugify,
+  slugToTranslationKey,
+} from "../../utils/slugify";
+import { getTranslationKeyFromTurkishName } from "../../utils/translationHelper";
 
 // Icon bileşenleri
 const iconComponents = {
@@ -44,91 +53,160 @@ const getIcon = (iconName) => {
 };
 
 const ServiceDetail = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [service, setService] = useState(null);
   const [category, setCategory] = useState(null);
-  const [detailedServiceData, setDetailedServiceData] = useState(null);
   const [similarServices, setSimilarServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // Hata state'i eklendi
   const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
-    // Ana servis verisini al
-    const serviceId = parseInt(id);
-    const foundService = servicesData.find((serv) => serv.id === serviceId);
+    const fetchServiceData = async () => {
+      setLoading(true);
+      setError(null);
+      setService(null);
+      setCategory(null);
+      setSimilarServices([]);
 
-    if (foundService) {
-      setService(foundService);
+      const serviceId = parseInt(id);
 
-      // Bu servise ait kategoriyi bul
-      const relatedCategory = categoriesData.find(
-        (cat) => cat.id === foundService.categoryId
-      );
-      setCategory(relatedCategory);
+      if (isNaN(serviceId)) {
+        setError(t("errors.invalidServiceId"));
+        setLoading(false);
+        return;
+      }
 
-      // Benzer servisleri bul (aynı kategorideki diğer servisler)
-      const similar = servicesData
-        .filter(
-          (serv) =>
-            serv.categoryId === foundService.categoryId && serv.id !== serviceId
-        )
-        .slice(0, 4); // En fazla 4 benzer servis göster
-      setSimilarServices(similar);
-
-      // Daha detaylı servis verisi için dosya yüklemeyi dene (varsa)
       try {
-        // Servis slug'ı üzerinden detaylı veri dosyasını dinamik olarak import et
-        import(`../../data/services/${foundService.slug}.json`)
-          .then((module) => {
-            setDetailedServiceData(module.default);
-          })
-          .catch(() => {
-            // Detaylı veri dosyası bulunamadıysa sessizce devam et
-            console.log("Detailed service data not found");
-          })
-          .finally(() => {
-            setLoading(false);
+        // 1. Servis detayını çek
+        const serviceData = await serviceService.getServiceById(serviceId);
+
+        if (!serviceData) {
+          throw new Error("Service not found in API response");
+        }
+
+        // Serviste slug yoksa oluştur
+        if (!serviceData.slug) {
+          setService({
+            ...serviceData,
+            slug: slugify(serviceData.name),
           });
-      } catch (error) {
-        console.error("Error loading detailed service data:", error);
+        } else {
+          setService(serviceData);
+        }
+
+        // 2. Kategori ve Benzer Servisleri Çek
+        if (serviceData.categoryId) {
+          try {
+            // Paralel olarak kategori ve benzer servisleri çek
+            const [categoryData, similarServicesData] = await Promise.all([
+              categoryService.getCategoryById(serviceData.categoryId),
+              serviceService.getSimilarServices(
+                serviceId,
+                serviceData.categoryId,
+                4
+              ),
+            ]);
+
+            // Kategori verisini işle (eğer çekildiyse)
+            if (categoryData) {
+              if (!categoryData.slug) {
+                setCategory({
+                  ...categoryData,
+                  slug: slugify(categoryData.name),
+                });
+              } else {
+                setCategory(categoryData);
+              }
+            } else if (serviceData.category) {
+              // Servis verisi içinde kategori bilgisi varsa onu kullan
+              const category = serviceData.category;
+              if (!category.slug) {
+                setCategory({
+                  ...category,
+                  slug: slugify(category.name),
+                });
+              } else {
+                setCategory(category);
+              }
+            }
+
+            // Benzer servis verisini işle
+            if (similarServicesData && Array.isArray(similarServicesData)) {
+              setSimilarServices(addSlugsToItems(similarServicesData));
+            } else {
+              console.warn(
+                "Similar services data not in expected format:",
+                similarServicesData
+              );
+              setSimilarServices([]);
+            }
+          } catch (relatedDataError) {
+            console.error(
+              "Error fetching related category/services:",
+              relatedDataError
+            );
+            // İkincil veriler alınamazsa bile ana servis gösterilebilir.
+            // İsteğe bağlı olarak burada da toast mesajı gösterilebilir.
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching service data:", err);
+        if (err.response && err.response.status === 404) {
+          setError(t("pages.serviceDetail.notFound.title"));
+          toast.error(t("pages.serviceDetail.notFound.title"));
+        } else {
+          setError(t("errors.fetchDataError"));
+          toast.error(t("errors.fetchDataError"));
+        }
+        setService(null);
+      } finally {
         setLoading(false);
       }
-    } else {
-      console.error("Service not found");
-      setLoading(false);
-    }
-  }, [id]);
+    };
+
+    fetchServiceData();
+  }, [id, t]);
 
   const handleSimilarServiceClick = (serviceId) => {
     navigate(`/servis/${serviceId}`);
+    // Sayfa yeniden yüklenecek ve useEffect tetiklenecek
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/30">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
   }
 
-  if (!service) {
+  if (error || !service) {
     return (
       <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-3xl font-bold mb-4">Hizmet Bulunamadı</h1>
-        <p className="mb-8">Üzgünüz, aradığınız hizmet bulunamadı.</p>
+        <h1 className="text-3xl font-bold mb-4">
+          {error
+            ? t("errors.errorTitle")
+            : t("pages.serviceDetail.notFound.title")}
+        </h1>
+        <p className="mb-8">
+          {error || t("pages.serviceDetail.notFound.description")}
+        </p>
         <Link
           to="/"
           className="inline-flex items-center px-6 py-3 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
         >
-          <HomeIcon className="w-5 h-5 mr-2" /> Ana Sayfaya Dön
+          <HomeIcon className="w-5 h-5 mr-2" />
+          {t("common.backToHome")}
         </Link>
       </div>
     );
   }
 
-  // Detaylı veri varsa onu kullan, yoksa normal servis verisini kullan
-  const displayService = detailedServiceData || service;
+  // Detaylı veri state'i kaldırıldığı için displayService yerine doğrudan service kullanılır
+  const displayService = service;
 
   return (
     <div className="min-h-screen bg-background dark:bg-gray-900">
@@ -140,7 +218,7 @@ const ServiceDetail = () => {
               displayService.backgroundImage ||
               "/images/backgrounds/default-bg.jpg"
             }
-            alt={displayService.name}
+            alt={t(`services.${slugToTranslationKey(displayService.slug)}`)}
             className="w-full h-full object-cover mix-blend-overlay"
           />
         </div>
@@ -157,8 +235,9 @@ const ServiceDetail = () => {
                   to={`/kategori/${category.id}`}
                   className="inline-flex items-center text-gray-300 hover:text-white text-sm font-medium"
                 >
-                  {category.name} <ChevronRightIcon className="w-4 h-4 mx-1" />{" "}
-                  {displayService.name}
+                  {t(`categories.${slugToTranslationKey(category.slug)}`)}
+                  <ChevronRightIcon className="w-4 h-4 mx-1" />{" "}
+                  {t(`services.${slugToTranslationKey(displayService.slug)}`)}
                 </Link>
               </motion.div>
             )}
@@ -168,7 +247,7 @@ const ServiceDetail = () => {
               transition={{ duration: 0.5 }}
               className="text-4xl md:text-6xl font-bold mb-6"
             >
-              {displayService.name}
+              {t(`services.${slugToTranslationKey(displayService.slug)}`)}
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -176,17 +255,37 @@ const ServiceDetail = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-lg md:text-xl mb-8 max-w-2xl mx-auto text-gray-200"
             >
-              {displayService.description}
+              {t("pages.serviceDetail.description")}
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex justify-center items-center mb-4"
+              className="flex justify-center items-center gap-4"
             >
               <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-primary/20 text-white">
-                {displayService.expertCount} Uzman
+                {t("pages.serviceDetail.price", {
+                  price: displayService.price,
+                })}
               </span>
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-primary/20 text-white">
+                {t("pages.serviceDetail.duration", {
+                  duration: displayService.duration,
+                })}
+              </span>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="mt-8"
+            >
+              <button
+                onClick={() => navigate("/request-service")}
+                className="inline-flex items-center px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-primary/50"
+              >
+                {t("pages.serviceDetail.requestService")}
+              </button>
             </motion.div>
           </div>
         </div>
@@ -209,7 +308,7 @@ const ServiceDetail = () => {
                         : "border-transparent text-muted-foreground dark:text-gray-400 hover:text-foreground dark:hover:text-white"
                     }`}
                   >
-                    Genel Bakış
+                    {t("pages.serviceDetail.tabs.overview")}
                   </button>
                   {displayService.packages && (
                     <button
@@ -220,7 +319,7 @@ const ServiceDetail = () => {
                           : "border-transparent text-muted-foreground dark:text-gray-400 hover:text-foreground dark:hover:text-white"
                       }`}
                     >
-                      Paketler
+                      {t("pages.serviceDetail.tabs.packages")}
                     </button>
                   )}
                   {displayService.process && (
@@ -232,7 +331,7 @@ const ServiceDetail = () => {
                           : "border-transparent text-muted-foreground dark:text-gray-400 hover:text-foreground dark:hover:text-white"
                       }`}
                     >
-                      Süreç
+                      {t("pages.serviceDetail.tabs.process")}
                     </button>
                   )}
                   {displayService.faqs && (
@@ -244,253 +343,128 @@ const ServiceDetail = () => {
                           : "border-transparent text-muted-foreground dark:text-gray-400 hover:text-foreground dark:hover:text-white"
                       }`}
                     >
-                      SSS
+                      {t("pages.serviceDetail.tabs.faqs")}
                     </button>
                   )}
                 </nav>
               </div>
 
               {/* Tab İçerikleri */}
-              <div className="tab-content">
-                {/* Genel Bakış Tab İçeriği */}
+              <div className="py-6">
                 {activeTab === "overview" && (
                   <div>
-                    {displayService.longDescription && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mb-10"
-                      >
-                        <h2 className="text-2xl font-semibold mb-4 text-foreground dark:text-white">
-                          {displayService.name} Hakkında
-                        </h2>
-                        <p className="text-lg text-muted-foreground dark:text-gray-300 leading-relaxed">
-                          {displayService.longDescription}
-                        </p>
-                      </motion.div>
-                    )}
-
-                    {/* Özellikler ve Faydalar */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                      {/* Özellikler */}
-                      {displayService.features && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.1 }}
-                          className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg"
-                        >
-                          <h3 className="text-xl font-semibold mb-4 text-foreground dark:text-white">
-                            Hizmet Özellikleri
-                          </h3>
-                          <ul className="space-y-3">
-                            {displayService.features.map((feature, index) => (
-                              <li key={index} className="flex items-start">
-                                <CheckIcon className="w-5 h-5 text-primary dark:text-primary-foreground mt-0.5 mr-3 flex-shrink-0" />
-                                <span className="text-muted-foreground dark:text-gray-300">
-                                  {feature}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        </motion.div>
-                      )}
-
-                      {/* Faydalar */}
-                      {displayService.benefits && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.2 }}
-                          className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg"
-                        >
-                          <h3 className="text-xl font-semibold mb-4 text-foreground dark:text-white">
-                            Hizmet Faydaları
-                          </h3>
-                          <ul className="space-y-3">
-                            {displayService.benefits.map((benefit, index) => (
-                              <li key={index} className="flex items-start">
-                                <CheckIcon className="w-5 h-5 text-primary dark:text-primary-foreground mt-0.5 mr-3 flex-shrink-0" />
-                                <span className="text-muted-foreground dark:text-gray-300">
-                                  {benefit}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        </motion.div>
-                      )}
+                    <h2 className="text-2xl font-bold mb-4 text-foreground dark:text-white">
+                      {t("pages.serviceDetail.overview.title")}
+                    </h2>
+                    <div className="space-y-4 text-foreground dark:text-gray-300">
+                      <h3 className="text-xl font-semibold text-foreground dark:text-white mb-4">
+                        {t("pages.serviceDetail.included.title")}
+                      </h3>
+                      <ul className="list-none space-y-3">
+                        {displayService.includedItems?.map((item, index) => (
+                          <li key={index} className="flex items-center">
+                            <CheckIcon className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-
-                    {/* Müşteri Yorumları */}
-                    {displayService.testimonials && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="mb-10"
-                      >
-                        <h2 className="text-2xl font-semibold mb-6 text-foreground dark:text-white">
-                          Müşteri Yorumları
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {displayService.testimonials.map(
-                            (testimonial, index) => (
-                              <div
-                                key={index}
-                                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md"
-                              >
-                                <p className="text-muted-foreground dark:text-gray-300 italic mb-4">
-                                  "{testimonial.content}"
-                                </p>
-                                <div className="flex items-center">
-                                  <img
-                                    src={
-                                      testimonial.avatar ||
-                                      "/images/testimonials/default-avatar.jpg"
-                                    }
-                                    alt={testimonial.author}
-                                    className="w-10 h-10 rounded-full object-cover mr-3"
-                                  />
-                                  <div>
-                                    <h4 className="font-medium text-foreground dark:text-white">
-                                      {testimonial.author}
-                                    </h4>
-                                    <p className="text-sm text-muted-foreground dark:text-gray-400">
-                                      {testimonial.role}
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      </motion.div>
+                    {displayService.features && (
+                      <div className="mt-8">
+                        <h3 className="text-xl font-semibold mb-4 text-foreground dark:text-white">
+                          {t("pages.serviceDetail.overview.features")}
+                        </h3>
+                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {displayService.features.map((feature, index) => (
+                            <li
+                              key={index}
+                              className="flex items-start space-x-3 text-muted-foreground dark:text-gray-300"
+                            >
+                              <CheckIcon className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     )}
                   </div>
                 )}
 
-                {/* Paketler Tab İçeriği */}
+                {activeTab === "overview" && displayService.longDescription && (
+                  <div className="prose prose-lg dark:prose-invert max-w-none text-foreground dark:text-gray-300">
+                    <h3 className="text-xl font-semibold text-foreground dark:text-white mb-4">
+                      {t("pages.serviceDetail.descriptionTitle")}
+                    </h3>
+                    <p>{displayService.longDescription}</p>
+                  </div>
+                )}
+
                 {activeTab === "packages" && displayService.packages && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    <h2 className="text-2xl font-semibold mb-6 text-foreground dark:text-white">
-                      Hizmet Paketleri
+                  <div className="space-y-6">
+                    {displayService.packages.map((pkg, index) => (
+                      <div
+                        key={index}
+                        className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-border dark:border-gray-700"
+                      >
+                        <h4 className="text-lg font-semibold mb-2 text-foreground dark:text-white">
+                          {pkg.name}
+                        </h4>
+                        <p className="text-muted-foreground dark:text-gray-400 mb-4">
+                          {pkg.description}
+                        </p>
+                        <p className="text-2xl font-bold text-primary mb-4">
+                          {t("pages.serviceDetail.price", { price: pkg.price })}
+                        </p>
+                        <ul className="list-none space-y-2 text-foreground dark:text-gray-300 mb-4">
+                          {pkg.features?.map((feature, fIndex) => (
+                            <li key={fIndex} className="flex items-center">
+                              <CheckIcon className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+                          {t("pages.serviceDetail.selectPackage")}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === "process" && displayService.process && (
+                  <div>
+                    <h2 className="text-2xl font-bold mb-8 text-foreground dark:text-white">
+                      {t("pages.serviceDetail.process.title")}
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                      {displayService.packages.map((pkg, index) => (
-                        <div
-                          key={pkg.id}
-                          className={`bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg border ${
-                            index === 1
-                              ? "border-primary dark:border-primary-foreground ring-4 ring-primary/20"
-                              : "border-border dark:border-gray-700"
-                          }`}
-                        >
-                          <div
-                            className={`p-6 ${
-                              index === 1
-                                ? "bg-primary/5 dark:bg-primary/10"
-                                : ""
-                            }`}
-                          >
-                            <h3 className="text-xl font-bold mb-2 text-foreground dark:text-white">
-                              {pkg.name}
-                            </h3>
-                            <p className="text-muted-foreground dark:text-gray-300 mb-4">
-                              {pkg.description}
-                            </p>
-                            <div className="flex items-end mb-4">
-                              <span className="text-3xl font-bold text-foreground dark:text-white">
-                                {pkg.price} ₺
-                              </span>
-                              {pkg.duration && (
-                                <span className="text-sm text-muted-foreground dark:text-gray-400 ml-2 pb-1">
-                                  <ClockIcon className="w-4 h-4 inline mr-1" />
-                                  {pkg.duration}
-                                </span>
-                              )}
-                            </div>
+                    <div className="space-y-8">
+                      {displayService.process.map((step, index) => (
+                        <div key={index} className="flex items-start space-x-4">
+                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-semibold">
+                            {index + 1}
                           </div>
-                          <div className="p-6 bg-gray-50 dark:bg-gray-800/80">
-                            <h4 className="font-medium text-sm text-foreground dark:text-gray-300 mb-3">
-                              Paket İçeriği:
-                            </h4>
-                            <ul className="space-y-2">
-                              {pkg.features.map((feature, idx) => (
-                                <li key={idx} className="flex items-start">
-                                  <CheckIcon className="w-5 h-5 text-primary dark:text-primary-foreground mt-0.5 mr-2 flex-shrink-0" />
-                                  <span className="text-sm text-muted-foreground dark:text-gray-300">
-                                    {feature}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
-                            <button
-                              className={`w-full mt-6 py-3 px-4 rounded-lg font-medium ${
-                                index === 1
-                                  ? "bg-primary text-white"
-                                  : "bg-gray-200 dark:bg-gray-700 text-foreground dark:text-white"
-                              } hover:bg-primary hover:text-white transition-colors`}
-                            >
-                              Paketi Seç
-                            </button>
+                          <div>
+                            <h3 className="text-lg font-semibold mb-2 text-foreground dark:text-white">
+                              {step.title}
+                            </h3>
+                            <p className="text-muted-foreground dark:text-gray-300">
+                              {step.description}
+                            </p>
                           </div>
                         </div>
                       ))}
                     </div>
-                  </motion.div>
+                  </div>
                 )}
 
-                {/* Süreç Tab İçeriği */}
-                {activeTab === "process" && displayService.process && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    <h2 className="text-2xl font-semibold mb-6 text-foreground dark:text-white">
-                      Hizmet Süreci
-                    </h2>
-                    <div className="relative">
-                      <div className="absolute left-12 top-0 bottom-0 w-0.5 bg-primary/20 dark:bg-primary/30"></div>
-                      <div className="space-y-8">
-                        {displayService.process.map((step, index) => (
-                          <div key={index} className="flex">
-                            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white text-lg font-bold z-10">
-                              {step.step}
-                            </div>
-                            <div className="ml-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
-                              <h3 className="text-xl font-semibold mb-2 text-foreground dark:text-white">
-                                {step.title}
-                              </h3>
-                              <p className="text-muted-foreground dark:text-gray-300">
-                                {step.description}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* SSS Tab İçeriği */}
                 {activeTab === "faqs" && displayService.faqs && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    <h2 className="text-2xl font-semibold mb-6 text-foreground dark:text-white">
-                      Sıkça Sorulan Sorular
+                  <div>
+                    <h2 className="text-2xl font-bold mb-8 text-foreground dark:text-white">
+                      {t("pages.serviceDetail.faqs.title")}
                     </h2>
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       {displayService.faqs.map((faq, index) => (
-                        <div
-                          key={index}
-                          className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md"
-                        >
-                          <h3 className="text-lg font-semibold mb-3 text-foreground dark:text-white">
+                        <div key={index}>
+                          <h3 className="text-lg font-semibold mb-2 text-foreground dark:text-white">
                             {faq.question}
                           </h3>
                           <p className="text-muted-foreground dark:text-gray-300">
@@ -499,111 +473,142 @@ const ServiceDetail = () => {
                         </div>
                       ))}
                     </div>
-                  </motion.div>
+                  </div>
                 )}
               </div>
             </div>
 
-            {/* Sağ Sütun - Yan Panel */}
-            <div className="lg:w-80 flex-shrink-0">
-              <div className="sticky top-24">
-                {/* Hizmet Talebi Kartı */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6"
-                >
-                  <h3 className="text-xl font-semibold mb-4 text-foreground dark:text-white">
-                    Hizmet Talebi Oluştur
-                  </h3>
-                  <p className="text-muted-foreground dark:text-gray-300 mb-6">
-                    Bu hizmet için talebinizi oluşturun, uzmanlarımız en kısa
-                    sürede size ulaşsın.
-                  </p>
-                  <button className="w-full py-3 px-4 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors">
-                    Talep Oluştur
-                  </button>
-                </motion.div>
+            {/* Sağ Sütun - Servis Bilgileri ve Benzer Hizmetler */}
+            <div className="lg:w-1/3 space-y-8">
+              {/* Servis Özeti Kartı */}
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-border dark:border-gray-700">
+                <h3 className="text-xl font-semibold text-foreground dark:text-white mb-4">
+                  {t("pages.serviceDetail.summary.title")}
+                </h3>
+                <div className="space-y-3 text-muted-foreground dark:text-gray-300">
+                  <div className="flex justify-between">
+                    <span className="font-medium">
+                      {t("pages.serviceDetail.summary.price")}
+                    </span>
+                    <span className="text-foreground dark:text-white font-semibold">
+                      {t("pages.serviceDetail.price", {
+                        price: displayService.price,
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">
+                      {t("pages.serviceDetail.summary.duration")}
+                    </span>
+                    <span className="inline-flex items-center">
+                      <ClockIcon className="w-4 h-4 mr-1" />
+                      {t("pages.serviceDetail.duration", {
+                        duration: displayService.duration,
+                      })}
+                    </span>
+                  </div>
+                  {category && (
+                    <div className="flex justify-between">
+                      <span className="font-medium">
+                        {t("pages.serviceDetail.summary.category")}
+                      </span>
+                      <Link
+                        to={`/kategori/${category.id}`}
+                        className="text-primary hover:underline"
+                      >
+                        {t(
+                          getTranslationKeyFromTurkishName(
+                            category.name,
+                            "category"
+                          )
+                        )}
+                      </Link>
+                    </div>
+                  )}
+                </div>
+                <button className="mt-6 w-full px-4 py-3 bg-primary text-primary-foreground rounded-md font-semibold hover:bg-primary/90 transition-colors">
+                  {t("pages.serviceDetail.requestService")}
+                </button>
+              </div>
 
-                {/* Benzer Hizmetler */}
-                {similarServices.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6"
-                  >
-                    <h3 className="text-lg font-semibold mb-4 text-foreground dark:text-white">
-                      Benzer Hizmetler
-                    </h3>
-                    <div className="space-y-4">
-                      {similarServices.map((similarService) => (
-                        <div
-                          key={similarService.id}
-                          onClick={() =>
-                            handleSimilarServiceClick(similarService.id)
-                          }
-                          className="flex items-start cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
-                        >
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary dark:text-primary-foreground mr-3 flex-shrink-0">
+              {/* Benzer Hizmetler Kartı */}
+              {similarServices.length > 0 && (
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-border dark:border-gray-700">
+                  <h3 className="text-xl font-semibold text-foreground dark:text-white mb-4">
+                    {t("pages.serviceDetail.similarServices.title")}
+                  </h3>
+                  <div className="space-y-4">
+                    {similarServices.map((similarService) => (
+                      <div
+                        key={similarService.id}
+                        className="flex items-center gap-4 cursor-pointer group"
+                        onClick={() =>
+                          handleSimilarServiceClick(similarService.id)
+                        }
+                      >
+                        {similarService.icon && (
+                          <div className="flex-shrink-0 w-12 h-12 bg-muted/50 dark:bg-gray-700/50 rounded-lg flex items-center justify-center text-primary">
                             {getIcon(similarService.icon)}
                           </div>
-                          <div>
-                            <h4 className="font-medium text-foreground dark:text-white mb-1">
-                              {similarService.name}
-                            </h4>
-                            <p className="text-sm text-muted-foreground dark:text-gray-400 line-clamp-2">
-                              {similarService.shortDescription}
-                            </p>
-                          </div>
+                        )}
+                        <div>
+                          <h4 className="font-medium text-foreground dark:text-white group-hover:text-primary transition-colors">
+                            {t(
+                              `services.${slugToTranslationKey(
+                                similarService.slug
+                              )}`
+                            )}
+                          </h4>
+                          <p className="text-sm text-muted-foreground dark:text-gray-400">
+                            {t("pages.serviceDetail.price", {
+                              price: similarService.price,
+                            })}
+                          </p>
                         </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </div>
+                        <ChevronRightIcon className="w-5 h-5 text-muted-foreground dark:text-gray-500 ml-auto group-hover:text-primary transition-colors" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Bölümü */}
-      <section className="py-16 bg-primary/10 dark:bg-primary/5">
-        <div className="container mx-auto px-4 text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-3xl font-bold mb-6 text-foreground dark:text-white"
-          >
-            {displayService.name} İhtiyacınız İçin Hemen Başlayın
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-lg mb-8 max-w-2xl mx-auto text-muted-foreground dark:text-gray-300"
-          >
-            Profesyonel uzmanlarımız en kısa sürede size ulaşsın
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Link
-              to="/register"
-              className="inline-flex items-center px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-primary/50"
+      {/* Müşteri Yorumları Bölümü */}
+      {displayService.testimonials && (
+        <section className="py-16 bg-background dark:bg-gray-900">
+          <div className="container mx-auto px-4">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-3xl font-bold text-center mb-16 text-foreground dark:text-white"
             >
-              Hemen Başla
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+              {t("pages.serviceDetail.testimonials.title")}
+            </motion.h2>
+            {/* Müşteri yorumları için gerekli kod buraya eklenecek */}
+          </div>
+        </section>
+      )}
+
+      {/* Sıkça Sorulan Sorular */}
+      {displayService.faqs && (
+        <section className="py-16 bg-muted/30 dark:bg-gray-800/20">
+          <div className="container mx-auto px-4">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-3xl font-bold text-center mb-16 text-foreground dark:text-white"
+            >
+              {t("pages.serviceDetail.faqs.title")}
+            </motion.h2>
+            {/* Sıkça sorulan sorular için gerekli kod buraya eklenecek */}
+          </div>
+        </section>
+      )}
     </div>
   );
 };

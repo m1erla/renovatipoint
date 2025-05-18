@@ -26,6 +26,7 @@ import AdImagesUpload from "../common/AdImagesUpload";
 import { toast } from "react-toastify";
 import RequestService from "../../services/requestService";
 import adService from "../../services/adService";
+import { useTranslation } from "react-i18next";
 
 function TabPanel({ children, value, index }) {
   return (
@@ -47,6 +48,7 @@ function TabPanel({ children, value, index }) {
 }
 
 export default function UserProfile() {
+  const { t, i18n } = useTranslation();
   const [user, setUser] = useState(null);
   const [ads, setAds] = useState([]);
   const [error, setError] = useState(null);
@@ -79,7 +81,7 @@ export default function UserProfile() {
     const token = localStorage.getItem("accessToken");
     if (!token) {
       localStorage.clear();
-      toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+      toast.error(t("toasts.sessionExpired"));
       navigate("/login");
       return false;
     }
@@ -99,22 +101,19 @@ export default function UserProfile() {
 
         if (!token) {
           localStorage.clear();
-          toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+          toast.error(t("toasts.sessionExpired"));
           navigate("/login");
           return;
         }
 
-        // Token'ı kontrol et
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-        // Kullanıcı bilgilerini yükle
         const userResponse = await api.get("/api/v1/users/response");
 
         if (userResponse.data) {
           setUser(userResponse.data);
           setEditData(userResponse.data);
 
-          // Kullanıcının verilerini sırayla yükle
           await Promise.all([
             fetchUserAds(userResponse.data.id),
             fetchUserChatRooms(userResponse.data.id),
@@ -127,13 +126,12 @@ export default function UserProfile() {
         console.error("Failed to fetch user profile:", error);
         if (error.response?.status === 401) {
           localStorage.clear();
-          toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+          toast.error(t("toasts.sessionExpired"));
           navigate("/login");
         } else {
-          setError("Profil bilgileri yüklenirken bir hata oluştu.");
+          setError(t("profile.errors.loadProfileFailed"));
           toast.error(
-            error.response?.data?.message ||
-              "Bir hata oluştu. Lütfen tekrar deneyin."
+            error.response?.data?.message || t("toasts.genericError")
           );
         }
       } finally {
@@ -144,14 +142,19 @@ export default function UserProfile() {
     initializeProfile();
     fetchCategories();
     fetchServices();
-  }, [navigate, isAuthenticated]);
+  }, [navigate, isAuthenticated, t]);
+
+  const handleImageError = (e) => {
+    e.target.onerror = null;
+    e.target.src = adService.DEFAULT_AD_IMAGE;
+  };
 
   const fetchUserAds = async (userId) => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
         localStorage.clear();
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
         navigate("/login");
         return;
       }
@@ -163,15 +166,19 @@ export default function UserProfile() {
       });
 
       if (response.data) {
-        // İlanları ve resimlerini yükle
         const adsWithImages = await Promise.all(
           response.data
             .filter((ad) => ad != null)
             .map(async (ad) => {
               try {
                 const images = await adService.getAdImages(ad.id);
+                const imageUrl =
+                  images && images.length > 0
+                    ? images[0].url
+                    : adService.DEFAULT_AD_IMAGE;
                 return {
                   ...ad,
+                  imageUrl: imageUrl,
                   images: images || [{ url: adService.DEFAULT_AD_IMAGE }],
                   storages: images || [],
                 };
@@ -179,6 +186,7 @@ export default function UserProfile() {
                 console.warn(`Failed to load images for ad ${ad.id}:`, error);
                 return {
                   ...ad,
+                  imageUrl: adService.DEFAULT_AD_IMAGE,
                   images: [{ url: adService.DEFAULT_AD_IMAGE }],
                   storages: [],
                 };
@@ -191,10 +199,10 @@ export default function UserProfile() {
       console.error("Failed to fetch ads:", error);
       if (error.response?.status === 401) {
         localStorage.clear();
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
         navigate("/login");
       } else {
-        toast.error("İlanlar yüklenirken bir hata oluştu.");
+        toast.error(t("profile.errors.loadAdsFailed"));
       }
     }
   };
@@ -204,7 +212,7 @@ export default function UserProfile() {
       const token = localStorage.getItem("accessToken");
       if (!token) {
         localStorage.clear();
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
         navigate("/login");
         return;
       }
@@ -222,10 +230,10 @@ export default function UserProfile() {
       console.error("Failed to fetch chat rooms:", error);
       if (error.response?.status === 401) {
         localStorage.clear();
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
         navigate("/login");
       } else {
-        toast.error("Sohbet odaları yüklenirken bir hata oluştu.");
+        toast.error(t("profile.errors.loadChatsFailed"));
       }
     }
   };
@@ -237,7 +245,7 @@ export default function UserProfile() {
 
       if (!token) {
         localStorage.clear();
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
         navigate("/login");
         return;
       }
@@ -256,10 +264,10 @@ export default function UserProfile() {
       console.error("Failed to fetch requests:", error);
       if (error.response?.status === 401) {
         localStorage.clear();
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
         navigate("/login");
       } else {
-        toast.error("İstekler yüklenirken bir hata oluştu.");
+        toast.error(t("profile.errors.loadRequestsFailed"));
       }
     }
   };
@@ -293,7 +301,7 @@ export default function UserProfile() {
       const userId = localStorage.getItem("userId");
 
       if (!token || !userId) {
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
         navigate("/login");
         return;
       }
@@ -316,7 +324,6 @@ export default function UserProfile() {
       });
 
       if (response.data) {
-        // Güncel kullanıcı bilgilerini al ve state'i güncelle
         const updatedUserResponse = await api.get("/api/v1/users/response", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -329,20 +336,19 @@ export default function UserProfile() {
         }
 
         setEditMode(false);
-        toast.success("Profil başarıyla güncellendi!");
+        toast.success(t("profile.edit.success"));
       }
     } catch (error) {
       console.error("Error updating profile:", error);
       if (error.response?.status === 401) {
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
       } else if (error.response?.status === 404) {
-        toast.error("Kullanıcı bulunamadı.");
+        toast.error(t("profile.errors.userNotFound"));
       } else if (error.response?.status === 405) {
-        toast.error("Bu işlem için yetkiniz yok.");
+        toast.error(t("profile.errors.unauthorized"));
       } else {
         toast.error(
-          error.response?.data?.error ||
-            "Profil güncellenirken bir hata oluştu."
+          error.response?.data?.error || t("profile.errors.updateFailed")
         );
       }
     } finally {
@@ -362,37 +368,35 @@ export default function UserProfile() {
         profileImage: newImageFileName,
       }));
 
-      // Profil resmini güncelle
       const formData = new FormData();
       formData.append("file", newImageFileName);
 
-      await api.post("/api/v1/users/update-profile-image", formData, {
+      await api.put("/api/v1/users/{id}/uploadProfileImage", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
 
-      toast.success("Profil resmi başarıyla güncellendi!");
+      toast.success(t("profile.edit.imageUpdateSuccess"));
     } catch (error) {
       console.error("Failed to update profile image:", error);
-      toast.error("Profil resmi güncellenirken bir hata oluştu.");
+      toast.error(t("profile.errors.imageUpdateFailed"));
     }
   };
 
   const handleEditAd = async (ad) => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
-      toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+      toast.error(t("toasts.sessionExpired"));
       navigate("/login");
       return;
     }
     if (!ad || !ad.id) {
-      toast.error("Geçersiz ilan bilgisi");
+      toast.error(t("profile.ads.invalidAd"));
       return;
     }
     try {
-      // İlan resimlerini yükle
       const images = await adService.getAdImages(ad.id);
       setEditingAd({
         ...ad,
@@ -404,7 +408,7 @@ export default function UserProfile() {
       setShowAdEditDialog(true);
     } catch (error) {
       console.error("Failed to load ad images:", error);
-      toast.error("İlan resimleri yüklenirken bir hata oluştu.");
+      toast.error(t("profile.errors.loadAdImagesFailed"));
     }
   };
 
@@ -427,10 +431,10 @@ export default function UserProfile() {
   const validateAdEdit = () => {
     const errors = {};
     if (!editingAd.categoryId) {
-      errors.categoryId = "Lütfen bir kategori seçin";
+      errors.categoryId = t("profile.adEdit.validation.categoryRequired");
     }
     if (!editingAd.serviceId) {
-      errors.serviceId = "Lütfen bir servis seçin";
+      errors.serviceId = t("profile.adEdit.validation.serviceRequired");
     }
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -443,7 +447,7 @@ export default function UserProfile() {
       }
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
         return;
       }
 
@@ -458,7 +462,6 @@ export default function UserProfile() {
       formData.append("serviceId", editingAd.serviceId);
       formData.append("serviceName", editingAd.serviceName);
 
-      // Resim dosyalarını ekle
       if (editingAd.images && Array.isArray(editingAd.images)) {
         editingAd.images.forEach((image, index) => {
           if (image && image.file) {
@@ -476,17 +479,15 @@ export default function UserProfile() {
 
       await fetchUserAds(user.id);
       handleAdEditClose();
-      toast.success("İlan başarıyla güncellendi!");
+      toast.success(t("profile.adEdit.success"));
     } catch (error) {
       console.error("İlan güncellenirken hata oluştu:", error);
       if (error.response?.status === 401) {
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
       } else if (error.response?.status === 400) {
-        toast.error("Geçersiz veri. Lütfen tüm alanları kontrol edin.");
+        toast.error(t("profile.adEdit.errors.invalidData"));
       } else {
-        toast.error(
-          "İlan güncellenirken bir hata oluştu. Lütfen tekrar deneyin."
-        );
+        toast.error(t("profile.adEdit.errors.updateFailed"));
       }
     }
   };
@@ -497,10 +498,9 @@ export default function UserProfile() {
       const response = await RequestService.acceptRequest(requestId);
 
       if (response) {
-        toast.success("İstek başarıyla kabul edildi");
+        toast.success(t("profile.requests.acceptSuccess"));
         await fetchUserRequests(user.id);
 
-        // Check both possible chatRoom ID locations
         const chatRoomId = response.chatRoom?.id || response.chatRoomId;
         if (chatRoomId) {
           navigate(`/chat/${chatRoomId}`);
@@ -510,10 +510,10 @@ export default function UserProfile() {
       console.error("Failed to accept request:", error);
       if (error.response?.status === 401) {
         localStorage.clear();
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
         navigate("/login");
       } else {
-        toast.error("İstek kabul edilirken bir hata oluştu.");
+        toast.error(t("profile.requests.errors.acceptFailed"));
       }
     } finally {
       setLoading(false);
@@ -524,23 +524,24 @@ export default function UserProfile() {
     try {
       const userId = localStorage.getItem("userId");
       await RequestService.rejectRequest(requestId, userId);
-      toast.success("İstek reddedildi");
+      toast.success(t("profile.requests.rejectSuccess"));
       await fetchUserRequests(user.id);
     } catch (error) {
       console.error("Failed to reject request:", error);
       if (error.response?.status === 401) {
         localStorage.clear();
-        toast.error("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+        toast.error(t("toasts.sessionExpired"));
         navigate("/login");
       } else {
-        toast.error("İstek reddedilirken bir hata oluştu.");
+        toast.error(t("profile.requests.errors.rejectFailed"));
       }
     }
   };
 
   const formatDate = (dateString) => {
+    const currentLocale = i18n.language || "tr-TR";
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat("tr-TR", {
+    return new Intl.DateTimeFormat(currentLocale, {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -570,7 +571,7 @@ export default function UserProfile() {
         >
           <div className="flex items-center gap-3 mb-3">
             <XCircleIcon className="w-6 h-6" />
-            <h3 className="text-lg font-semibold">Hata</h3>
+            <h3 className="text-lg font-semibold">{t("common.error")}</h3>
           </div>
           <p>{error}</p>
         </motion.div>
@@ -586,7 +587,7 @@ export default function UserProfile() {
           animate={{ opacity: 1, scale: 1 }}
           className="max-w-md p-6 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl shadow-lg"
         >
-          <p>Kullanıcı bilgileri bulunamadı</p>
+          <p>{t("profile.errors.userNotFoundMessage")}</p>
         </motion.div>
       </div>
     );
@@ -595,14 +596,12 @@ export default function UserProfile() {
   return (
     <div className="min-h-[calc(100vh-200px)] bg-gradient-to-b from-background to-background/95 dark:from-gray-900 dark:to-gray-950 pt-16 sm:pt-20 pb-8 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Profile Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="relative p-8 md:p-10 mb-8 mt-4 rounded-3xl bg-gradient-to-br from-gray-800/95 via-gray-800 to-gray-900 text-white shadow-2xl overflow-hidden"
         >
-          {/* Decorative Elements */}
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10">
             <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-blue-500 blur-3xl"></div>
             <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-purple-500 blur-3xl"></div>
@@ -614,6 +613,7 @@ export default function UserProfile() {
               whileTap={{ scale: 0.95 }}
               onClick={() => setEditMode(true)}
               className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors shadow-lg"
+              aria-label={t("profile.edit.editButtonLabel")}
             >
               <PencilIcon className="w-5 h-5" />
             </motion.button>
@@ -626,7 +626,7 @@ export default function UserProfile() {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15 }}
               >
-                <div className="relative w-37 h-37 rounded-full overflow-hidden border-4 border-white/20 shadow-xl">
+                <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-white/20 shadow-xl">
                   <ProfileImageUpload
                     currentImage={user.profileImage}
                     onImageUpdate={handleProfileImageUpdate}
@@ -675,22 +675,21 @@ export default function UserProfile() {
           </div>
         </motion.div>
 
-        {/* Tabs Navigation */}
         <div className="mb-8">
           <nav className="flex overflow-x-auto py-2 scrollbar-hide">
             <div className="flex space-x-2 mx-auto bg-card/60 dark:bg-gray-800/60 backdrop-blur-sm p-1.5 rounded-xl shadow-md">
               {[
                 {
                   icon: <DocumentTextIcon className="w-5 h-5" />,
-                  label: "İlanlarım",
+                  label: t("profile.tabs.ads"),
                 },
                 {
                   icon: <ChatBubbleLeftRightIcon className="w-5 h-5" />,
-                  label: "Sohbetler",
+                  label: t("profile.tabs.chats"),
                 },
                 {
                   icon: <BriefcaseIcon className="w-5 h-5" />,
-                  label: "İstekler",
+                  label: t("profile.tabs.requests"),
                 },
               ].map((tab, index) => (
                 <motion.button
@@ -712,11 +711,10 @@ export default function UserProfile() {
           </nav>
         </div>
 
-        {/* Tab Panels */}
         <TabPanel value={tabValue} index={0}>
           <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
             <h2 className="text-2xl font-bold text-foreground dark:text-white">
-              İlanlarım
+              {t("profile.ads.title")}
             </h2>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -725,7 +723,7 @@ export default function UserProfile() {
               className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground rounded-xl font-medium transition-all shadow-md hover:shadow-lg"
             >
               <PlusIcon className="w-5 h-5 mr-2" />
-              Yeni İlan Oluştur
+              {t("profile.ads.createNewButton")}
             </motion.button>
           </div>
 
@@ -739,11 +737,10 @@ export default function UserProfile() {
                 <DocumentTextIcon className="w-10 h-10 text-primary dark:text-primary-foreground/90" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-foreground dark:text-white">
-                Henüz İlan Yok
+                {t("profile.ads.emptyState.title")}
               </h3>
               <p className="text-muted-foreground dark:text-gray-400 text-center mb-6 max-w-md">
-                Henüz hiç ilan oluşturmadınız. İlk ilanınızı oluşturmak için
-                "Yeni İlan Oluştur" butonuna tıklayın.
+                {t("profile.ads.emptyState.message")}
               </p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -752,7 +749,7 @@ export default function UserProfile() {
                 className="inline-flex items-center px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium transition-colors shadow-md"
               >
                 <PlusIcon className="w-5 h-5 mr-2" />
-                İlk İlanımı Oluştur
+                {t("profile.ads.emptyState.createFirstButton")}
               </motion.button>
             </motion.div>
           ) : (
@@ -772,13 +769,10 @@ export default function UserProfile() {
                 >
                   <div className="relative h-56 overflow-hidden">
                     <img
-                      src={
-                        ad.imageUrl
-                          ? `${process.env.REACT_APP_API_URL}/api/v1/ads/${ad.id}/image/${ad.imageUrl}`
-                          : `${process.env.REACT_APP_API_URL}/api/v1/ads/default-image`
-                      }
+                      src={ad.imageUrl || adService.DEFAULT_AD_IMAGE}
                       alt={ad.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={handleImageError}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <motion.button
@@ -786,6 +780,7 @@ export default function UserProfile() {
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleEditAd(ad)}
                       className="absolute bottom-4 right-4 p-3 bg-white/90 dark:bg-gray-800/90 text-primary dark:text-primary-foreground rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0"
+                      aria-label={t("profile.ads.editButtonLabel")}
                     >
                       <PencilIcon className="w-5 h-5" />
                     </motion.button>
@@ -810,7 +805,7 @@ export default function UserProfile() {
                       className="w-full px-4 py-3 bg-background dark:bg-gray-700 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary rounded-xl font-medium transition-all group-hover:bg-primary group-hover:text-primary-foreground dark:group-hover:bg-primary-foreground dark:group-hover:text-primary flex justify-center items-center gap-2"
                     >
                       <PencilIcon className="w-5 h-5" />
-                      Düzenle
+                      {t("common.edit")}
                     </button>
                   </div>
                 </motion.div>
@@ -819,7 +814,6 @@ export default function UserProfile() {
           )}
         </TabPanel>
 
-        {/* Sohbetler Tab */}
         <TabPanel value={tabValue} index={1}>
           {chatRooms.length === 0 ? (
             <motion.div
@@ -831,11 +825,10 @@ export default function UserProfile() {
                 <ChatBubbleLeftRightIcon className="w-10 h-10 text-primary dark:text-primary-foreground/90" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-foreground dark:text-white">
-                Sohbet Bulunamadı
+                {t("profile.chats.emptyState.title")}
               </h3>
               <p className="text-muted-foreground dark:text-gray-400 text-center mb-6 max-w-md">
-                Henüz hiç sohbetiniz bulunmuyor. İsteklerinizi kabul ettiğinizde
-                veya sohbet başlatıldığında burada görüntülenecektir.
+                {t("profile.chats.emptyState.message")}
               </p>
             </motion.div>
           ) : (
@@ -853,6 +846,15 @@ export default function UserProfile() {
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   onClick={() => navigate(`/chat/${room.id}`)}
                   className="group bg-card dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-border/50 dark:border-gray-700/50 cursor-pointer p-6"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={t("profile.chats.chatCardAriaLabel", {
+                    title: room.ad.title,
+                  })}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ")
+                      navigate(`/chat/${room.id}`);
+                  }}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-xl font-semibold text-foreground dark:text-white group-hover:text-primary dark:group-hover:text-primary-foreground transition-colors">
@@ -867,17 +869,18 @@ export default function UserProfile() {
                   </div>
                   <p className="text-muted-foreground dark:text-gray-400 mb-3 flex items-center gap-2">
                     <UserIcon className="w-4 h-4" />
-                    Uzman: {room.expert.name}
+                    {t("profile.chats.expertLabel")}: {room.expert.name}
                   </p>
                   <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4 flex items-center gap-2">
                     <CalendarIcon className="w-4 h-4" />
-                    Son aktivite: {formatDate(room.lastActivity)}
+                    {t("profile.chats.lastActivityLabel")}:{" "}
+                    {formatDate(room.lastActivity)}
                   </p>
                   {room.recentMessages?.length > 0 && (
                     <div className="mt-4 p-4 bg-background/80 dark:bg-gray-700/50 backdrop-blur-sm rounded-xl group-hover:bg-primary/5 dark:group-hover:bg-primary/10 transition-colors">
                       <p className="text-sm text-muted-foreground dark:text-gray-300 line-clamp-2">
                         <span className="font-medium text-foreground dark:text-white">
-                          Son mesaj:
+                          {t("profile.chats.lastMessageLabel")}:
                         </span>{" "}
                         {room.recentMessages[0].content}
                       </p>
@@ -886,7 +889,7 @@ export default function UserProfile() {
                   <div className="mt-4 pt-4 border-t border-border/50 dark:border-gray-700/50">
                     <button className="w-full py-2.5 rounded-xl bg-background dark:bg-gray-700 group-hover:bg-primary group-hover:text-primary-foreground dark:group-hover:bg-primary-foreground dark:group-hover:text-primary transition-colors font-medium flex items-center justify-center gap-2">
                       <ChatBubbleLeftRightIcon className="w-5 h-5" />
-                      Sohbete Git
+                      {t("profile.chats.goToChatButton")}
                     </button>
                   </div>
                 </motion.div>
@@ -895,7 +898,6 @@ export default function UserProfile() {
           )}
         </TabPanel>
 
-        {/* İstekler Tab */}
         <TabPanel value={tabValue} index={2}>
           {requests.length === 0 ? (
             <motion.div
@@ -907,11 +909,10 @@ export default function UserProfile() {
                 <BriefcaseIcon className="w-10 h-10 text-primary dark:text-primary-foreground/90" />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-foreground dark:text-white">
-                İstek Bulunamadı
+                {t("profile.requests.emptyState.title")}
               </h3>
               <p className="text-muted-foreground dark:text-gray-400 text-center mb-6 max-w-md">
-                Şu anda bekleyen herhangi bir istek bulunmuyor. İlanlarınız için
-                gelen istekler burada listelenecektir.
+                {t("profile.requests.emptyState.message")}
               </p>
             </motion.div>
           ) : (
@@ -942,12 +943,12 @@ export default function UserProfile() {
                           : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200"
                       }`}
                     >
-                      {request.status}
+                      {t(`requestStatus.${request.status.toLowerCase()}`)}
                     </span>
                   </div>
                   <p className="text-muted-foreground dark:text-gray-400 mb-4 flex items-center gap-2">
                     <UserIcon className="w-4 h-4" />
-                    Uzman: {request.expertName}
+                    {t("profile.requests.expertLabel")}: {request.expertName}
                   </p>
                   <div className="flex gap-3 mt-6">
                     {request.status === "PENDING" && (
@@ -959,7 +960,7 @@ export default function UserProfile() {
                           className="flex-1 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-colors shadow-md flex items-center justify-center gap-2"
                         >
                           <CheckCircleIcon className="w-5 h-5" />
-                          Kabul Et
+                          {t("common.accept")}
                         </motion.button>
                         <motion.button
                           whileHover={{ scale: 1.05 }}
@@ -968,7 +969,7 @@ export default function UserProfile() {
                           className="flex-1 px-4 py-3 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white dark:hover:bg-red-600 rounded-xl font-medium transition-all shadow-md flex items-center justify-center gap-2"
                         >
                           <XCircleIcon className="w-5 h-5" />
-                          Reddet
+                          {t("common.reject")}
                         </motion.button>
                       </>
                     )}
@@ -980,7 +981,7 @@ export default function UserProfile() {
                         className="w-full px-4 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium transition-colors shadow-md flex items-center justify-center gap-2"
                       >
                         <ChatBubbleLeftRightIcon className="w-5 h-5" />
-                        Sohbete Git
+                        {t("profile.requests.goToChatButton")}
                       </motion.button>
                     )}
                   </div>
@@ -990,7 +991,6 @@ export default function UserProfile() {
           )}
         </TabPanel>
 
-        {/* Edit Profile Dialog */}
         <AnimatePresence>
           {editMode && (
             <motion.div
@@ -999,6 +999,9 @@ export default function UserProfile() {
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"
               onClick={() => setEditMode(false)}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="edit-profile-dialog-title"
             >
               <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -1009,14 +1012,18 @@ export default function UserProfile() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-2xl font-bold text-foreground dark:text-white">
-                    Profili Düzenle
+                  <h2
+                    id="edit-profile-dialog-title"
+                    className="text-2xl font-bold text-foreground dark:text-white"
+                  >
+                    {t("profile.edit.dialogTitle")}
                   </h2>
                   <motion.button
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setEditMode(false)}
                     className="p-2 text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-white transition-colors rounded-full bg-background/80 dark:bg-gray-700/80"
+                    aria-label={t("common.closeDialog")}
                   >
                     <XMarkIcon className="w-6 h-6" />
                   </motion.button>
@@ -1025,10 +1032,14 @@ export default function UserProfile() {
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2">
-                        Ad
+                      <label
+                        htmlFor="edit-name"
+                        className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2"
+                      >
+                        {t("profile.edit.firstNameLabel")}
                       </label>
                       <input
+                        id="edit-name"
                         type="text"
                         value={editData.name || ""}
                         onChange={(e) =>
@@ -1039,10 +1050,14 @@ export default function UserProfile() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2">
-                        Soyad
+                      <label
+                        htmlFor="edit-surname"
+                        className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2"
+                      >
+                        {t("profile.edit.lastNameLabel")}
                       </label>
                       <input
+                        id="edit-surname"
                         type="text"
                         value={editData.surname || ""}
                         onChange={(e) =>
@@ -1054,10 +1069,14 @@ export default function UserProfile() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2">
-                      Telefon
+                    <label
+                      htmlFor="edit-phone"
+                      className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2"
+                    >
+                      {t("profile.edit.phoneLabel")}
                     </label>
                     <input
+                      id="edit-phone"
                       type="tel"
                       value={editData.phoneNumber || ""}
                       onChange={(e) =>
@@ -1071,10 +1090,14 @@ export default function UserProfile() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2">
-                      Adres
+                    <label
+                      htmlFor="edit-address"
+                      className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2"
+                    >
+                      {t("profile.edit.addressLabel")}
                     </label>
                     <textarea
+                      id="edit-address"
                       value={editData.address || ""}
                       onChange={(e) =>
                         setEditData({ ...editData, address: e.target.value })
@@ -1085,10 +1108,14 @@ export default function UserProfile() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2">
-                      Posta Kodu
+                    <label
+                      htmlFor="edit-postcode"
+                      className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2"
+                    >
+                      {t("profile.edit.postCodeLabel")}
                     </label>
                     <input
+                      id="edit-postcode"
                       type="text"
                       value={editData.postCode || ""}
                       onChange={(e) =>
@@ -1106,7 +1133,7 @@ export default function UserProfile() {
                     onClick={() => setEditMode(false)}
                     className="px-6 py-3 rounded-xl text-muted-foreground hover:text-foreground bg-background/80 hover:bg-background dark:bg-gray-700/80 dark:hover:bg-gray-700 dark:text-gray-300 dark:hover:text-white transition-all border border-border dark:border-gray-600"
                   >
-                    İptal
+                    {t("common.cancelButton")}
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -1114,7 +1141,7 @@ export default function UserProfile() {
                     onClick={handleEditSave}
                     className="px-6 py-3 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground rounded-xl font-medium transition-all shadow-md"
                   >
-                    Kaydet
+                    {t("common.saveButton")}
                   </motion.button>
                 </div>
               </motion.div>
@@ -1122,7 +1149,6 @@ export default function UserProfile() {
           )}
         </AnimatePresence>
 
-        {/* Ad Edit Dialog */}
         <AnimatePresence>
           {showAdEditDialog && editingAd && (
             <motion.div
@@ -1131,6 +1157,9 @@ export default function UserProfile() {
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"
               onClick={handleAdEditClose}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="edit-ad-dialog-title"
             >
               <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -1141,15 +1170,19 @@ export default function UserProfile() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-2xl font-bold text-foreground dark:text-white flex items-center gap-2">
+                  <h2
+                    id="edit-ad-dialog-title"
+                    className="text-2xl font-bold text-foreground dark:text-white flex items-center gap-2"
+                  >
                     <DocumentTextIcon className="w-6 h-6 text-primary dark:text-primary-foreground" />
-                    İlanı Düzenle
+                    {t("profile.adEdit.dialogTitle")}
                   </h2>
                   <motion.button
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={handleAdEditClose}
                     className="p-2 text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-white transition-colors rounded-full bg-background/80 dark:bg-gray-700/80"
+                    aria-label={t("common.closeDialog")}
                   >
                     <XMarkIcon className="w-6 h-6" />
                   </motion.button>
@@ -1157,10 +1190,14 @@ export default function UserProfile() {
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2">
-                      Başlık
+                    <label
+                      htmlFor="ad-title"
+                      className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2"
+                    >
+                      {t("profile.adEdit.titleLabel")}
                     </label>
                     <input
+                      id="ad-title"
                       type="text"
                       value={editingAd.title}
                       onChange={(e) =>
@@ -1171,10 +1208,14 @@ export default function UserProfile() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2">
-                      Açıklama
+                    <label
+                      htmlFor="ad-description"
+                      className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2"
+                    >
+                      {t("profile.adEdit.descriptionLabel")}
                     </label>
                     <textarea
+                      id="ad-description"
                       value={editingAd.descriptions}
                       onChange={(e) =>
                         setEditingAd({
@@ -1189,27 +1230,48 @@ export default function UserProfile() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2">
-                        Kategori
+                      <label
+                        htmlFor="ad-category"
+                        className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2"
+                      >
+                        {t("profile.adEdit.categoryLabel")}
                       </label>
                       <select
+                        id="ad-category"
                         value={editingAd.categoryId || ""}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          const selectedCategory = categories.find(
+                            (c) => c.id === e.target.value
+                          );
                           setEditingAd({
                             ...editingAd,
                             categoryId: e.target.value,
-                            categoryName: categories.find(
-                              (c) => c.id === e.target.value
-                            )?.name,
-                          })
-                        }
+                            categoryName: selectedCategory
+                              ? selectedCategory.name
+                              : "",
+                          });
+                          if (validationErrors.categoryId) {
+                            setValidationErrors((prev) => ({
+                              ...prev,
+                              categoryId: undefined,
+                            }));
+                          }
+                        }}
                         className={`w-full px-4 py-3 rounded-xl border-2 ${
                           validationErrors.categoryId
                             ? "border-red-500 dark:border-red-400 ring-2 ring-red-500/50"
                             : "border-border dark:border-gray-600"
                         } bg-background dark:bg-gray-700 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all`}
+                        aria-invalid={!!validationErrors.categoryId}
+                        aria-describedby={
+                          validationErrors.categoryId
+                            ? "category-error"
+                            : undefined
+                        }
                       >
-                        <option value="">Kategori seçin</option>
+                        <option value="">
+                          {t("profile.adEdit.selectCategoryPlaceholder")}
+                        </option>
                         {categories.map((category) => (
                           <option key={category.id} value={category.id}>
                             {category.name}
@@ -1217,7 +1279,10 @@ export default function UserProfile() {
                         ))}
                       </select>
                       {validationErrors.categoryId && (
-                        <p className="mt-2 text-sm text-red-500 dark:text-red-400 flex items-center gap-1">
+                        <p
+                          id="category-error"
+                          className="mt-2 text-sm text-red-500 dark:text-red-400 flex items-center gap-1"
+                        >
                           <XCircleIcon className="w-4 h-4 inline" />
                           {validationErrors.categoryId}
                         </p>
@@ -1225,27 +1290,48 @@ export default function UserProfile() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2">
-                        Servis
+                      <label
+                        htmlFor="ad-service"
+                        className="block text-sm font-medium text-foreground dark:text-gray-200 mb-2"
+                      >
+                        {t("profile.adEdit.serviceLabel")}
                       </label>
                       <select
+                        id="ad-service"
                         value={editingAd.serviceId || ""}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          const selectedService = services.find(
+                            (s) => s.id === e.target.value
+                          );
                           setEditingAd({
                             ...editingAd,
                             serviceId: e.target.value,
-                            serviceName: services.find(
-                              (s) => s.id === e.target.value
-                            )?.name,
-                          })
-                        }
+                            serviceName: selectedService
+                              ? selectedService.name
+                              : "",
+                          });
+                          if (validationErrors.serviceId) {
+                            setValidationErrors((prev) => ({
+                              ...prev,
+                              serviceId: undefined,
+                            }));
+                          }
+                        }}
                         className={`w-full px-4 py-3 rounded-xl border-2 ${
                           validationErrors.serviceId
                             ? "border-red-500 dark:border-red-400 ring-2 ring-red-500/50"
                             : "border-border dark:border-gray-600"
                         } bg-background dark:bg-gray-700 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all`}
+                        aria-invalid={!!validationErrors.serviceId}
+                        aria-describedby={
+                          validationErrors.serviceId
+                            ? "service-error"
+                            : undefined
+                        }
                       >
-                        <option value="">Servis seçin</option>
+                        <option value="">
+                          {t("profile.adEdit.selectServicePlaceholder")}
+                        </option>
                         {services.map((service) => (
                           <option key={service.id} value={service.id}>
                             {service.name}
@@ -1253,7 +1339,10 @@ export default function UserProfile() {
                         ))}
                       </select>
                       {validationErrors.serviceId && (
-                        <p className="mt-2 text-sm text-red-500 dark:text-red-400 flex items-center gap-1">
+                        <p
+                          id="service-error"
+                          className="mt-2 text-sm text-red-500 dark:text-red-400 flex items-center gap-1"
+                        >
                           <XCircleIcon className="w-4 h-4 inline" />
                           {validationErrors.serviceId}
                         </p>
@@ -1264,7 +1353,7 @@ export default function UserProfile() {
                   <div className="mt-4">
                     <h3 className="text-lg font-semibold text-foreground dark:text-white mb-4 flex items-center gap-2">
                       <PlusIcon className="w-5 h-5 text-primary dark:text-primary-foreground" />
-                      İlan Görselleri
+                      {t("profile.adEdit.imagesTitle")}
                     </h3>
                     <AdImagesUpload
                       adId={editingAd.id}
@@ -1293,7 +1382,7 @@ export default function UserProfile() {
                     onClick={handleAdEditClose}
                     className="px-6 py-3 rounded-xl text-muted-foreground hover:text-foreground bg-background/80 hover:bg-background dark:bg-gray-700/80 dark:hover:bg-gray-700 dark:text-gray-300 dark:hover:text-white transition-all border border-border dark:border-gray-600"
                   >
-                    İptal
+                    {t("common.cancelButton")}
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -1301,7 +1390,7 @@ export default function UserProfile() {
                     onClick={handleAdSave}
                     className="px-6 py-3 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground rounded-xl font-medium transition-all shadow-md"
                   >
-                    Kaydet
+                    {t("common.saveButton")}
                   </motion.button>
                 </div>
               </motion.div>

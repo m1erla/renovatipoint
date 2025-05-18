@@ -16,76 +16,25 @@ import WaterDropIcon from "@mui/icons-material/WaterDrop";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import DeckIcon from "@mui/icons-material/Deck";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useTranslation } from "react-i18next";
 
 const GardenDesign = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
 
-  const services = [
-    {
-      title: "Peyzaj Tasarımı",
-      description:
-        "Bahçenizi profesyonel peyzaj tasarımı ile yeniden düzenliyoruz.",
-      image:
-        "https://images.unsplash.com/photo-1551410224-699683e15636?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2064&q=80",
-      icon: <LocalFloristIcon />,
-      features: [
-        "Bahçe düzenleme",
-        "Bitki seçimi ve yerleşimi",
-        "Peyzaj aydınlatması",
-        "Dekoratif taş döşeme",
-      ],
-    },
-    {
-      title: "Sulama Sistemleri",
-      description:
-        "Otomatik sulama sistemleri ile bahçenizi her zaman yeşil tutuyoruz.",
-      image:
-        "https://images.unsplash.com/photo-1623510593430-2fb4c2da5881?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      icon: <WaterDropIcon />,
-      features: [
-        "Otomatik sulama sistemleri",
-        "Damlama sulama",
-        "Yağmurlama sistemleri",
-        "Su tasarrufu çözümleri",
-      ],
-    },
-    {
-      title: "Bahçe Mobilyaları",
-      description: "Bahçenizi fonksiyonel ve estetik mobilyalarla donatıyoruz.",
-      image:
-        "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-      icon: <CheckCircleIcon />,
-      features: [
-        "Dış mekan mobilyaları",
-        "Veranda ve teras düzenleme",
-        "Çardak ve pergola yapımı",
-        "Bahçe oturma grupları",
-      ],
-    },
+  const serviceKeys = ["landscaping", "irrigation", "furniture"];
+  const benefitKeys = [
+    "sustainable",
+    "allSeasons",
+    "easyMaintenance",
+    "valueIncrease",
   ];
 
-  const benefits = [
-    {
-      title: "Sürdürülebilir Tasarım",
-      description:
-        "Çevre dostu malzemeler ve su tasarrufu sağlayan sistemlerle sürdürülebilir bahçeler tasarlıyoruz.",
-    },
-    {
-      title: "Dört Mevsim Kullanım",
-      description:
-        "Her mevsim güzel görünen ve kullanılabilen bahçeler için özel bitki seçimleri yapıyoruz.",
-    },
-    {
-      title: "Kolay Bakım",
-      description:
-        "Akıllı sistemler ve doğru bitki seçimleriyle bakımı kolay bahçeler oluşturuyoruz.",
-    },
-    {
-      title: "Değer Artışı",
-      description:
-        "Profesyonel peyzaj tasarımı ile mülkünüzün değerini artırıyoruz.",
-    },
-  ];
+  const serviceIcons = {
+    landscaping: <LocalFloristIcon />,
+    irrigation: <WaterDropIcon />,
+    furniture: <CheckCircleIcon />,
+  };
 
   return (
     <Box sx={{ py: 8 }}>
@@ -109,7 +58,7 @@ const GardenDesign = () => {
             <Box
               component="img"
               src="https://images.unsplash.com/photo-1558293842-c0fd3db86157?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80"
-              alt="Bahçe tasarımı"
+              alt={t("pages.gardenDesign.hero.alt", "Garden Design Hero Image")}
               sx={{
                 width: "100%",
                 height: "100%",
@@ -129,11 +78,13 @@ const GardenDesign = () => {
               }}
             >
               <Typography variant="h3" fontWeight="bold">
-                Bahçe Tasarımı
+                {t("pages.gardenDesign.title", "Bahçe Tasarımı")}
               </Typography>
               <Typography variant="h6">
-                Doğanın güzelliğini evinize taşıyacak profesyonel peyzaj
-                çözümleri
+                {t(
+                  "pages.gardenDesign.subtitle",
+                  "Doğanın güzelliğini evinize taşıyacak profesyonel peyzaj çözümleri"
+                )}
               </Typography>
             </Box>
           </Box>
@@ -145,14 +96,15 @@ const GardenDesign = () => {
             paragraph
             sx={{ mb: 8, maxWidth: "900px", mx: "auto" }}
           >
-            Bahçenizi dört mevsim yaşanabilir bir yaşam alanına dönüştürmek için
-            uzman peyzaj mimarlarımız ve deneyimli bahçıvanlarımızla özel
-            çözümler sunuyoruz.
+            {t(
+              "pages.gardenDesign.description",
+              "Bahçenizi dört mevsim yaşanabilir bir yaşam alanına dönüştürmek için uzman peyzaj mimarlarımız ve deneyimli bahçıvanlarımızla özel çözümler sunuyoruz."
+            )}
           </Typography>
 
           <Grid container spacing={4} sx={{ mb: 8 }}>
-            {services.map((service, index) => (
-              <Grid item xs={12} sm={6} key={index}>
+            {serviceKeys.map((key, index) => (
+              <Grid item xs={12} md={4} key={key}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -173,8 +125,11 @@ const GardenDesign = () => {
                     <CardMedia
                       component="img"
                       height="240"
-                      image={service.image}
-                      alt={service.title}
+                      image={t(
+                        `pages.gardenDesign.services.${key}.image`,
+                        "/images/services/default-garden.jpg"
+                      )}
+                      alt={t(`pages.gardenDesign.services.${key}.title`)}
                     />
                     <CardContent>
                       <Box
@@ -191,21 +146,24 @@ const GardenDesign = () => {
                             borderRadius: "50%",
                             backgroundColor: theme.palette.primary.main,
                             color: "white",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
                           }}
                         >
-                          {service.icon}
+                          {serviceIcons[key]}
                         </Box>
                         <Typography variant="h5" component="h2">
-                          {service.title}
+                          {t(`pages.gardenDesign.services.${key}.title`)}
                         </Typography>
                       </Box>
                       <Typography variant="body1" paragraph>
-                        {service.description}
+                        {t(`pages.gardenDesign.services.${key}.description`)}
                       </Typography>
                       <Box sx={{ mt: 2 }}>
-                        {service.features.map((feature, idx) => (
+                        {[1, 2, 3, 4].map((featureIndex) => (
                           <Typography
-                            key={idx}
+                            key={featureIndex}
                             variant="body2"
                             sx={{
                               display: "flex",
@@ -213,7 +171,10 @@ const GardenDesign = () => {
                               mb: 1,
                             }}
                           >
-                            • {feature}
+                            •{" "}
+                            {t(
+                              `pages.gardenDesign.services.${key}.features.${featureIndex}`
+                            )}
                           </Typography>
                         ))}
                       </Box>
@@ -231,10 +192,13 @@ const GardenDesign = () => {
               gutterBottom
               sx={{ mb: 6, fontWeight: 700 }}
             >
-              Neden Bizi Seçmelisiniz?
+              {t(
+                "pages.gardenDesign.benefits.title",
+                "Neden Bizi Seçmelisiniz?"
+              )}
             </Typography>
             <Grid container spacing={4}>
-              {benefits.map((benefit, index) => (
+              {benefitKeys.map((key, index) => (
                 <Grid item xs={12} sm={6} md={3} key={index}>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -254,10 +218,10 @@ const GardenDesign = () => {
                     >
                       <CardContent>
                         <Typography variant="h6" gutterBottom>
-                          {benefit.title}
+                          {t(`pages.gardenDesign.benefits.${key}.title`)}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          {benefit.description}
+                          {t(`pages.gardenDesign.benefits.${key}.description`)}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -293,10 +257,16 @@ const GardenDesign = () => {
           >
             <Box sx={{ position: "relative", zIndex: 1, color: "white" }}>
               <Typography variant="h4" gutterBottom>
-                Bahçeniz İçin Ücretsiz Keşif
+                {t(
+                  "pages.gardenDesign.cta.title",
+                  "Bahçeniz İçin Ücretsiz Keşif"
+                )}
               </Typography>
               <Typography variant="body1" paragraph>
-                Bahçenizin potansiyelini keşfetmek için uzmanlarımız yanınızda.
+                {t(
+                  "pages.gardenDesign.cta.description",
+                  "Bahçenizin potansiyelini keşfetmek için uzmanlarımız yanınızda."
+                )}
               </Typography>
               <Button
                 variant="contained"
@@ -305,7 +275,7 @@ const GardenDesign = () => {
                 href="/contact"
                 sx={{ mt: 2 }}
               >
-                Randevu Al
+                {t("pages.gardenDesign.cta.button", "Randevu Al")}
               </Button>
             </Box>
           </Box>

@@ -63,6 +63,12 @@ function AdDetail() {
     },
   };
 
+  // --- Helper function for image error handling ---
+  const handleImageError = (e, placeholder = adService.DEFAULT_AD_IMAGE) => {
+    e.target.onerror = null; // prevent infinite loop
+    e.target.src = placeholder;
+  };
+
   useEffect(() => {
     const fetchAdDetail = async () => {
       try {
@@ -112,7 +118,10 @@ function AdDetail() {
                 const images = await adService.getAdImages(relAd.id);
                 return {
                   ...relAd,
-                  images: images || [{ url: adService.DEFAULT_AD_IMAGE }],
+                  images:
+                    images && images.length > 0
+                      ? images
+                      : [{ url: adService.DEFAULT_AD_IMAGE }],
                 };
               } catch (error) {
                 return {
@@ -129,7 +138,7 @@ function AdDetail() {
         }
 
         // Mock reviews data - in a real app this would be fetched from an API
-        setReviews([
+        const mockReviews = [
           {
             id: 1,
             userId: "user1",
@@ -150,7 +159,22 @@ function AdDetail() {
             date: "2023-05-28T14:15:00",
             userImage: "https://randomuser.me/api/portraits/women/44.jpg",
           },
-        ]);
+          {
+            id: 3,
+            userId: "user3",
+            userName: "Test User",
+            rating: 3,
+            comment: "Okay.",
+            date: "2023-07-01T09:00:00",
+            userImage: "invalid-url",
+          }, // Test case
+        ];
+        setReviews(
+          mockReviews.map((r) => ({
+            ...r,
+            userImage: r.userImage || "/images/placeholder-user.png",
+          }))
+        );
       } catch (error) {
         console.error("Failed to fetch ad details:", error);
         setError(
@@ -285,16 +309,17 @@ function AdDetail() {
                   <AnimatePresence mode="wait">
                     <motion.img
                       key={currentImageIndex}
-                      src={ad.images[currentImageIndex].url}
+                      src={
+                        ad.images[currentImageIndex]?.url ||
+                        adService.DEFAULT_AD_IMAGE
+                      }
                       alt={ad.title}
                       className="w-full h-full object-cover"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.3 }}
-                      onError={(e) => {
-                        e.target.src = adService.DEFAULT_AD_IMAGE;
-                      }}
+                      onError={handleImageError}
                     />
                   </AnimatePresence>
 
@@ -350,12 +375,10 @@ function AdDetail() {
                         }`}
                       >
                         <img
-                          src={image.url}
+                          src={image?.url || adService.DEFAULT_AD_IMAGE}
                           alt={`Thumbnail ${index + 1}`}
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.src = adService.DEFAULT_AD_IMAGE;
-                          }}
+                          onError={handleImageError}
                         />
                         {currentImageIndex === index && (
                           <div className="absolute inset-0 bg-primary/10 dark:bg-primary-foreground/10" />
@@ -479,12 +502,17 @@ function AdDetail() {
                       >
                         <div className="flex items-start gap-4">
                           <img
-                            src={review.userImage}
+                            src={
+                              review.userImage || "/images/placeholder-user.png"
+                            }
                             alt={review.userName}
                             className="w-12 h-12 rounded-full object-cover"
-                            onError={(e) => {
-                              e.target.src = "https://via.placeholder.com/100";
-                            }}
+                            onError={(e) =>
+                              handleImageError(
+                                e,
+                                "/images/placeholder-user.png"
+                              )
+                            }
                           />
                           <div className="flex-1">
                             <div className="flex justify-between items-start mb-2">
@@ -550,14 +578,12 @@ function AdDetail() {
 
                 <div className="flex items-center gap-4 mb-6">
                   <img
-                    src={
-                      expert?.profileImage || "https://via.placeholder.com/100"
-                    }
+                    src={expert?.profileImage || "/images/placeholder-user.png"}
                     alt={expert?.name || ad.expertName || "İlan Sahibi"}
                     className="w-16 h-16 rounded-full object-cover"
-                    onError={(e) => {
-                      e.target.src = "https://via.placeholder.com/100";
-                    }}
+                    onError={(e) =>
+                      handleImageError(e, "/images/placeholder-user.png")
+                    }
                   />
                   <div>
                     <h3 className="font-semibold text-lg text-foreground dark:text-white">
@@ -630,14 +656,12 @@ function AdDetail() {
                         <img
                           src={
                             relatedAd.images && relatedAd.images.length > 0
-                              ? relatedAd.images[0].url
+                              ? relatedAd.images[0]?.url
                               : adService.DEFAULT_AD_IMAGE
                           }
                           alt={relatedAd.title}
                           className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
-                          onError={(e) => {
-                            e.target.src = adService.DEFAULT_AD_IMAGE;
-                          }}
+                          onError={handleImageError}
                         />
                         <div className="flex-1">
                           <h3 className="font-medium text-foreground dark:text-white line-clamp-2">
