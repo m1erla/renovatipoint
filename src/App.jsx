@@ -38,6 +38,7 @@ import HomePage from "./components/pages/HomePage";
 import RequestList from "./components/pages/RequestList";
 import CategoryDetail from "./components/pages/CategoryDetail";
 import ServiceDetail from "./components/pages/ServiceDetail";
+import ExpertPage from "./components/pages/ExpertPage";
 
 // Company Pages
 import AboutUs from "./components/pages/company/AboutUs";
@@ -48,6 +49,7 @@ import ContactUs from "./components/pages/company/ContactUs";
 import HomeRenovation from "./components/pages/services/HomeRenovation";
 import GardenDesign from "./components/pages/services/GardenDesign";
 import SpecialProjects from "./components/pages/services/SpecialProjects";
+import ServicesPage from "./components/pages/services/Services";
 
 // Support Pages
 import HelpCenter from "./components/pages/support/HelpCenter";
@@ -274,6 +276,11 @@ function App() {
                           path="/services/special-projects"
                           element={<SpecialProjects />}
                         />
+                        {/* Services List Page */}
+                        <Route path="/services" element={<ServicesPage />} />
+
+                        {/* Experts List Page */}
+                        <Route path="/experts" element={<ExpertPage />} />
 
                         {/* Support Pages */}
                         <Route path="/help" element={<HelpCenter />} />

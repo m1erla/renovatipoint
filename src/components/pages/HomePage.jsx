@@ -89,7 +89,7 @@ function HomePage() {
         // Kategori verilerini işle
         if (categoriesData && Array.isArray(categoriesData)) {
           const processedCategories = convertToTranslationKeys(categoriesData, {
-            type: "category",
+            type: "categories",
             nameField: "name",
           });
           setCategories(processedCategories);
@@ -262,42 +262,42 @@ function HomePage() {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-12">
-              {visibleCategories.map((category, index) => (
+              {visibleCategories.map((categories, index) => (
                 <motion.div
-                  key={category.id}
+                  key={categories.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -8 }}
                   className="bg-card dark:bg-gray-800 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer border border-border dark:border-gray-700"
-                  onClick={() => handleCategoryClick(category.id)}
+                  onClick={() => handleCategoryClick(categories.id)}
                 >
                   <div className="relative h-56 overflow-hidden">
                     <img
-                      src={getCategoryImage(category.id)}
-                      alt={t(category.translationKey || category.name)}
+                      src={getCategoryImage(categories.id)}
+                      alt={t(categories.translationKey || categories.name)}
                       className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
                       onError={handleImageError}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <div className="absolute bottom-0 left-0 w-full p-6">
                       <div className="inline-flex items-center justify-center w-12 h-12 mb-3 rounded-full bg-primary/80 text-white">
-                        {getIcon(category.icon)}
+                        {getIcon(categories.icon)}
                       </div>
                       <h3 className="text-2xl font-semibold text-white">
-                        {t(category.translationKey || category.name)}
+                        {t(categories.translationKey || categories.name)}
                       </h3>
                     </div>
                   </div>
                   <div className="p-6">
                     <p className="text-muted-foreground dark:text-gray-300 mb-4">
-                      {category.description}
+                      {categories.description}
                     </p>
                     <div className="flex justify-between items-center">
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground">
                         {t("home.categories.expertCount", {
-                          count: category.expertCount,
+                          count: categories.expertCount,
                         })}
                       </span>
                       <span className="text-sm text-muted-foreground dark:text-gray-400">

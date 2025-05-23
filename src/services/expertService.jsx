@@ -1,5 +1,5 @@
 import api from "../utils/api";
-
+import { mockExperts } from "../../src/services/mockExpertData"
 const getAuthHeader = () => {
   const token = localStorage.getItem("accessToken");
   if (!token) {
@@ -7,6 +7,26 @@ const getAuthHeader = () => {
   }
   return { Authorization: `Bearer ${token}` };
 };
+
+
+
+
+const getAllExperts = async () => {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // In a real scenario, you would fetch from an API:
+    // try {
+    //   const response = await api.get('/experts');
+    //   return response.data;
+    // } catch (error) {
+    //   console.error('Failed to fetch experts:', error);
+    //   throw error;
+    // }
+
+    // Return mock data for now
+    return mockExperts;
+  };
 
 const getExpertProfile = async () => {
   try {
@@ -133,4 +153,5 @@ export default {
   createStripeCustomer,
   attachPaymentMethod,
   updateExpertProfile,
+  getAllExperts
 };
