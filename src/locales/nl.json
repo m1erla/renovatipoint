@@ -281,18 +281,18 @@
     "noBio": "Geen biografie beschikbaar.",
     "noSkills": "Geen vaardigheden vermeld."
   },
-  "jobTitles": {
-    "jobTitle.mimarlarVeMuhendisler": "Architecten en Ingenieurs (NL)",
-    "jobTitle.insaatIscileriVeUstalar": "Bouwvakkers en Voormannen (NL)",
-    "jobTitle.catiUstalari": "Dakdekkers (NL)",
-    "jobTitle.zeminDosemeUstalari": "Vloerenleggers (NL)",
-    "jobTitle.elektrikciler": "Elektriciens (NL)",
-    "jobTitle.tesisatcilar": "Loodgieters (NL)",
-    "jobTitle.insaatYoneticileriVeDenetciler": "Bouwmanagers en Toezichthouders (NL)",
-    "jobTitle.boyacilarVeSivacilar": "Schilders en Stukadoors (NL)",
-    "jobTitle.icDekorasyonUstalari": "Interieurontwerpers (NL)",
-    "jobTitle.peyzajMimariVeBahcivanlar": "Landschapsarchitecten en Hoveniers (NL)",
-    "jobTitle.bakimVeOnarimEkipleri": "Onderhouds- en Reparatieteams (NL)"
+  "jobTitle": {
+    "mimarlarVeMuhendisler": "Architecten en Ingenieurs (NL)",
+    "insaatIscileriVeUstalar": "Bouwvakkers en Voormannen (NL)",
+    "catiUstalari": "Dakdekkers (NL)",
+    "zeminDosemeUstalari": "Vloerenleggers (NL)",
+    "elektrikciler": "Elektriciens (NL)",
+    "tesisatcilar": "Loodgieters (NL)",
+    "insaatYoneticileriVeDenetciler": "Bouwmanagers en Toezichthouders (NL)",
+    "boyacilarVeSivacilar": "Schilders en Stukadoors (NL)",
+    "icDekorasyonUstalari": "Interieurontwerpers (NL)",
+    "peyzajMimariVeBahcivanlar": "Landschapsarchitecten en Hoveniers (NL)",
+    "bakimVeOnarimEkipleri": "Onderhouds- en Reparatieteams (NL)"
   },
   "categories": {
     "elektrikIsleri": "Elektrische Werken (NL)",
@@ -1273,30 +1273,30 @@
         }
       },
       "contact": {
-        "title": "Contact",
-        "description": "Heeft u vragen? Neem contact met ons op.",
-        "address": "Adres",
-        "address.line1": "Maslak, Grote Cad. Nr.:123",
-        "address.line2": "1012 AB Amsterdam",
-        "phone": "Telefoon",
-        "phone.number1": "+31 20 123 4567",
-        "phone.number2": "+31 6 1234 5678",
-        "email": "E-mail",
-        "email.address1": "info@builtbetter.nl",
-        "email.address2": "support@builtbetter.nl",
-        "form": {
-          "title": "Stuur ons een bericht",
-          "name": "Uw naam",
-          "email": "Uw e-mailadres",
-          "subject": "Onderwerp",
-          "message": "Uw bericht",
-          "send": "Bericht verzenden"
-        },
-        "map": {
-          "alt": "Contactkaart Locatie"
-        }
+      "title": "Contact",
+      "description": "Heeft u vragen? Neem contact met ons op.",
+      "address": "Adres",
+      "address.line1": "Maslak, Grote Cad. Nr.:123", 
+      "address.line2": "1012 AB Amsterdam",         
+      "phone": "Telefoon",
+      "phone.number1": "+31 20 123 4567",          
+      "phone.number2": "+31 6 1234 5678",          
+      "email": "E-mail",
+      "email.address1": "info@builtbetter.nl",    
+      "email.address2": "support@builtbetter.nl",  
+      "form": {
+        "title": "Stuur ons een bericht",
+        "name": "Uw naam",
+        "email": "Uw e-mailadres",
+        "subject": "Onderwerp",
+        "message": "Uw bericht",
+        "send": "Bericht verzenden"
+      },
+      "map": {
+        "alt": "Contactkaart Locatie"
       }
-    },
+    }
+  },
     "support": {
       "helpCenter": {
         "title": "Helpcentrum",
@@ -1396,23 +1396,27 @@
       "deletePaymentMethodFailed": "Betalingsmethode kon niet worden verwijderd."
     },
     "invoices": {
-       "title": "Facturen",
-       "description": "Bekijk en download uw eerdere facturen.",
-       "errors": {
-         "loadFailed": "Fout bij het laden van facturen.",
-         "downloadFailed": "Factuur kon niet worden gedownload."
-       },
-       "toast": {
-         "downloadSuccess": "Factuur succesvol gedownload."
-       },
-       "invoiceTable": {
-         "invoiceNumber": "Factuurnr.",
-         "date": "Datum",
-         "amount": "Bedrag",
-         "status": "Status",
-         "actions": "Acties"
-       }
-     },
+      "title": "Facturen",
+      "description": "Bekijk en download uw eerdere facturen.",
+      "errors": {
+        "loadFailed": "Fout bij het laden van facturen.",
+        "downloadFailed": "Factuur kon niet worden gedownload."
+      },
+      "toast": {
+        "downloadSuccess": "Factuur succesvol gedownload."
+      },
+      "invoiceTable": { 
+        "invoiceNumber": "Factuurnr.",
+        "date": "Datum",
+        "amount": "Bedrag",
+        "status": "Status",
+        "actions": "Acties",
+        "emptyState": { 
+          "title": "Geen Facturen Gevonden",
+          "message": "U heeft nog geen facturen gegenereerd."
+        }
+      }
+    },
     "edit": {
       "success": "Profiel succesvol bijgewerkt.",
       "imageUpdateSuccess": "Profielfoto succesvol bijgewerkt.",

@@ -533,15 +533,15 @@
     "contact": {
       "title": "Contact Us",
       "description": "Have questions? Get in touch with us.",
-      "address": "Address",
+      "address": "Address", 
       "address.line1": "123 Main Street",
-      "address.line2": "Anytown, USA 12345",
-      "phone": "Phone",
-      "phone.number1": "+1 (555) 123-4567",
-      "phone.number2": "+1 (555) 987-6543",
-      "email": "Email",
-      "email.address1": "info@builtbetter.com",
-      "email.address2": "support@builtbetter.com",
+      "address.line2": "Anytown, USA 12345", 
+      "phone": "Phone",    
+      "phone.number1": "+1 (555) 123-4567", 
+      "phone.number2": "+1 (555) 987-6543", 
+      "email": "Email",     
+      "email.address1": "info@builtbetter.com", 
+      "email.address2": "support@builtbetter.com", 
       "form": {
         "title": "Send us a message",
         "name": "Your Name",
@@ -1209,18 +1209,18 @@
     "noBio": "No biography available.",
     "noSkills": "No skills listed."
   },
-  "jobTitles": {
-    "jobTitle.mimarlarVeMuhendisler": "Architects and Engineers",
-    "jobTitle.insaatIscileriVeUstalar": "Construction Workers and Foremen",
-    "jobTitle.catiUstalari": "Roofers",
-    "jobTitle.zeminDosemeUstalari": "Flooring Installers",
-    "jobTitle.elektrikciler": "Electricians",
-    "jobTitle.tesisatcilar": "Plumbers",
-    "jobTitle.insaatYoneticileriVeDenetciler": "Construction Managers and Supervisors",
-    "jobTitle.boyacilarVeSivacilar": "Painters and Plasterers",
-    "jobTitle.icDekorasyonUstalari": "Interior Decoration Experts",
-    "jobTitle.peyzajMimariVeBahcivanlar": "Landscape Architects and Gardeners",
-    "jobTitle.bakimVeOnarimEkipleri": "Maintenance and Repair Teams"
+  "jobTitle": {
+      "mimarlarVeMuhendisler": "Architects and Engineers",
+    "insaatIscileriVeUstalar": "Construction Workers and Foremen",
+    "catiUstalari": "Roofers",
+    "zeminDosemeUstalari": "Flooring Installers",
+    "elektrikciler": "Electricians",
+    "tesisatcilar": "Plumbers",
+    "insaatYoneticileriVeDenetciler": "Construction Managers and Supervisors",
+    "boyacilarVeSivacilar": "Painters and Plasterers",
+    "icDekorasyonUstalari": "Interior Decoration Experts",
+    "peyzajMimariVeBahcivanlar": "Landscape Architects and Gardeners",
+    "bakimVeOnarimEkipleri": "Maintenance and Repair Teams"
   },
 
   "categories": {
@@ -1399,24 +1399,28 @@
       "loadPaymentInfoFailed": "Failed to load payment information.",
       "deletePaymentMethodFailed": "Failed to remove payment method."
     },
-    "invoices": {
-       "title": "Invoices",
-       "description": "Review and download your past invoices.",
-       "errors": {
-         "loadFailed": "Failed to load invoices.",
-         "downloadFailed": "Failed to download invoice."
-       },
-       "toast": {
-         "downloadSuccess": "Invoice downloaded successfully."
-       },
-       "invoiceTable": {
-         "invoiceNumber": "Invoice No",
-         "date": "Date",
-         "amount": "Amount",
-         "status": "Status",
-         "actions": "Actions"
-       }
-     },
+     "invoices": {
+      "title": "Invoices",
+      "description": "Review and download your past invoices.",
+      "errors": {
+        "loadFailed": "Failed to load invoices.",
+        "downloadFailed": "Failed to download invoice."
+      },
+      "toast": {
+        "downloadSuccess": "Invoice downloaded successfully."
+      },
+      "invoiceTable": { 
+        "invoiceNumber": "Invoice No",
+        "date": "Date",
+        "amount": "Amount",
+        "status": "Status",
+        "actions": "Actions",
+        "emptyState": { 
+          "title": "No Invoices Found",
+          "message": "You don't have any generated invoices yet."
+        }
+      }
+    },
     "edit": {
       "success": "Profile updated successfully.",
       "imageUpdateSuccess": "Profile image updated successfully.",

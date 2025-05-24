@@ -279,18 +279,18 @@
     "noBio": "Keine Biografie verfügbar.",
     "noSkills": "Keine Fähigkeiten aufgelistet."
   },
-  "jobTitles": {
-    "jobTitle.mimarlarVeMuhendisler": "Architekten und Ingenieure (DE)",
-    "jobTitle.insaatIscileriVeUstalar": "Bauarbeiter und Vorarbeiter (DE)",
-    "jobTitle.catiUstalari": "Dachdecker (DE)",
-    "jobTitle.zeminDosemeUstalari": "Bodenleger (DE)",
-    "jobTitle.elektrikciler": "Elektriker (DE)",
-    "jobTitle.tesisatcilar": "Klempner (DE)",
-    "jobTitle.insaatYoneticileriVeDenetciler": "Bauleiter und Supervisoren (DE)",
-    "jobTitle.boyacilarVeSivacilar": "Maler und Stuckateure (DE)",
-    "jobTitle.icDekorasyonUstalari": "Innenarchitekten (DE)",
-    "jobTitle.peyzajMimariVeBahcivanlar": "Landschaftsarchitekten und Gärtner (DE)",
-    "jobTitle.bakimVeOnarimEkipleri": "Wartungs- und Reparaturteams (DE)"
+  "jobTitle": {
+    "mimarlarVeMuhendisler": "Architekten und Ingenieure (DE)",
+    "insaatIscileriVeUstalar": "Bauarbeiter und Vorarbeiter (DE)",
+    "catiUstalari": "Dachdecker (DE)",
+    "zeminDosemeUstalari": "Bodenleger (DE)",
+    "elektrikciler": "Elektriker (DE)",
+    "tesisatcilar": "Klempner (DE)",
+    "insaatYoneticileriVeDenetciler": "Bauleiter und Supervisoren (DE)",
+    "boyacilarVeSivacilar": "Maler und Stuckateure (DE)",
+    "icDekorasyonUstalari": "Innenarchitekten (DE)",
+    "peyzajMimariVeBahcivanlar": "Landschaftsarchitekten und Gärtner (DE)",
+    "bakimVeOnarimEkipleri": "Wartungs- und Reparaturteams (DE)"
   },
   "categories": {
     "elektrikIsleri": "Elektroarbeiten (DE)",
@@ -1271,18 +1271,18 @@
         "submit": "Bewerbung absenden"
       }
     },
-    "contact": {
+     "contact": {
       "title": "Kontaktieren Sie uns",
       "description": "Haben Sie Fragen? Kontaktieren Sie uns.",
       "address": "Adresse",
-      "address.line1": "Maslak Mah. Büyükdere Cad. No:123",
-      "address.line2": "34485 Sarıyer/Istanbul",
+      "address.line1": "Maslak Mah. Büyükdere Cad. No:123", 
+      "address.line2": "34485 Sarıyer/Istanbul",         
       "phone": "Telefon",
-      "phone.number1": "+90 (212) 123 45 67",
-      "phone.number2": "+90 (532) 123 45 67",
+      "phone.number1": "+90 (212) 123 45 67",          
+      "phone.number2": "+90 (532) 123 45 67",          
       "email": "E-Mail",
-      "email.address1": "info@builtbetter.com",
-      "email.address2": "destek@builtbetter.com",
+      "email.address1": "info@builtbetter.com",        
+      "email.address2": "destek@builtbetter.com",      
       "form": {
         "title": "Senden Sie uns eine Nachricht",
         "name": "Ihr Name",
@@ -1394,24 +1394,28 @@
       "loadPaymentInfoFailed": "Zahlungsinformationen konnten nicht geladen werden.",
       "deletePaymentMethodFailed": "Zahlungsmethode konnte nicht entfernt werden."
     },
-    "invoices": {
-       "title": "Rechnungen",
-       "description": "Überprüfen und laden Sie Ihre vergangenen Rechnungen herunter.",
-       "errors": {
-         "loadFailed": "Rechnungen konnten nicht geladen werden.",
-         "downloadFailed": "Rechnung konnte nicht heruntergeladen werden."
-       },
-       "toast": {
-         "downloadSuccess": "Rechnung erfolgreich heruntergeladen."
-       },
-       "invoiceTable": {
-         "invoiceNumber": "Rechnungsnr.",
-         "date": "Datum",
-         "amount": "Betrag",
-         "status": "Status",
-         "actions": "Aktionen"
-       }
-     },
+   "invoices": {
+      "title": "Rechnungen",
+      "description": "Überprüfen und laden Sie Ihre vergangenen Rechnungen herunter.",
+      "errors": {
+        "loadFailed": "Rechnungen konnten nicht geladen werden.",
+        "downloadFailed": "Rechnung konnte nicht heruntergeladen werden."
+      },
+      "toast": {
+        "downloadSuccess": "Rechnung erfolgreich heruntergeladen."
+      },
+      "invoiceTable": {
+        "invoiceNumber": "Rechnungsnr.",
+        "date": "Datum",
+        "amount": "Betrag",
+        "status": "Status",
+        "actions": "Aktionen",
+        "emptyState": {
+          "title": "Keine Rechnungen gefunden",
+          "message": "Sie haben noch keine Rechnungen erstellt."
+        }
+      }
+    },
     "edit": {
       "success": "Profil erfolgreich aktualisiert.",
       "imageUpdateSuccess": "Profilbild erfolgreich aktualisiert.",

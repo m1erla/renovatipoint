@@ -515,15 +515,15 @@
         "submit": "Başvuruyu Gönder"
       }
     },
-    "contact": {
+     "contact": {
       "title": "Bize Ulaşın",
       "description": "Sorularınız mı var? Bizimle iletişime geçin.",
       "address": "Adres",
-      "address.line1": "123 Ana Cadde",
-      "address.line2": "Herhangi bir şehir, Türkiye 12345",
+      "address.line1": "Maslak Mah. Büyükdere Cad. No:123",
+      "address.line2": "34485 Sarıyer/İstanbul",
       "phone": "Telefon",
-      "phone.number1": "+90 (555) 123-4567",
-      "phone.number2": "+90 (555) 987-6543",
+      "phone.number1": "+90 (212) 123 45 67",
+      "phone.number2": "+90 (532) 123 45 67",
       "email": "E-posta",
       "email.address1": "info@builtbetter.com",
       "email.address2": "destek@builtbetter.com",
@@ -1194,18 +1194,18 @@
     "noBio": "Biyografi mevcut değil.",
     "noSkills": "Yetenek listelenmemiş."
   },
-  "jobTitles": {
-    "jobTitle.mimarlarVeMuhendisler": "Mimarlar ve Mühendisler",
-    "jobTitle.insaatIscileriVeUstalar": "İnşaat İşçileri ve Ustalar",
-    "jobTitle.catiUstalari": "Çatı Ustaları",
-    "jobTitle.zeminDosemeUstalari": "Zemin Döşeme Ustaları",
-    "jobTitle.elektrikciler": "Elektrikçiler",
-    "jobTitle.tesisatcilar": "Tesisatçılar",
-    "jobTitle.insaatYoneticileriVeDenetciler": "İnşaat Yöneticileri ve Denetçiler",
-    "jobTitle.boyacilarVeSivacilar": "Boyacılar ve Sıvacılar",
-    "jobTitle.icDekorasyonUstalari": "İç Dekorasyon Ustaları",
-    "jobTitle.peyzajMimariVeBahcivanlar": "Peyzaj Mimarları ve Bahçıvanlar",
-    "jobTitle.bakimVeOnarimEkipleri": "Bakım ve Onarım Ekipleri"
+  "jobTitle": {
+    "mimarlarVeMuhendisler": "Mimarlar ve Mühendisler",
+    "insaatIscileriVeUstalar": "İnşaat İşçileri ve Ustalar",
+    "catiUstalari": "Çatı Ustaları",
+    "zeminDosemeUstalari": "Zemin Döşeme Ustaları",
+    "elektrikciler": "Elektrikçiler",
+    "tesisatcilar": "Tesisatçılar",
+    "insaatYoneticileriVeDenetciler": "İnşaat Yöneticileri ve Denetçiler",
+    "boyacilarVeSivacilar": "Boyacılar ve Sıvacılar",
+    "icDekorasyonUstalari": "İç Dekorasyon Ustaları",
+    "peyzajMimariVeBahcivanlar": "Peyzaj Mimarları ve Bahçıvanlar",
+    "bakimVeOnarimEkipleri": "Bakım ve Onarım Ekipleri"
   },
 
   "categories": {
@@ -1451,7 +1451,7 @@
       },
       "completionDateLabel": "Tamamlandı: {{date}}"
     },
-    "invoices": {
+   "invoices": {
       "title": "Faturalar",
       "description": "Geçmiş faturalarınızı inceleyin ve indirin.",
       "errors": {
@@ -1466,7 +1466,11 @@
         "date": "Tarih",
         "amount": "Tutar",
         "status": "Durum",
-        "actions": "İşlemler"
+        "actions": "İşlemler",
+        "emptyState": {
+          "title": "Fatura Bulunamadı",
+          "message": "Henüz oluşturulmuş bir faturanız yok."
+        }
       }
     },
     "paymentMethods": {

@@ -782,12 +782,7 @@ function ExpertProfile() {
               </h1>
               {expert.jobTitle?.name && (
                 <p className="text-xl text-blue-300 mb-4">
-                  {t(
-                    getTranslationKeyFromTurkishName(
-                      expert.jobTitle.name,
-                      "jobTitle"
-                    )
-                  )}
+                 {t(expert.jobTitle.name, expert.jobTitle.name.split('.').pop())}
                 </p>
               )}
               <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-6">
@@ -1194,14 +1189,10 @@ function ExpertProfile() {
                         {!jobTitlesLoading &&
                           !jobTitlesError &&
                           jobTitles.map((jt) => {
-                            const jobTitleKey =
-                              getTranslationKeyFromTurkishName(
-                                jt.name,
-                                "jobTitle"
-                              );
+                      
                             return (
                               <option key={jt.id} value={jt.id}>
-                                {t(jobTitleKey)}
+                                {t(jt.name, jt.name.split('.').pop())}
                               </option>
                             );
                           })}

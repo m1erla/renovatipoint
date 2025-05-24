@@ -178,7 +178,7 @@ function AdList() {
                 className="pl-10 w-full px-4 py-3 rounded-xl border-2 border-border dark:border-gray-600 bg-background dark:bg-gray-700 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
               />
             </div>
-            <select
+      <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="px-4 py-3 rounded-xl border-2 border-border dark:border-gray-600 bg-background dark:bg-gray-700 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all appearance-none"
@@ -186,12 +186,12 @@ function AdList() {
               <option value="">{t("ads.list.allCategories")}</option>
               {categories.map((category) => {
                 const categoryKey = getTranslationKeyFromTurkishName(
-                  category.name,
-                  "category"
+                  category.name, // e.g., "elektrikIsleri"
+                  "categories" // CORRECTED: Use "categories" (plural)
                 );
                 return (
                   <option key={category.id} value={category.name}>
-                    {t(categoryKey)}
+                    {t(categoryKey, category.name)} {/* Added fallback */}
                   </option>
                 );
               })}
@@ -249,7 +249,7 @@ function AdList() {
                 {filteredAds.map((ad) => {
                   const categoryKey = getTranslationKeyFromTurkishName(
                     ad.categoryName,
-                    "category"
+                    "categories"
                   );
                   const serviceKey = getTranslationKeyFromTurkishName(
                     ad.serviceName,
