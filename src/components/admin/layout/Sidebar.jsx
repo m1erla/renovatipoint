@@ -58,13 +58,13 @@ const Sidebar = ({ isLoggedIn, handleLogout }) => {
     },
     {
       id: "messages",
-      label: t("admin.messages"),
+      label: t("admin.message"),
       path: "/admin/messages",
       icon: <MessageIcon />,
     },
     {
       id: "payments",
-      label: t("admin.payments"),
+      label: t("admin.payment"),
       path: "/admin/payments",
       icon: <PaymentIcon />,
     },
@@ -82,13 +82,13 @@ const Sidebar = ({ isLoggedIn, handleLogout }) => {
     },
     {
       id: "categories",
-      label: t("admin.categories"),
+      label: t("admin.category"),
       path: "/admin/categories",
       icon: <CategoryIcon />,
     },
     {
       id: "services",
-      label: t("admin.services"),
+      label: t("admin.service"),
       path: "/admin/services",
       icon: <MiscellaneousServicesIcon />,
     },
