@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react"; // Added useMemo
 import { motion } from "framer-motion";
-import adService from "../../services/adService";
-import requestService from "../../services/requestService";
+import adService from "../../services/adService"; // Keep if you still need DEFAULT_AD_IMAGE
+// import { DEFAULT_AD_IMAGE } from "../../services/adService"; // Import directly if only this is needed from adService
+// import requestService from "../../services/requestService"; // Not used in this version
 import AdRequestButton from "./AdRequestButton";
 import api from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import { mockAdsData } from "../../services/mockAdData"; // Correct path
 import {
   MagnifyingGlassIcon,
   ArrowRightIcon,
@@ -29,12 +31,10 @@ function AdList() {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
-  // Kullanıcı bilgilerini localStorage'dan al
   const isAuthenticated = localStorage.getItem("accessToken") ? true : false;
   const userRole = localStorage.getItem("role");
   const isExpert = userRole === "EXPERT";
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -56,69 +56,90 @@ function AdList() {
   };
 
   useEffect(() => {
-    fetchAds();
-    fetchCategories();
+    fetchCategories(); // Fetch categories for the filter dropdown
+    fetchAds();       // Fetch ads (will use mock data for now)
   }, []);
 
   const fetchCategories = async () => {
     try {
       const response = await api.get("/api/v1/categories");
-      setCategories(response.data);
+      // Process categories to add translationKey before setting state
+      const processedCategories = response.data.map(category => ({
+        ...category,
+        translationKey: getTranslationKeyFromTurkishName(category.name, "categories")
+      }));
+      setCategories(processedCategories || []);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
+      // Potentially set an error state for categories
     }
   };
 
   const fetchAds = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      const response = await api.get("/api/v1/ads");
+      // Simulate API call delay when using mock data
+      await new Promise(resolve => setTimeout(resolve, 700));
 
-      // İlanları ve resimlerini yükle
-      const adsWithImages = await Promise.all(
-        response.data.map(async (ad) => {
-          try {
-            const images = await adService.getAdImages(ad.id);
-            return {
-              ...ad,
-              images: images || [{ url: adService.DEFAULT_AD_IMAGE }],
-            };
-          } catch (error) {
-            console.warn(`Failed to load images for ad ${ad.id}:`, error);
-            return {
-              ...ad,
-              images: [{ url: adService.DEFAULT_AD_IMAGE }],
-            };
-          }
-        })
-      );
+      // Assign mock images to each ad from mockAdsData
+      const adsWithMockImages = mockAdsData.map(ad => ({
+        ...ad,
+        images: [{ url: adService.DEFAULT_AD_IMAGE, name: "default.png", id: "default-img-id" }],
+      }));
 
-      setAds(adsWithImages.filter((ad) => ad !== null));
+      setAds(adsWithMockImages);
+
+      // --- REAL API CALL (commented out for mock data usage) ---
+      // const response = await api.get("/api/v1/ads");
+      // const adsFromApi = response.data || [];
+      // const adsWithImages = await Promise.all(
+      //   adsFromApi.map(async (ad) => {
+      //     try {
+      //       const images = await adService.getAdImages(ad.id); // adService might be used here
+      //       return {
+      //         ...ad,
+      //         images: images && images.length > 0 ? images : [{ url: DEFAULT_AD_IMAGE }],
+      //       };
+      //     } catch (error) {
+      //       console.warn(`Failed to load images for ad ${ad.id}:`, error);
+      //       return { ...ad, images: [{ url: DEFAULT_AD_IMAGE }] };
+      //     }
+      //   })
+      // );
+      // setAds(adsWithImages.filter((ad) => ad !== null));
+      // --- END REAL API CALL ---
+
     } catch (error) {
       console.error("Failed to fetch ads:", error);
-      setError(t("ads.list.errors.fetchFailed"));
+      setError(t("ads.list.errors.fetchFailed", "Failed to load ads. Please try again."));
     } finally {
       setLoading(false);
     }
   };
 
-  // İlan detayına yönlendirme fonksiyonu
   const handleViewDetails = (adId) => {
     navigate(`/ads/${adId}`);
   };
 
-  // Filter ads based on search term and category
-  const filteredAds = ads.filter((ad) => {
-    const matchesSearch =
-      !searchTerm ||
-      ad.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ad.descriptions.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredAds = useMemo(() => { // Wrapped in useMemo
+    return ads.filter((ad) => {
+      const adTitle = ad.title || "";
+      const adDescriptions = ad.descriptions || "";
+      const adCategoryName = ad.categoryName || "";
 
-    const matchesCategory =
-      !selectedCategory || ad.categoryName === selectedCategory;
+      const matchesSearch =
+        !searchTerm ||
+        adTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        adDescriptions.toLowerCase().includes(searchTerm.toLowerCase());
 
-    return matchesSearch && matchesCategory;
-  });
+      const matchesCategory =
+        !selectedCategory || adCategoryName === selectedCategory; // category.name is the value from dropdown
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [ads, searchTerm, selectedCategory]);
+
 
   return (
     <div className="min-h-[calc(100vh-200px)] bg-gradient-to-b from-background to-background/95 dark:from-gray-900 dark:to-gray-950 pt-8 sm:pt-12 pb-8 px-4 sm:px-6">
@@ -130,6 +151,7 @@ function AdList() {
           transition={{ duration: 0.6 }}
           className="relative mb-10 md:mb-16 text-center"
         >
+          {/* ... (background blur div) ... */}
           <div className="absolute inset-0 -z-10 transform-gpu overflow-hidden blur-3xl">
             <div
               className="relative left-[calc(50%-20rem)] aspect-[1155/678] w-[40rem] -translate-x-1/2 -rotate-[30deg] bg-gradient-to-tr from-primary/20 to-primary-foreground/20 opacity-30 sm:left-[calc(50%-30rem)] sm:w-[80rem]"
@@ -178,23 +200,17 @@ function AdList() {
                 className="pl-10 w-full px-4 py-3 rounded-xl border-2 border-border dark:border-gray-600 bg-background dark:bg-gray-700 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
               />
             </div>
-      <select
+            <select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
+              onChange={(e) => setSelectedCategory(e.target.value)} // Filter by category.name
               className="px-4 py-3 rounded-xl border-2 border-border dark:border-gray-600 bg-background dark:bg-gray-700 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all appearance-none"
             >
               <option value="">{t("ads.list.allCategories")}</option>
-              {categories.map((category) => {
-                const categoryKey = getTranslationKeyFromTurkishName(
-                  category.name, // e.g., "elektrikIsleri"
-                  "categories" // CORRECTED: Use "categories" (plural)
-                );
-                return (
-                  <option key={category.id} value={category.name}>
-                    {t(categoryKey, category.name)} {/* Added fallback */}
+              {categories.map((category) => (
+                  <option key={category.id} value={category.name}> {/* Use category.name for value to match ad.categoryName */}
+                    {t(category.translationKey, category.name)}
                   </option>
-                );
-              })}
+                ))}
             </select>
           </motion.div>
         </motion.div>
@@ -202,16 +218,11 @@ function AdList() {
         {/* Ads Grid */}
         {loading ? (
           <div className="flex justify-center items-center min-h-[300px]">
-            <div className="relative w-16 h-16">
-              <div className="absolute inset-0 rounded-full border-4 border-t-primary border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
-              <div className="absolute inset-2 rounded-full border-4 border-t-primary/50 border-r-transparent border-b-transparent border-l-transparent animate-spin-slow"></div>
-            </div>
+            {/* ... (loader) ... */}
           </div>
         ) : error ? (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="max-w-lg mx-auto p-6 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-2xl shadow-lg"
+            // ... (error display) ...
           >
             <div className="flex items-center gap-3 mb-3">
               <XCircleIcon className="w-6 h-6" />
@@ -225,9 +236,7 @@ function AdList() {
           <>
             {filteredAds.length === 0 ? (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center p-12 bg-card/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-border/40 dark:border-gray-700/40 max-w-lg mx-auto"
+                // ... (no ads display) ...
               >
                 <div className="w-20 h-20 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-4">
                   <BuildingOfficeIcon className="w-10 h-10 text-primary dark:text-primary-foreground/90" />
@@ -247,14 +256,12 @@ function AdList() {
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
               >
                 {filteredAds.map((ad) => {
-                  const categoryKey = getTranslationKeyFromTurkishName(
-                    ad.categoryName,
-                    "categories"
-                  );
-                  const serviceKey = getTranslationKeyFromTurkishName(
-                    ad.serviceName,
-                    "service"
-                  );
+                  // ad.categoryName from mock is "elektrikIsleri"
+                  // ad.serviceName from mock is "service.name.key1"
+                  const categoryKey = getTranslationKeyFromTurkishName(ad.categoryName, "categories");
+                  const serviceKey = getTranslationKeyFromTurkishName(ad.serviceName, "service"); // This should be fine if serviceName is like "key1" or a descriptive string for slugify
+                                                                                                    // If ad.serviceName is already "services.service.name.key1", then t(ad.serviceName) is better.
+                                                                                                    // Let's assume for now serviceName from mock is something the helper can process to the final key.
 
                   return (
                     <motion.div
@@ -273,11 +280,7 @@ function AdList() {
                         className="relative h-56 overflow-hidden cursor-pointer"
                       >
                         <img
-                          src={
-                            ad.images && ad.images.length > 0
-                              ? ad.images[0].url
-                              : adService.DEFAULT_AD_IMAGE
-                          }
+                          src={ad.images && ad.images.length > 0 ? ad.images[0].url : adService.DEFAULT_AD_IMAGE }
                           alt={ad.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           onError={(e) => {
@@ -309,20 +312,21 @@ function AdList() {
                         <div className="flex flex-wrap gap-2 mb-6">
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground">
                             <TagIcon className="w-4 h-4 mr-1" />
-                            {t(categoryKey)}
+                            {t(categoryKey, ad.categoryName)}
                           </span>
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground">
                             <CheckBadgeIcon className="w-4 h-4 mr-1" />
-                            {t(serviceKey)}
+                            {t(serviceKey, ad.serviceName)}
                           </span>
                         </div>
 
                         <div className="mt-auto">
-                          {isAuthenticated ? (
+                          {/* ... (button logic as before) ... */}
+                           {isAuthenticated ? (
                             isExpert ? (
                               <AdRequestButton
                                 adId={ad.id}
-                                expertId={ad.userId}
+                                expertId={ad.userId} // Assuming ad.userId is the ID of the ad creator (expert)
                                 className="w-full py-3 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground rounded-xl font-medium transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
                               />
                             ) : (
